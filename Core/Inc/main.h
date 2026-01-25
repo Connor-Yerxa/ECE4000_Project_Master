@@ -81,6 +81,8 @@ void Error_Handler(void);
 #define DISPL_MOSI_GPIO_Port GPIOA
 #define B3_Pin GPIO_PIN_4
 #define B3_GPIO_Port GPIOC
+#define RTD_CS_Pin GPIO_PIN_5
+#define RTD_CS_GPIO_Port GPIOC
 #define B5_Pin GPIO_PIN_12
 #define B5_GPIO_Port GPIOB
 #define B4_Pin GPIO_PIN_6
