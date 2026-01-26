@@ -83,10 +83,16 @@ void Error_Handler(void);
 #define B3_GPIO_Port GPIOC
 #define RTD_CS_Pin GPIO_PIN_5
 #define RTD_CS_GPIO_Port GPIOC
+#define EXCIT1_Pin GPIO_PIN_2
+#define EXCIT1_GPIO_Port GPIOB
 #define B5_Pin GPIO_PIN_12
 #define B5_GPIO_Port GPIOB
 #define B4_Pin GPIO_PIN_6
 #define B4_GPIO_Port GPIOC
+#define EXCIT2_Pin GPIO_PIN_7
+#define EXCIT2_GPIO_Port GPIOC
+#define GPS_Wake_Pin GPIO_PIN_9
+#define GPS_Wake_GPIO_Port GPIOC
 #define B6_Pin GPIO_PIN_8
 #define B6_GPIO_Port GPIOA
 #define TMS_Pin GPIO_PIN_13
