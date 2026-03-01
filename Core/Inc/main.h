@@ -91,6 +91,8 @@ void Error_Handler(void);
 #define B4_GPIO_Port GPIOC
 #define EXCIT2_Pin GPIO_PIN_7
 #define EXCIT2_GPIO_Port GPIOC
+#define SD_CS_Pin GPIO_PIN_8
+#define SD_CS_GPIO_Port GPIOC
 #define GPS_Wake_Pin GPIO_PIN_9
 #define GPS_Wake_GPIO_Port GPIOC
 #define B6_Pin GPIO_PIN_8
