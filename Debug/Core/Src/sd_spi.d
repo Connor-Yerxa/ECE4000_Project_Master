@@ -23,7 +23,7 @@ Core/Src/sd_spi.o: ../Core/Src/sd_spi.c ../Core/Inc/sd_spi.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h \
- ../Core/Inc/main.h
+ ../Core/Inc/GPS.h ../Core/Inc/main.h
 ../Core/Inc/sd_spi.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:
@@ -50,4 +50,5 @@ Core/Src/sd_spi.o: ../Core/Src/sd_spi.c ../Core/Inc/sd_spi.h \
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:
+../Core/Inc/GPS.h:
 ../Core/Inc/main.h:
