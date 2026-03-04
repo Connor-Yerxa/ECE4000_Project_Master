@@ -1,0 +1,7 @@
+SWV ITM Data Console - ITM Port: 0
+Valid: A
+UTC-D:  40326
+UTC-T: 210343
+AST: 170343
+Latitude: 46.0460
+Longitude: -66.8826

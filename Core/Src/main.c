@@ -51,6 +51,7 @@ DMA_HandleTypeDef hdma_spi1_tx;
 
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
+DMA_HandleTypeDef hdma_usart1_rx;
 
 /* USER CODE BEGIN PV */
 
@@ -116,15 +117,17 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  SD_CS_HIGH();  // Ensure card is deselected
-  HAL_Delay(10);
+//  SD_CS_HIGH();  // Ensure card is deselected
+//  HAL_Delay(10);
+//  int connected = sd_mount();
+////  sd_write_file("test1.txt", "hello from STM32\r\n");
+//  sd_list_files();
+//  sd_unmount();
 
-
-  int connected = sd_mount();
-//  sd_write_file("test1.txt", "hello from STM32\r\n");
-  sd_list_files();
-  sd_unmount();
-
+  GPS_Init(&huart1);
+  GPS_Data_t gps = {0};
+  GPS_oneshot(&gps);
+  printGPSData(&gps);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -132,7 +135,6 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -269,7 +271,7 @@ static void MX_USART1_UART_Init(void)
 
   /* USER CODE END USART1_Init 1 */
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
+  huart1.Init.BaudRate = 9600;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
@@ -335,6 +337,9 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel3_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
+  /* DMA1_Channel5_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
 
 }
 
