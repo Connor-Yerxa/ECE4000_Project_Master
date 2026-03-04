@@ -18,9 +18,11 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "fatfs.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "sd_functions.h"
 
 /* USER CODE END Includes */
 
@@ -31,6 +33,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define SD_CS_LOW()     HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_RESET)
+#define SD_CS_HIGH()    HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_SET)
 
 /* USER CODE END PD */
 
@@ -42,6 +46,8 @@
 /* Private variables ---------------------------------------------------------*/
 SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi2;
+DMA_HandleTypeDef hdma_spi1_rx;
+DMA_HandleTypeDef hdma_spi1_tx;
 
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
@@ -53,6 +59,7 @@ UART_HandleTypeDef huart2;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_USART2_UART_Init(void);
@@ -63,6 +70,14 @@ static void MX_USART1_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+#include <stdio.h>
+
+int _write(int file, char *ptr, int len) {
+    for (int i = 0; i < len; i++) {
+        ITM_SendChar((*ptr++));
+    }
+    return len;
+}
 
 /* USER CODE END 0 */
 
@@ -95,11 +110,20 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_SPI1_Init();
   MX_SPI2_Init();
   MX_USART2_UART_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+  SD_CS_HIGH();  // Ensure card is deselected
+  HAL_Delay(10);
+
+
+  int connected = sd_mount();
+//  sd_write_file("test1.txt", "hello from STM32\r\n");
+  sd_list_files();
+  sd_unmount();
 
   /* USER CODE END 2 */
 
@@ -296,6 +320,25 @@ static void MX_USART2_UART_Init(void)
 }
 
 /**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Channel2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
+  /* DMA1_Channel3_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -315,10 +358,10 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, DISPL_LED_Pin|DISPL_DC_Pin|DISPL_RST_Pin|EXCIT2_Pin
-                          |SD_CS_Pin|GPS_Wake_Pin, GPIO_PIN_RESET);
+                          |GPS_Wake_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, DISPL_CS_Pin|RTD_CS_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOC, DISPL_CS_Pin|RTD_CS_Pin|SD_CS_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(THERM_CS_GPIO_Port, THERM_CS_Pin, GPIO_PIN_SET);
@@ -333,9 +376,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : DISPL_LED_Pin DISPL_DC_Pin DISPL_RST_Pin DISPL_CS_Pin
-                           EXCIT2_Pin SD_CS_Pin GPS_Wake_Pin */
+                           EXCIT2_Pin GPS_Wake_Pin */
   GPIO_InitStruct.Pin = DISPL_LED_Pin|DISPL_DC_Pin|DISPL_RST_Pin|DISPL_CS_Pin
-                          |EXCIT2_Pin|SD_CS_Pin|GPS_Wake_Pin;
+                          |EXCIT2_Pin|GPS_Wake_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -348,12 +391,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(THERM_CS_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : RTD_CS_Pin */
-  GPIO_InitStruct.Pin = RTD_CS_Pin;
+  /*Configure GPIO pins : RTD_CS_Pin SD_CS_Pin */
+  GPIO_InitStruct.Pin = RTD_CS_Pin|SD_CS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(RTD_CS_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pin : EXCIT1_Pin */
   GPIO_InitStruct.Pin = EXCIT1_Pin;
