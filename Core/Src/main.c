@@ -117,17 +117,24 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-//  SD_CS_HIGH();  // Ensure card is deselected
-//  HAL_Delay(10);
-//  int connected = sd_mount();
-////  sd_write_file("test1.txt", "hello from STM32\r\n");
-//  sd_list_files();
-//  sd_unmount();
+  SD_CS_HIGH();  // Ensure card is deselected
+  HAL_Delay(10);
+  int connected = sd_mount();
+//  sd_test_read_raw();
+  sd_write_file("test1.txt", "hello from STM32\r\n");
 
-  GPS_Init(&huart1);
-  GPS_Data_t gps = {0};
-  GPS_oneshot(&gps);
-  printGPSData(&gps);
+//  char buf[64];
+//  UINT br;
+//  FRESULT r = sd_read_file("test1.txt", buf, sizeof(buf), &br);
+//  printf("read_file = %d, br = %u, data = '%s'\r\n", r, br, buf);
+
+  sd_list_files();
+  sd_unmount();
+
+//  GPS_Init(&huart1);
+//  GPS_Data_t gps = {0};
+//  GPS_oneshot(&gps);
+//  printGPSData(&gps);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -135,6 +142,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -202,7 +210,7 @@ static void MX_SPI1_Init(void)
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
