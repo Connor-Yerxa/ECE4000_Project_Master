@@ -128,7 +128,10 @@ int main(void)
 //  FRESULT r = sd_read_file("test1.txt", buf, sizeof(buf), &br);
 //  printf("read_file = %d, br = %u, data = '%s'\r\n", r, br, buf);
 
-  sd_list_files();
+//  sd_list_files();
+
+  //TLS-CRC-2025-10-30-11-29-14A.csv
+  readMeasurementData("readMeasurementData.csv", 6485);
   sd_unmount();
 
 //  GPS_Init(&huart1);
