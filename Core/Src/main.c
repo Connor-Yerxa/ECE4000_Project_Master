@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "sd_functions.h"
+#include "SD_Commands.h"
 
 /* USER CODE END Includes */
 
@@ -120,6 +121,7 @@ int main(void)
   SD_CS_HIGH();  // Ensure card is deselected
   HAL_Delay(10);
   int connected = sd_mount();
+  printf("Connected: %d\n", connected);
 //  sd_test_read_raw();
   sd_write_file("test1.txt", "hello from STM32\r\n");
 
@@ -130,8 +132,22 @@ int main(void)
 
 //  sd_list_files();
 
-  //TLS-CRC-2025-10-30-11-29-14A.csv
-  readMeasurementData("readMeasurementData.csv", 6485);
+  //TLS-CRC-2025-10-30-11-29-14A.csv - 6485
+  int tempsLen;
+  float * temps = readMeasurementData("readMeasurementData.csv", &tempsLen);
+  if(temps != NULL)
+  {
+	  for(int i=0;i<tempsLen;i++)
+	  {
+		  printf("%.2f\n", temps[i]);
+	  }
+	  free(temps);
+  }
+  else
+  {
+	  printf("could not read .csv :(\n");
+  }
+
   sd_unmount();
 
 //  GPS_Init(&huart1);
