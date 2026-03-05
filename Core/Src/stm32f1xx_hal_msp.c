@@ -116,7 +116,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
 
     GPIO_InitStruct.Pin = TOUCH_MISO_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(TOUCH_MISO_GPIO_Port, &GPIO_InitStruct);
 
     /* SPI1 DMA Init */

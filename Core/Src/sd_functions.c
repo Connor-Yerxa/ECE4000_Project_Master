@@ -31,6 +31,21 @@ FATFS fs;
 static DIR dir;
 static FILINFO fno;
 
+
+void sd_test_read_raw(void) {
+    uint8_t buf[512];
+    if (SD_ReadBlocks(buf, 0, 1) != SD_OK) {
+        printf("Raw read failed\n");
+        return;
+    }
+
+    printf("Sector 0 first 16 bytes:\r\n");
+    for (int i = 0; i < 16; i++) {
+        printf("%02X ", buf[i]);
+    }
+    printf("\r\n");
+}
+
 //int sd_format(void) {
 //	// Pre-mount required for legacy FatFS
 //	f_mount(&fs, sd_path, 0);
@@ -252,6 +267,66 @@ FRESULT sd_create_directory(const char *path) {
 	return res;
 }
 
+//void sd_list_files_simple(void) {
+////    DIR d;
+////    FILINFO fi;
+//    FRESULT res;
+//
+//    printf("Simple list:\r\n");
+//    res = f_opendir(&dir, "/");
+//    printf("opendir = %d\r\n", res);
+//    if (res != FR_OK) return;
+//
+//    while (1) {
+//        res = f_readdir(&dir, &fno);
+//        if (res != FR_OK || fno.fname[0] == 0) break;
+//
+//        // Skip bogus entries that look like 0xFF-filled junk
+//        if ((uint8_t)fno.fname[0] == 0xFF || fno.fsize == 0xFFFFFFFF) {
+//            continue;
+//        }
+//
+//        printf("  %s (%lu bytes)\r\n", fno.fname, (unsigned long)fno.fsize);
+//    }
+//
+//
+//    f_closedir(&dir);
+//}
+void sd_list_files_simple(void) {
+//    DIR dir;
+//    FILINFO fno;
+    FRESULT res;
+
+    printf("Simple list:\r\n");
+
+    res = f_opendir(&dir, "/");
+    printf("opendir = %d\r\n", res);
+    if (res != FR_OK) return;
+
+    while (1) {
+        res = f_readdir(&dir, &fno);
+        if (res != FR_OK) break;
+
+        // End of directory
+        if (fno.fname[0] == 0) break;
+
+        // Skip deleted entries (0xE5) and uninitialized entries (0xFF)
+        uint8_t c = (uint8_t)fno.fname[0];
+        if (c == 0xE5 || c == 0xFF) continue;
+
+        // Skip volume labels
+        if (fno.fattrib & AM_VOL) continue;
+
+        printf("  %s (%lu bytes)\r\n",
+               fno.fname,
+               (unsigned long)fno.fsize);
+    }
+
+    f_closedir(&dir);
+}
+
+
+
 void sd_list_directory_recursive(const char *path, int depth) {
 //	DIR dir;
 //	FILINFO fno;
@@ -283,7 +358,9 @@ void sd_list_directory_recursive(const char *path, int depth) {
 
 void sd_list_files(void) {
 	printf("📂 Files on SD Card:\r\n");
-	sd_list_directory_recursive(sd_path, 0);
+//	sd_list_directory_recursive(sd_path, 0);
 //	sd_list_directory_recursive("/", 0);
+
+	sd_list_files_simple();
 	printf("\r\n\r\n");
 }

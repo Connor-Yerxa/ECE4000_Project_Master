@@ -21,6 +21,8 @@
 
 extern char sd_path[];
 
+void sd_test_read_raw(void);
+
 // Mount and unmount
 int sd_mount(void);
 int sd_unmount(void);
@@ -35,6 +37,7 @@ int sd_rename_file(const char *oldname, const char *newname);
 
 // Directory handling
 FRESULT sd_create_directory(const char *path);
+void sd_list_files_simple(void);
 void sd_list_directory_recursive(const char *path, int depth);
 void sd_list_files(void);
 
