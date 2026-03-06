@@ -1,3 +1,4 @@
-../Core/Src/SD_Commands.c:4:6:readMeasurementData	680	static
-../Core/Src/SD_Commands.c:33:9:WriteMetaData	16	static
-../Core/Src/SD_Commands.c:74:9:createMeasurementFile	664	static
+../Core/Src/SD_Commands.c:21:6:readMeasurementData	672	static
+../Core/Src/SD_Commands.c:47:9:updateMetaData	760	static
+../Core/Src/SD_Commands.c:82:9:WriteMetaData	80	static
+../Core/Src/SD_Commands.c:138:9:createMeasurementFile	664	static
