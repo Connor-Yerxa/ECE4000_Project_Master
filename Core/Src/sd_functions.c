@@ -14,7 +14,7 @@
  *    You are free to use and modify it for learning and development.
  ******************************************************************************/
 
-
+#include "sd_functions.h"
 #include "fatfs.h"
 #include "sd_diskio_spi.h"
 #include "sd_spi.h"
@@ -149,7 +149,7 @@ int sd_write_file(const char *filename, const char *text) {
 
 	res = f_write(&file, text, strlen(text), &bw);
 	f_close(&file);
-	printf("Write %u bytes to %s\r\n", bw, filename);
+	if(PRINT) printf("Write %u bytes to %s\r\n", bw, filename);
 	return (res == FR_OK && bw == strlen(text)) ? FR_OK : FR_DISK_ERR;
 }
 
@@ -167,7 +167,7 @@ int sd_append_file(const char *filename, const char *text) {
 
 	res = f_write(&file, text, strlen(text), &bw);
 	f_close(&file);
-	printf("Appended %u bytes to %s\r\n", bw, filename);
+	if(PRINT) printf("Appended %u bytes to %s\r\n", bw, filename);
 	return (res == FR_OK && bw == strlen(text)) ? FR_OK : FR_DISK_ERR;
 }
 
@@ -196,15 +196,15 @@ int sd_read_file(const char *filename, char *buffer, UINT bufsize, UINT *bytes_r
 		return res;
 	}
 
-	printf("Read %u bytes from %s\r\n", *bytes_read, filename);
+	if(PRINT) printf("Read %u bytes from %s\r\n", *bytes_read, filename);
 	return FR_OK;
 }
 
-typedef struct CsvRecord {
-	char field1[32];
-	char field2[32];
-	int value;
-} CsvRecord;
+//typedef struct CsvRecord {
+//	char field1[32];
+//	char field2[32];
+//	int value;
+//} CsvRecord;
 
 int sd_read_csv(const char *filename, CsvRecord *records, int max_records, int *record_count) {
 	FIL file;
@@ -217,7 +217,7 @@ int sd_read_csv(const char *filename, CsvRecord *records, int max_records, int *
 		return res;
 	}
 
-	printf("📄 Reading CSV: %s\r\n", filename);
+	if(PRINT) printf("📄 Reading CSV: %s\r\n", filename);
 	while (f_gets(line, sizeof(line), &file) && *record_count < max_records) {
 		char *token = strtok(line, ",");
 		if (!token) continue;
@@ -239,7 +239,7 @@ int sd_read_csv(const char *filename, CsvRecord *records, int max_records, int *
 	f_close(&file);
 
 	// Print parsed data
-	for (int i = 0; i < *record_count; i++) {
+	if(PRINT) for (int i = 0; i < *record_count; i++) {
 		printf("[%d] %s | %s | %d", i,
 				records[i].field1,
 				records[i].field2,

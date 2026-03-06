@@ -9,9 +9,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "sd_functions.h"
 
 uint8_t gps_dma_buf[GPS_DMA_BUF_SIZE];
-//GPS_Data_t gps_data = {0};
+
+GPS_Data_t gps_data = {0};
+uint8_t TIME_ZONE = -4;
+uint16_t GPS_WAIT = 500;
 
 static UART_HandleTypeDef *gps_huart;
 static uint16_t dma_idx = 0;
@@ -42,7 +46,7 @@ static float gps_convert_deg(float raw)
     return deg + minutes / 60.0f;
 }
 
-static void gps_parse_rmc(GPS_Data_t * gps_data, char *line)
+static void gps_parse_rmc(char *line)
 {
     char *token;
     int field = 0;
@@ -52,27 +56,58 @@ static void gps_parse_rmc(GPS_Data_t * gps_data, char *line)
     {
         switch (field)
         {
-            case 1: gps_data->utc_time = atoi(token); break;
-            case 2: gps_data->valid = (token[0] == 'A'); break;
-            case 3: gps_data->latitude = gps_convert_deg(atof(token)); break;
-            case 4: if (token[0] == 'S') gps_data->latitude = - gps_data->latitude; break;
-            case 5: gps_data->longitude = gps_convert_deg(atof(token)); break;
-            case 6: if (token[0] == 'W') gps_data->longitude = - gps_data->longitude; break;
-            case 9: gps_data->utc_date = atoi(token); break;
+            case 1: gps_data.utc_time = atoi(token); break;
+            case 2: gps_data.valid = (token[0] == 'A'); break;
+            case 3: gps_data.latitude = gps_convert_deg(atof(token)); break;
+            case 4: if (token[0] == 'S') gps_data.latitude = - gps_data.latitude; break;
+            case 5: gps_data.longitude = gps_convert_deg(atof(token)); break;
+            case 6: if (token[0] == 'W') gps_data.longitude = - gps_data.longitude; break;
+            case 9: gps_data.utc_date = atoi(token); break;
         }
         token = strtok(NULL, ",");
         field++;
     }
+    printf("Valid: %d\n", gps_data.valid);
+}
+
+void calc_timestamp()
+{
+
+    uint8_t day   =  gps_data.utc_date / 10000;          	// DD
+	uint8_t month = (gps_data.utc_date / 100) % 100;     	// MM
+	uint8_t year  =  gps_data.utc_date % 100;            	// YY
+
+
+	uint8_t hr   =  gps_data.utc_time / 10000 + TIME_ZONE;    // hr
+	uint8_t min = (gps_data.utc_time / 100) % 100;			// mm
+	uint8_t sec  =  gps_data.utc_time % 100;            		// ss
+
+	gps_data.full_timestamp = ((year + 20) << 25) | (month << 21) | (day << 16) | (hr << 11) | (min << 5) | (sec / 2);
+}
+
+void GPS_default()
+{
+	gps_data.valid = 0;
+	gps_data.utc_date = 050326;
+	gps_data.utc_time = 224030;
+
+	gps_data.latitude = 46.0460;
+	gps_data.longitude = -66.8825;
+
+	calc_timestamp();
 }
 
 void GPS_Init(UART_HandleTypeDef *huart)
 {
     gps_huart = huart;
     HAL_UART_Receive_DMA(gps_huart, gps_dma_buf, GPS_DMA_BUF_SIZE);
-    GPS_Off_On(0);
+
+    if(PRINT) printf("Initializing GPS...\n");
+    GPS_default();
+//    GPS_Off_On(0);
 }
 
-void GPS_Process(GPS_Data_t * gps_data)
+void GPS_Process()
 {
     while (1) {
         uint8_t c = gps_dma_buf[dma_idx];
@@ -89,7 +124,7 @@ void GPS_Process(GPS_Data_t * gps_data)
 
             if (strncmp(line_buf, "$GNRMC", 6) == 0)
             {
-                gps_parse_rmc(gps_data, line_buf);
+                gps_parse_rmc(line_buf);
                 line_pos = 0;
                 break;
             } else line_pos = 0;
@@ -99,32 +134,40 @@ void GPS_Process(GPS_Data_t * gps_data)
                 line_buf[line_pos++] = c;
         }
     }
+    calc_timestamp();
 }
 
-void printGPSData(GPS_Data_t * gps_data)
+void printGPSData()
 {
-	printf("Valid: %c\n", gps_data->valid ? 'A' : 'V');
+	printf("Valid: %c\n", gps_data.valid ? 'A' : 'V');
 
-	printf("UTC-D: %6lu\n", gps_data->utc_date);
-	printf("UTC-T: %6lu\n", gps_data->utc_time);
-	printf("AST: %6lu\n", gps_data->utc_time + (TIME_ZONE * 10000));
+	printf("UTC-D: %6lu\n", gps_data.utc_date);
+	printf("UTC-T: %6lu\n", gps_data.utc_time);
+	printf("AST: %6lu\n", gps_data.utc_time + (TIME_ZONE * 10000));
 
-	printf("Latitude: %.4f\n", gps_data->latitude);
-	printf("Longitude: %.4f\n", gps_data->longitude);
+	printf("Latitude: %.4f\n", gps_data.latitude);
+	printf("Longitude: %.4f\n", gps_data.longitude);
 }
 
-void GPS_oneshot(GPS_Data_t * gps_data)
+void GPS_oneshot()
 {
 	GPS_Off_On(1);
-	gps_data->valid = 0;
-	while(!gps_data->valid)
+	gps_data.valid = 0;
+	int i=0;
+	while(!gps_data.valid && i < GPS_WAIT)
 	{
-		GPS_Process(gps_data);
+		GPS_Process();
 //		printGPSData(gps_data);
 		HAL_Delay(500);
+		i++;
 	}
+
+	if(i > GPS_WAIT)
+	{
+		printf("Default GPS\n");
+		GPS_default();
+	}
+	else printf("GPS Connected\n");
 
 	GPS_Off_On(0);
 }
-
-

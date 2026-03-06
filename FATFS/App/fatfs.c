@@ -25,6 +25,7 @@ FIL USERFile;       /* File object for USER */
 
 /* USER CODE BEGIN Variables */
 
+#include "GPS.h"
 /* USER CODE END Variables */
 
 void MX_FATFS_Init(void)
@@ -45,7 +46,9 @@ void MX_FATFS_Init(void)
 DWORD get_fattime(void)
 {
   /* USER CODE BEGIN get_fattime */
-  return 0;
+//	return ((2024 - 1980) << 25) | (3 << 21) | (5 << 16) | (12 << 11) | (0 << 5) | (0 / 2); // Default time
+
+	return gps_data.full_timestamp;
   /* USER CODE END get_fattime */
 }
 

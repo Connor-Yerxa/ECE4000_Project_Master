@@ -1,4 +1,5 @@
-Core/Src/sd_functions.o: ../Core/Src/sd_functions.c ../FATFS/App/fatfs.h \
+Core/Src/sd_functions.o: ../Core/Src/sd_functions.c \
+ ../Core/Inc/sd_functions.h ../FATFS/App/fatfs.h \
  ../Middlewares/Third_Party/FatFs/src/ff.h \
  ../Middlewares/Third_Party/FatFs/src/integer.h ../FATFS/Target/ffconf.h \
  ../Core/Inc/main.h ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h \
@@ -26,11 +27,13 @@ Core/Src/sd_functions.o: ../Core/Src/sd_functions.c ../FATFS/App/fatfs.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h \
  ../Core/Inc/GPS.h ../Core/Inc/main.h \
+ ../Middlewares/Third_Party/FatFs/src/integer.h \
  ../Middlewares/Third_Party/FatFs/src/ff_gen_drv.h \
  ../Middlewares/Third_Party/FatFs/src/diskio.h \
  ../Middlewares/Third_Party/FatFs/src/ff.h ../FATFS/Target/user_diskio.h \
  ../Core/Inc/sd_diskio_spi.h \
  ../Middlewares/Third_Party/FatFs/src/diskio.h ../Core/Inc/sd_spi.h
+../Core/Inc/sd_functions.h:
 ../FATFS/App/fatfs.h:
 ../Middlewares/Third_Party/FatFs/src/ff.h:
 ../Middlewares/Third_Party/FatFs/src/integer.h:
@@ -62,6 +65,7 @@ Core/Src/sd_functions.o: ../Core/Src/sd_functions.c ../FATFS/App/fatfs.h \
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:
 ../Core/Inc/GPS.h:
 ../Core/Inc/main.h:
+../Middlewares/Third_Party/FatFs/src/integer.h:
 ../Middlewares/Third_Party/FatFs/src/ff_gen_drv.h:
 ../Middlewares/Third_Party/FatFs/src/diskio.h:
 ../Middlewares/Third_Party/FatFs/src/ff.h:

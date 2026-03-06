@@ -24,6 +24,7 @@
 /* USER CODE BEGIN Includes */
 #include "sd_functions.h"
 #include "max31865_stm32.h"
+#include "SD_Commands.h"
 
 /* USER CODE END Includes */
 
@@ -81,6 +82,27 @@ int _write(int file, char *ptr, int len) {
     return len;
 }
 
+int SDMOUNT(SPI_HandleTypeDef *hspi)
+{
+	uint32_t original = hspi->Init.BaudRatePrescaler;
+	HAL_SPI_DeInit(hspi);
+	hspi->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
+	HAL_Delay(10);
+	HAL_SPI_Init(hspi);
+
+	SD_CS_HIGH();  // Ensure card is deselected
+	HAL_Delay(10);
+
+	int connected = sd_mount();
+
+	HAL_SPI_DeInit(hspi);
+	hspi->Init.BaudRatePrescaler = original;
+	HAL_Delay(10);
+	HAL_SPI_Init(hspi);
+
+	return connected;
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -136,8 +158,41 @@ int main(void)
 //  //TLS-CRC-2025-10-30-11-29-14A.csv
 //  readMeasurementData("readMeasurementData.csv", 6485);
 //  sd_unmount();
+    GPS_Init(&huart1);
 
-//  GPS_Init(&huart1);
+  int connected = SDMOUNT(&hspi1);
+  printf("Connected: %d\n", connected);
+//  sd_test_read_raw();
+//  sd_write_file("test1.txt", "hello from STM32\r\n");
+
+//  char buf[64];
+//  UINT br;
+//  FRESULT r = sd_read_file("test1.txt", buf, sizeof(buf), &br);
+//  printf("read_file = %d, br = %u, data = '%s'\r\n", r, br, buf);
+
+  sd_list_files();
+
+  //TLS-CRC-2025-10-30-11-29-14A.csv - 6485
+//  readMeasurementData("TLS-CRC-2025-10-30-11-29-14A.csv", &tempsLen, 15);
+
+  METADATA md;
+  char * filename = "TLS-SIN";
+  createMeasurementFile(&filename, &md);
+
+//  float mins = 4;
+  float mins = 0.2;
+  float t=0;
+  float sampleTime = 1.0/15.0;
+  char text[10];
+  while(t < mins * 60)
+  {
+	  sprintf(text, "%.3f\n", sin(t));
+	  sd_append_file(filename, text);
+	  t += sampleTime;
+  }
+
+  sd_unmount();
+
 //  GPS_Data_t gps = {0};
 //  GPS_oneshot(&gps);
 //  printGPSData(&gps);
@@ -232,7 +287,7 @@ static void MX_SPI1_Init(void)
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
