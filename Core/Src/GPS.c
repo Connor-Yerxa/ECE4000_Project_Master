@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "sd_functions.h"
 
 uint8_t gps_dma_buf[GPS_DMA_BUF_SIZE];
 
@@ -69,11 +70,24 @@ static void gps_parse_rmc(char *line)
     printf("Valid: %d\n", gps_data.valid);
 }
 
+void GPS_default()
+{
+	gps_data.valid = 0;
+	gps_data.utc_date = 050326;
+	gps_data.utc_time = 224030;
+
+	gps_data.latitude = 46.0460;
+	gps_data.longitude = -66.8825;
+}
+
 void GPS_Init(UART_HandleTypeDef *huart)
 {
     gps_huart = huart;
     HAL_UART_Receive_DMA(gps_huart, gps_dma_buf, GPS_DMA_BUF_SIZE);
-    GPS_Off_On(0);
+
+    if(PRINT) printf("Initializing GPS...\n");
+    GPS_default();
+//    GPS_Off_On(0);
 }
 
 void GPS_Process()
@@ -103,6 +117,8 @@ void GPS_Process()
                 line_buf[line_pos++] = c;
         }
     }
+
+
 }
 
 void printGPSData()
@@ -132,10 +148,10 @@ void GPS_oneshot()
 
 	if(i > GPS_WAIT)
 	{
-		gps_data.valid = 1;
-		gps_data.utc_date = 050326;
-		gps_data.utc_time = 224030;
+		printf("Default GPS\n");
+		GPS_default();
 	}
+	else printf("GPS Connected\n");
 
 	GPS_Off_On(0);
 }

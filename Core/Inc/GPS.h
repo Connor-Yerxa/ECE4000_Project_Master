@@ -33,6 +33,7 @@ extern uint8_t TIME_ZONE;
 extern uint16_t GPS_WAIT;
 
 void GPS_Off_On(uint8_t state);
+void GPS_default();
 void GPS_Init(UART_HandleTypeDef *huart);
 void GPS_Process();
 void printGPSData();
