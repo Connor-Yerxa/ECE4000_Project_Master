@@ -1,22 +1,3 @@
 SWV ITM Data Console - ITM Port: 0
-inking SD driver...
-Initializing disk...
-Attempting mount at 0:/...
-SD card mounted successfully at 0:/
-Card Type: SDHC/SDXC
-ð¾ Total: 7723008 KB, Free: 7722956 KB
-Write 18 bytes to test1.txt
-Simple list:
-opendir = 0
-  SYSTEM~1 (0 bytes)
-  test1.txt (18 bytes)
-  ÿÿÿÿÿÿÿÿ.ÿÿÿ (4294967295 bytes)
-  ÿÿÿÿÿÿÿÿ.ÿÿÿ (4294967295 bytes)
-  ÿÿÿÿÿÿÿÿ.ÿÿÿ (4294967295 bytes)
-  ÿÿÿÿÿÿÿÿ.ÿÿÿ (4294967295 bytes)
-  ÿÿÿÿÿÿÿÿ.ÿÿÿ (4294967295 bytes)
-  ÿÿÿÿÿÿÿÿ.ÿÿÿ (4294967295 bytes)
-  ÿÿÿÿÿÿÿÿ.ÿÿÿ (4294967295 bytes)
-  ÿÿÿÿÿÿÿÿ.ÿÿÿ (4294967295 bytes)
-  test.txt (15 bytes)
-SD card unmounted: OK
+Running RTD Test...
+44	00	00	FF	FF	80	00	02	

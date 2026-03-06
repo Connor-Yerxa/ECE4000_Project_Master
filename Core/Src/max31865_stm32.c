@@ -20,6 +20,7 @@ HAL_StatusTypeDef MAX31865_Write8(MAX31865_HandleTypeDef *dev, uint8_t reg, uint
     tx[1] = value;
 
     cs_low(dev);
+    HAL_Delay(10);
     HAL_StatusTypeDef st = HAL_SPI_Transmit(dev->hspi, tx, 2, HAL_MAX_DELAY);
     cs_high(dev);
     return st;
@@ -82,6 +83,7 @@ HAL_StatusTypeDef MAX31865_Init(MAX31865_HandleTypeDef *dev,
     uint8_t cfg = 0;
     if (wires == MAX31865_WIRES_3) cfg |= MAX31865_CFG_3WIRE;
     if (filter_50hz)               cfg |= MAX31865_CFG_FILT_50HZ;
+//    cfg |= MAX31865_CFG_BIAS;
     // (bias off, auto off)
 
     HAL_StatusTypeDef st = MAX31865_Write8(dev, MAX31865_REG_CONFIG, cfg);
