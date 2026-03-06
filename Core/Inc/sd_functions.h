@@ -21,6 +21,9 @@
 
 extern char sd_path[];
 
+
+#define PRINT 0
+
 void sd_test_read_raw(void);
 
 // Mount and unmount

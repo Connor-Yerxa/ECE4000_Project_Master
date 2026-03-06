@@ -9,8 +9,9 @@
 #include "stdlib.h"
 #include "main.h"
 #include "sd_functions.h"
+#include <string.h>
 
-typedef struct METADATA {
+typedef struct {
 	float power;
 	int testID; //100
 	char * project; //"ENGG4000-B"
@@ -21,12 +22,11 @@ typedef struct METADATA {
 	float conductivity; //0
 	float R_Squared; //0
 	uint8_t calibrationApplied; //0
-	GPS_Data_t gps;
 }METADATA;
 
 void readMeasurementData(char * filename, int * tempsLen, int maxprintout);
 uint8_t WriteMetaData(char * filename, METADATA md);
-uint8_t createMeasurementFile(char * filename, METADATA * md);
+uint8_t createMeasurementFile(char ** filename,  METADATA * md);
 
 #ifdef __cplusplus
 	}

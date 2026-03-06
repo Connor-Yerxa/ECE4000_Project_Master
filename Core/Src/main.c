@@ -139,6 +139,8 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+    GPS_Init(&huart1);
+
   int connected = SDMOUNT(&hspi1);
   printf("Connected: %d\n", connected);
 //  sd_test_read_raw();
@@ -152,15 +154,26 @@ int main(void)
   sd_list_files();
 
   //TLS-CRC-2025-10-30-11-29-14A.csv - 6485
-  int tempsLen;
-//  float * temps = readMeasurementData("TLS-CRC-2025-10-30-11-29-14A.csv", &tempsLen);
-  readMeasurementData("TLS-CR~1.csv", &tempsLen, 15);
+//  readMeasurementData("TLS-CRC-2025-10-30-11-29-14A.csv", &tempsLen, 15);
 
+  METADATA md;
+  char * filename = "TLS-SIN";
+  createMeasurementFile(&filename, &md);
 
+//  float mins = 4;
+  float mins = 0.2;
+  float t=0;
+  float sampleTime = 1.0/15.0;
+  char text[10];
+  while(t < mins * 60)
+  {
+	  sprintf(text, "%.3f\n", sin(t));
+	  sd_append_file(filename, text);
+	  t += sampleTime;
+  }
 
   sd_unmount();
 
-//  GPS_Init(&huart1);
 //  GPS_Data_t gps = {0};
 //  GPS_oneshot(&gps);
 //  printGPSData(&gps);
@@ -239,7 +252,7 @@ static void MX_SPI1_Init(void)
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;

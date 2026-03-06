@@ -71,27 +71,28 @@ uint8_t WriteMetaData(char * filename, METADATA md)
 	return 0;
 }
 
-uint8_t createMeasurementFile(char * filename,  METADATA * md)
+uint8_t createMeasurementFile(char ** filename,  METADATA * md)
 {
-	sd_write_file(filename, "");
+	char newfilename[32];
+	snprintf(newfilename, 32, "%s.csv", *filename);
+	int i=1;
 
-	FILINFO info;
+	FIL file;
+	FRESULT res = f_open(&file, newfilename, FA_READ);
+	while(res == FR_OK)
+	{
+		f_close(&file);
+		snprintf(newfilename, 32, "%s%d.csv", *filename, i++);
+		res = f_open(&file, newfilename, FA_READ);
+	}
+	f_close(&file);
+	*filename = strdup(newfilename);
 
-	uint8_t day   =  md->gps.utc_date / 10000;          	// DD
-	uint8_t month = (md->gps.utc_date / 100) % 100;     	// MM
-	uint8_t year  =  md->gps.utc_date % 100;            	// YY
+	GPS_oneshot();
 
+	sd_write_file(newfilename, "");
 
-	uint8_t hr   =  md->gps.utc_date / 10000;          	// hr
-	uint8_t min = (md->gps.utc_date / 100) % 100;		// mm
-	uint8_t sec  =  md->gps.utc_date % 100;            	// ss
-
-	info.fdate = ((year - 1980) << 9) | (month << 5) | day;
-	info.ftime = (hr << 11) | (min << 5) | (sec / 2);
-
-	f_utime(filename, &info);
-
-	if(WriteMetaData(filename, *md))
+	if(WriteMetaData(newfilename, *md))
 	{
 		return 1;
 	}

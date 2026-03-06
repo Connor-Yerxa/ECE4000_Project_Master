@@ -14,7 +14,6 @@
 
 #define GPS_DMA_BUF_SIZE   512
 #define GPS_LINE_BUF_SIZE  120
-#define TIME_ZONE -4
 
 #define GPS_WAKE_HIGH()  HAL_GPIO_WritePin(GPS_Wake_GPIO_Port, GPS_Wake_Pin, GPIO_PIN_SET)
 #define GPS_WAKE_LOW() HAL_GPIO_WritePin(GPS_Wake_GPIO_Port, GPS_Wake_Pin, GPIO_PIN_RESET)
@@ -30,11 +29,13 @@ typedef struct {
 
 extern uint8_t gps_dma_buf[GPS_DMA_BUF_SIZE];
 extern GPS_Data_t gps_data;
+extern uint8_t TIME_ZONE;
+extern uint16_t GPS_WAIT;
 
 void GPS_Off_On(uint8_t state);
 void GPS_Init(UART_HandleTypeDef *huart);
-void GPS_Process(GPS_Data_t * gps);
-void printGPSData(GPS_Data_t * gps_data);
-void GPS_oneshot(GPS_Data_t * gps_data);
+void GPS_Process();
+void printGPSData();
+void GPS_oneshot();
 
 #endif
