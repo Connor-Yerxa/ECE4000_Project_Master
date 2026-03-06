@@ -1,33 +1,3 @@
 SWV ITM Data Console - ITM Port: 0
-Linking SD driver...
-Initializing disk...
-Attempting mount at 0:/...
-SD card mounted successfully at 0:/
-Card Type: SDHC/SDXC
-ð¾ Total: 7723008 KB, Free: 7722600 KB
-Connected: 0
-ð Files on SD Card:
-Simple list:
-opendir = 0
-  SYSTEM~1 (0 bytes)
-  test1.txt (18 bytes)
-  TLS-SIN.csv (23750 bytes)
-  TLS-SIN1.csv (6360 bytes)
-  TLS-SIN2.csv (3473 bytes)
-  TLS-SIN3.csv (23750 bytes)
-  TLS-SIN4.csv (23750 bytes)
-  TLS-SIN5.csv (23750 bytes)
-  TLS-SIN6.csv (660 bytes)
-  TLS-SIN7.csv (11337 bytes)
-  TLS-SIN8.csv (709 bytes)
-  TLS-SIN9.csv (23750 bytes)
-  test.txt (15 bytes)
-  TLS-SI~1.CSV (23750 bytes)
-  TLS-CR~1.CSV (64541 bytes)
-
-
-DATE: 02-06-94
-TIME: 22:40:30
-FAT DATE: E4C2
-FAT TIME: B50F
-SD card unmounted: OK
+Running RTD Test...
+44	00	00	FF	FF	80	00	02	
