@@ -1,8 +1,9 @@
 ../Core/Src/GPS.c:25:6:GPS_Off_On	3
 ../Core/Src/GPS.c:42:14:gps_convert_deg	1
 ../Core/Src/GPS.c:49:13:gps_parse_rmc	11
-../Core/Src/GPS.c:73:6:GPS_default	1
-../Core/Src/GPS.c:83:6:GPS_Init	1
-../Core/Src/GPS.c:93:6:GPS_Process	5
-../Core/Src/GPS.c:124:6:printGPSData	2
-../Core/Src/GPS.c:136:6:GPS_oneshot	4
+../Core/Src/GPS.c:73:6:calc_timestamp	1
+../Core/Src/GPS.c:88:6:GPS_default	1
+../Core/Src/GPS.c:100:6:GPS_Init	1
+../Core/Src/GPS.c:110:6:GPS_Process	5
+../Core/Src/GPS.c:140:6:printGPSData	2
+../Core/Src/GPS.c:152:6:GPS_oneshot	4

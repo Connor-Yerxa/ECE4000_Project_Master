@@ -70,6 +70,21 @@ static void gps_parse_rmc(char *line)
     printf("Valid: %d\n", gps_data.valid);
 }
 
+void calc_timestamp()
+{
+
+    uint8_t day   =  gps_data.utc_date / 10000;          	// DD
+	uint8_t month = (gps_data.utc_date / 100) % 100;     	// MM
+	uint8_t year  =  gps_data.utc_date % 100;            	// YY
+
+
+	uint8_t hr   =  gps_data.utc_time / 10000 + TIME_ZONE;    // hr
+	uint8_t min = (gps_data.utc_time / 100) % 100;			// mm
+	uint8_t sec  =  gps_data.utc_time % 100;            		// ss
+
+	gps_data.full_timestamp = ((year + 20) << 25) | (month << 21) | (day << 16) | (hr << 11) | (min << 5) | (sec / 2);
+}
+
 void GPS_default()
 {
 	gps_data.valid = 0;
@@ -78,6 +93,8 @@ void GPS_default()
 
 	gps_data.latitude = 46.0460;
 	gps_data.longitude = -66.8825;
+
+	calc_timestamp();
 }
 
 void GPS_Init(UART_HandleTypeDef *huart)
@@ -117,8 +134,7 @@ void GPS_Process()
                 line_buf[line_pos++] = c;
         }
     }
-
-
+    calc_timestamp();
 }
 
 void printGPSData()
