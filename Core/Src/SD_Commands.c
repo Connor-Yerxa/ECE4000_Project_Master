@@ -1,43 +1,41 @@
 #include "SD_Commands.h"
 
 // Don't forget to free temps after use!
-float * readMeasurementData(char * filename, int * tempsLen)
+void readMeasurementData(char * filename, int * tempsLen, int maxprintout)
 {
 	FIL file;
 	FRESULT fin = f_open(&file, filename, FA_READ);
-	if(fin != FR_OK) return NULL;
+	if(fin != FR_OK) printf("Couln\'t open: %s", filename);
 
-	float * temps = NULL;
 	*tempsLen = 0;
 
-	char line[10];
+	char line[64];
 
 	uint8_t linesToTemps=20;
-	for(int i=0;i<linesToTemps;i++) f_gets((TCHAR*)line, 10, &file);
-
-	while(f_gets((TCHAR*)line, 10, &file) != 0)
+	for(int i=0;i<linesToTemps;i++)
 	{
-		float newTemp = atof(line);
+		f_gets((TCHAR*)line, 64, &file);
+	}
 
-		float * newTemps = realloc(temps, sizeof(float) * ++(*tempsLen));
-		if(newTemps == NULL)
-		{
-			f_close(&file);
-			return NULL;
-		}
-		temps = newTemps;
-		temps[*tempsLen - 1] = newTemp;
+	int i=0;
+	float newTemp;
+	while(f_gets((TCHAR*)line, 10, &file) != 0 && (i < maxprintout || maxprintout == 0))
+	{
+		newTemp = atof(line);
+
+		printf("Time %.2f: %.3f C\n", (float)i/15.0, newTemp);
+		i++;
 	}
 
 	f_close(&file);
-	return temps;
 }
 
-int WriteMetaData(FIL fil, char * metaData, UINT bytesToWrite)
+uint8_t WriteMetaData(char * filename, METADATA md)
 {
 	/*
+	#,Sensor Serial:,
 	#,Test ID:,
-	#,Instrument:,
+	#,Instrument:,TLS Handheld
 	#,Project:,
 	#,Material:,
 	#,Sample ID:,
@@ -50,27 +48,54 @@ int WriteMetaData(FIL fil, char * metaData, UINT bytesToWrite)
 	#,R Squared:,
 	#,Calibration Applied:,
 	 */
+
+	sd_append_file(filename, "#,Sensor Serial:,          \n");
+	sd_append_file(filename, "#,Test ID:,          \n");
+	sd_append_file(filename, "#,Instrument:,TLS Handheld\n");
+	sd_append_file(filename, "#,Project:,          \n");
+	sd_append_file(filename, "#,Material:,          \n");
+	sd_append_file(filename, "#,Sensor Serial:,          \n");
+	sd_append_file(filename, "#,Sample ID:,          \n\n\n");
+
+	sd_append_file(filename, "#,Power Level:,          \n\n\n");
+
+	sd_append_file(filename, "#,Region Start:,          \n");
+	sd_append_file(filename, "#,Region End:,          \n");
+	sd_append_file(filename, "#,Material:,          \n");
+	sd_append_file(filename, "#,Conductivity:,          \n");
+	sd_append_file(filename, "#,Calibration Applied:, \n\n\n");
+
+	sd_append_file(filename, "Delta Temperature (degC)\n");
+
+
 	return 0;
 }
 
-int writeMeasurements(FIL fil, char * filename, float * temps, int tempsLen, char * metaData, UINT bytesToWrite)
+uint8_t createMeasurementFile(char ** filename,  METADATA * md)
 {
-	FRESULT fout = f_open(&fil, filename, FA_WRITE | FA_OPEN_ALWAYS | FA_CREATE_ALWAYS);
-	if(fout != FR_OK) return -1;
+	char newfilename[32];
+	snprintf(newfilename, 32, "%s.csv", *filename);
+	int i=1;
 
-	if(WriteMetaData(fil, metaData, bytesToWrite) != 0)
+	FIL file;
+	FRESULT res = f_open(&file, newfilename, FA_READ);
+	while(res == FR_OK)
 	{
-		f_close(&fil);
-		return -1;
+		f_close(&file);
+		snprintf(newfilename, 32, "%s%d.csv", *filename, i++);
+		res = f_open(&file, newfilename, FA_READ);
+	}
+	f_close(&file);
+	*filename = strdup(newfilename);
+
+	GPS_oneshot();
+
+	sd_write_file(newfilename, "");
+
+	if(WriteMetaData(newfilename, *md))
+	{
+		return 1;
 	}
 
-	for(int i=0;i<tempsLen;i++)
-	{
-		BYTE t[5];
-		UINT written;
-		sprintf((char*)t, "%.2f", temps[i]);
-		f_write(&fil, t, 4, &written);
-	}
-
-	f_close(&fil);
+	return 0;
 }

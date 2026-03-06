@@ -9,11 +9,24 @@
 #include "stdlib.h"
 #include "main.h"
 #include "sd_functions.h"
+#include <string.h>
 
+typedef struct {
+	float power;
+	int testID; //100
+	char * project; //"ENGG4000-B"
+	char * material; //"N/A"
+	char * sampleID; //"N/A"
+	float regionStart; //0
+	float regionEnd; //0
+	float conductivity; //0
+	float R_Squared; //0
+	uint8_t calibrationApplied; //0
+}METADATA;
 
-float * readMeasurementData(char * filename, int * tempsLen);
-int WriteMetaData(FIL fil, char * metaData, UINT bytesToWrite);
-int writeMeasurements(FIL fil, char * filename, float * temps, int tempsLen, char * metaData, UINT bytesToWrite);
+void readMeasurementData(char * filename, int * tempsLen, int maxprintout);
+uint8_t WriteMetaData(char * filename, METADATA md);
+uint8_t createMeasurementFile(char ** filename,  METADATA * md);
 
 #ifdef __cplusplus
 	}
