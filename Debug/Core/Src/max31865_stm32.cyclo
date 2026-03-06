@@ -1,0 +1,11 @@
+../Core/Src/max31865_stm32.c:9:20:cs_low	1
+../Core/Src/max31865_stm32.c:13:20:cs_high	1
+../Core/Src/max31865_stm32.c:17:19:MAX31865_Write8	1
+../Core/Src/max31865_stm32.c:28:19:MAX31865_ReadN	2
+../Core/Src/max31865_stm32.c:40:26:read8	1
+../Core/Src/max31865_stm32.c:45:19:MAX31865_ClearFault	2
+../Core/Src/max31865_stm32.c:56:19:MAX31865_ReadFault	1
+../Core/Src/max31865_stm32.c:60:19:MAX31865_Init	12
+../Core/Src/max31865_stm32.c:105:19:MAX31865_ReadRTDRaw	9
+../Core/Src/max31865_stm32.c:152:7:MAX31865_RTD_Resistance_Ohms	1
+../Core/Src/max31865_stm32.c:158:7:MAX31865_Temperature_C	2

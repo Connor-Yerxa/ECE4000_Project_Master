@@ -1,6 +1,7 @@
 "./Core/Src/GPS.o"
 "./Core/Src/SD_Commands.o"
 "./Core/Src/main.o"
+"./Core/Src/max31865_stm32.o"
 "./Core/Src/sd_benchmark.o"
 "./Core/Src/sd_diskio_spi.o"
 "./Core/Src/sd_functions.o"
