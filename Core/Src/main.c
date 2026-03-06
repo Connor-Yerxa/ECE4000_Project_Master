@@ -140,7 +140,6 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   int connected = SDMOUNT(&hspi1);
-
   printf("Connected: %d\n", connected);
 //  sd_test_read_raw();
 //  sd_write_file("test1.txt", "hello from STM32\r\n");
@@ -154,19 +153,10 @@ int main(void)
 
   //TLS-CRC-2025-10-30-11-29-14A.csv - 6485
   int tempsLen;
-  float * temps = readMeasurementData("readMeasurementData.csv", &tempsLen);
-  if(temps != NULL)
-  {
-	  for(int i=0;i<tempsLen;i++)
-	  {
-		  printf("%.2f\n", temps[i]);
-	  }
-	  free(temps);
-  }
-  else
-  {
-	  printf("could not read .csv :(\n");
-  }
+//  float * temps = readMeasurementData("TLS-CRC-2025-10-30-11-29-14A.csv", &tempsLen);
+  readMeasurementData("TLS-CR~1.csv", &tempsLen, 15);
+
+
 
   sd_unmount();
 
