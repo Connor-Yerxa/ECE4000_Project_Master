@@ -13,7 +13,7 @@
 
 float * readMeasurementData(char * filename, int * tempsLen);
 int WriteMetaData(FIL fil, char * metaData, UINT bytesToWrite);
-int writeMeasurements(FIL fil, char * filename, float * temps, int tempsLen, char * metaData, UINT bytesToWrite);
+int createMeasurementFile(char * filename, float temp);
 
 #ifdef __cplusplus
 	}

@@ -81,6 +81,27 @@ int _write(int file, char *ptr, int len) {
     return len;
 }
 
+int SDMOUNT(SPI_HandleTypeDef *hspi)
+{
+	uint32_t original = hspi->Init.BaudRatePrescaler;
+	HAL_SPI_DeInit(hspi);
+	hspi->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
+	HAL_Delay(10);
+	HAL_SPI_Init(hspi);
+
+	SD_CS_HIGH();  // Ensure card is deselected
+	HAL_Delay(10);
+
+	int connected = sd_mount();
+
+	HAL_SPI_DeInit(hspi);
+	hspi->Init.BaudRatePrescaler = original;
+	HAL_Delay(10);
+	HAL_SPI_Init(hspi);
+
+	return connected;
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -118,19 +139,18 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  SD_CS_HIGH();  // Ensure card is deselected
-  HAL_Delay(10);
-  int connected = sd_mount();
+  int connected = SDMOUNT(&hspi1);
+
   printf("Connected: %d\n", connected);
 //  sd_test_read_raw();
-  sd_write_file("test1.txt", "hello from STM32\r\n");
+//  sd_write_file("test1.txt", "hello from STM32\r\n");
 
 //  char buf[64];
 //  UINT br;
 //  FRESULT r = sd_read_file("test1.txt", buf, sizeof(buf), &br);
 //  printf("read_file = %d, br = %u, data = '%s'\r\n", r, br, buf);
 
-//  sd_list_files();
+  sd_list_files();
 
   //TLS-CRC-2025-10-30-11-29-14A.csv - 6485
   int tempsLen;

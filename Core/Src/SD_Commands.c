@@ -15,7 +15,7 @@ float * readMeasurementData(char * filename, int * tempsLen)
 	uint8_t linesToTemps=20;
 	for(int i=0;i<linesToTemps;i++) f_gets((TCHAR*)line, 10, &file);
 
-	while(f_gets((TCHAR*)line, 10, &file) != 0)
+	while(f_gets((TCHAR*)line, 10, &file) != 0 || *temps < 100)
 	{
 		float newTemp = atof(line);
 
@@ -53,24 +53,7 @@ int WriteMetaData(FIL fil, char * metaData, UINT bytesToWrite)
 	return 0;
 }
 
-int writeMeasurements(FIL fil, char * filename, float * temps, int tempsLen, char * metaData, UINT bytesToWrite)
+int createMeasurementFile(char * filename, float temp)
 {
-	FRESULT fout = f_open(&fil, filename, FA_WRITE | FA_OPEN_ALWAYS | FA_CREATE_ALWAYS);
-	if(fout != FR_OK) return -1;
 
-	if(WriteMetaData(fil, metaData, bytesToWrite) != 0)
-	{
-		f_close(&fil);
-		return -1;
-	}
-
-	for(int i=0;i<tempsLen;i++)
-	{
-		BYTE t[5];
-		UINT written;
-		sprintf((char*)t, "%.2f", temps[i]);
-		f_write(&fil, t, 4, &written);
-	}
-
-	f_close(&fil);
 }
