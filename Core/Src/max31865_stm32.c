@@ -5,6 +5,9 @@
 #define RTD_A  (3.90830e-3f)
 #define RTD_B  (-5.77500e-7f)
 
+float RTD_NOMINAL_OHMS = 1000.0;
+float RREF_OHMS = 4000.0;
+
 // ----------------- helpers -----------------
 static inline void cs_low(MAX31865_HandleTypeDef *dev) {
     HAL_GPIO_WritePin(dev->cs_port, dev->cs_pin, GPIO_PIN_RESET);

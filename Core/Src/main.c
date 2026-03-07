@@ -24,6 +24,7 @@
 /* USER CODE BEGIN Includes */
 #include "sd_functions.h"
 #include "max31865_stm32.h"
+#include "max31856_stm32.h"
 #include "SD_Commands.h"
 
 /* USER CODE END Includes */
