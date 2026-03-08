@@ -25,6 +25,8 @@
 #include "sd_functions.h"
 #include "max31865_stm32.h"
 #include "SD_Commands.h"
+#include <stdio.h>
+#include <string.h>
 
 /* USER CODE END Includes */
 
@@ -73,7 +75,7 @@ static void MX_USART1_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-#include <stdio.h>
+uint8_t buttons = 0;
 
 int _write(int file, char *ptr, int len) {
     for (int i = 0; i < len; i++) {
@@ -122,7 +124,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-  MAX31865_HandleTypeDef MAX_RTD;
+//  MAX31865_HandleTypeDef MAX_RTD;
 
   /* USER CODE END Init */
 
@@ -144,80 +146,92 @@ int main(void)
 
 //  SD_CS_HIGH();  // Ensure card is deselected
   HAL_Delay(30);
-//  int connected = sd_mount();
+////  int connected = sd_mount();
+//////  sd_test_read_raw();
+////  sd_write_file("test1.txt", "hello from STM32\r\n");
+////
+//////  char buf[64];
+//////  UINT br;
+//////  FRESULT r = sd_read_file("test1.txt", buf, sizeof(buf), &br);
+//////  printf("read_file = %d, br = %u, data = '%s'\r\n", r, br, buf);
+////
+//////  sd_list_files();
+////
+////  //TLS-CRC-2025-10-30-11-29-14A.csv
+////  readMeasurementData("readMeasurementData.csv", 6485);
+////  sd_unmount();
+//    GPS_Init(&huart1);
+//
+//  int connected = SDMOUNT(&hspi1);
+//  printf("Connected: %d\n", connected);
 ////  sd_test_read_raw();
-//  sd_write_file("test1.txt", "hello from STM32\r\n");
+////  sd_write_file("test1.txt", "hello from STM32\r\n");
 //
 ////  char buf[64];
 ////  UINT br;
 ////  FRESULT r = sd_read_file("test1.txt", buf, sizeof(buf), &br);
 ////  printf("read_file = %d, br = %u, data = '%s'\r\n", r, br, buf);
 //
-////  sd_list_files();
+//  sd_list_files();
 //
-//  //TLS-CRC-2025-10-30-11-29-14A.csv
-//  readMeasurementData("readMeasurementData.csv", 6485);
+//  //TLS-CRC-2025-10-30-11-29-14A.csv - 6485
+////  readMeasurementData("TLS-CRC-2025-10-30-11-29-14A.csv", &tempsLen, 15);
+//
+//  METADATA md;
+//  char * filename = "TLS-SIN";
+//  createMeasurementFile(&filename, &md);
+//
+////  float mins = 4;
+//  float mins = 0.2;
+//  float t=0;
+//  float sampleTime = 1.0/15.0;
+//  char text[10];
+//  while(t < mins * 60)
+//  {
+//	  sprintf(text, "%.3f\n", sin(t));
+//	  sd_append_file(filename, text);
+//	  t += sampleTime;
+//  }
+//
 //  sd_unmount();
-    GPS_Init(&huart1);
-
-  int connected = SDMOUNT(&hspi1);
-  printf("Connected: %d\n", connected);
-//  sd_test_read_raw();
-//  sd_write_file("test1.txt", "hello from STM32\r\n");
-
-//  char buf[64];
-//  UINT br;
-//  FRESULT r = sd_read_file("test1.txt", buf, sizeof(buf), &br);
-//  printf("read_file = %d, br = %u, data = '%s'\r\n", r, br, buf);
-
-  sd_list_files();
-
-  //TLS-CRC-2025-10-30-11-29-14A.csv - 6485
-//  readMeasurementData("TLS-CRC-2025-10-30-11-29-14A.csv", &tempsLen, 15);
-
-  METADATA md;
-  char * filename = "TLS-SIN";
-  createMeasurementFile(&filename, &md);
-
-//  float mins = 4;
-  float mins = 0.2;
-  float t=0;
-  float sampleTime = 1.0/15.0;
-  char text[10];
-  while(t < mins * 60)
-  {
-	  sprintf(text, "%.3f\n", sin(t));
-	  sd_append_file(filename, text);
-	  t += sampleTime;
-  }
-
-  sd_unmount();
 
 //  GPS_Data_t gps = {0};
 //  GPS_oneshot(&gps);
 //  printGPSData(&gps);
 
-  printf("Running RTD Test...\n");
-  MAX31865_Init(&MAX_RTD, &hspi2, RTD_CS_GPIO_Port, RTD_CS_Pin, MAX31865_WIRES_3, 0);
+//  printf("Running RTD Test...\n");
+//  MAX31865_Init(&MAX_RTD, &hspi2, RTD_CS_GPIO_Port, RTD_CS_Pin, MAX31865_WIRES_3, 0);
+//
+//  uint16_t raw15;
+//  MAX31865_ReadRTDRaw(&MAX_RTD, &raw15);
+//  uint8_t buf[8];
+//  MAX31865_ReadN(&MAX_RTD, 0, buf, 8);
+//
+//
+//
+//  for(int i=0;i<8;i++)
+//  {
+//	  printf("%02X  ", buf[i]);
+//  }
+//  printf("\n");
 
-  uint16_t raw15;
-  MAX31865_ReadRTDRaw(&MAX_RTD, &raw15);
-  uint8_t buf[8];
-  MAX31865_ReadN(&MAX_RTD, 0, buf, 8);
 
 
 
-  for(int i=0;i<8;i++)
-  {
-	  printf("%02X  ", buf[i]);
-  }
-  printf("\n");
+
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	 // read_buttons();
+	  uint8_t i=buttons;
+	  printf("b: %x \n", buttons);
+	  HAL_Delay(30);
+	  //buttons = 0;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -461,7 +475,7 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : B2_Pin B3_Pin B4_Pin */
   GPIO_InitStruct.Pin = B2_Pin|B3_Pin|B4_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
@@ -497,21 +511,34 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin : B5_Pin */
   GPIO_InitStruct.Pin = B5_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B5_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : B6_Pin */
   GPIO_InitStruct.Pin = B6_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B6_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI2_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI4_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI4_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
@@ -519,7 +546,33 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+  if(GPIO_Pin == B1_Pin)
+  {
+	  buttons |= 0x01;
+  }
+  if(GPIO_Pin == B2_Pin)
+  {
+	  buttons |= 0x02;
+  }
+  if(GPIO_Pin == B3_Pin)
+  {
+	  buttons |= 0x04;
+  }
+  if(GPIO_Pin == B4_Pin)
+  {
+	  buttons |= 0x08;
+  }
+  if(GPIO_Pin == B5_Pin)
+  {
+	  buttons |= 0x10;
+  }
+  if(GPIO_Pin == B6_Pin)
+  {
+	  buttons |= 0x20;
+  }
+}
 /* USER CODE END 4 */
 
 /**
