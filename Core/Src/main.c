@@ -24,9 +24,11 @@
 /* USER CODE BEGIN Includes */
 #include "sd_functions.h"
 #include "max31865_stm32.h"
+#include "max31856_stm32.h"
 #include "SD_Commands.h"
 #include <stdio.h>
 #include <string.h>
+#include "MAX_Commands.h"
 
 /* USER CODE END Includes */
 
@@ -125,6 +127,7 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 //  MAX31865_HandleTypeDef MAX_RTD;
+//  MAX31865_HandleTypeDef MAX_RTD;
 
   /* USER CODE END Init */
 
@@ -194,6 +197,40 @@ int main(void)
 //  }
 //
 //  sd_unmount();
+    GPS_Init(&huart1);
+
+//  int connected = SDMOUNT(&hspi1);
+//  printf("Connected: %d\n", connected);
+////  sd_test_read_raw();
+////  sd_write_file("test1.txt", "hello from STM32\r\n");
+//
+////  char buf[64];
+////  UINT br;
+////  FRESULT r = sd_read_file("test1.txt", buf, sizeof(buf), &br);
+////  printf("read_file = %d, br = %u, data = '%s'\r\n", r, br, buf);
+//
+//  sd_list_files();
+
+  //TLS-CRC-2025-10-30-11-29-14A.csv - 6485
+//  readMeasurementData("TLS-CRC-2025-10-30-11-29-14A.csv", &tempsLen, 15);
+
+//  METADATA md;
+//  char * filename = "TLS-SIN";
+//  createMeasurementFile(&filename, &md);
+//
+////  float mins = 4;
+//  float mins = 0.2;
+//  float t=0;
+//  float sampleTime = 1.0/15.0;
+//  char text[10];
+//  while(t < mins * 60)
+//  {
+//	  sprintf(text, "%.3f\n", sin(t));
+//	  sd_append_file(filename, text);
+//	  t += sampleTime;
+//  }
+//
+//  sd_unmount();
 
 //  GPS_Data_t gps = {0};
 //  GPS_oneshot(&gps);
@@ -221,6 +258,25 @@ int main(void)
 
 
 
+//  printf("Running RTD Test...\n");
+//  MAX31865_Init(&MAX_RTD, &hspi2, RTD_CS_GPIO_Port, RTD_CS_Pin, MAX31865_WIRES_3, 0);
+//
+//  uint16_t raw15;
+//  MAX31865_ReadRTDRaw(&MAX_RTD, &raw15);
+//  uint8_t buf[8];
+//  MAX31865_ReadN(&MAX_RTD, 0, buf, 8);
+//
+//
+//
+//  for(int i=0;i<8;i++)
+//  {
+//	  printf("%02X  ", buf[i]);
+//  }
+//  printf("\n");
+
+
+   MAX_INITs(&hspi2);
+   HAL_Delay(10);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -233,6 +289,9 @@ int main(void)
 	  HAL_Delay(30);
 	  //buttons = 0;
     /* USER CODE END WHILE */
+	  float temp=readTemp();
+	  printf("Temp: %2.3f\n", temp);
+	  HAL_Delay(500);
 
     /* USER CODE BEGIN 3 */
   }
