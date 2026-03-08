@@ -284,14 +284,14 @@ int main(void)
   while (1)
   {
 	 // read_buttons();
-	  uint8_t i=buttons;
-	  printf("b: %x \n", buttons);
-	  HAL_Delay(30);
-	  //buttons = 0;
-    /* USER CODE END WHILE */
+	  printf("b: %02x \n", buttons);
+//	  HAL_Delay(30);
+	  buttons = 0;
+
 	  float temp=readTemp();
 	  printf("Temp: %2.3f\n", temp);
 	  HAL_Delay(500);
+    /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
   }
