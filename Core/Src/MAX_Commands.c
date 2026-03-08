@@ -8,6 +8,7 @@
 #include "max31856_stm32.h"
 #include "max31865_stm32.h"
 #include "main.h"
+#include <stdio.h>
 
 const SPI_HandleTypeDef * hspi_blank;
 
@@ -34,6 +35,17 @@ void MAX_INITs(SPI_HandleTypeDef * hspi)
 	{
 		max31856_set_cold_junction_enable(&THERM_MAX, CR0_CJ_ENABLED);
 	}
+
+	uint8_t tc_raw[3];
+	max31856_read_nregisters(&THERM_MAX, MAX31856_LTCBH, tc_raw, 3);
+
+	uint8_t sr = max31856_read_register(&THERM_MAX, MAX31856_SR);
+
+	printf("TC raw: %02X %02X %02X, CJ: %.2f, SR: 0x%02X\n",
+	       tc_raw[0], tc_raw[1], tc_raw[2],
+	       max31856_read_CJ_temp(&THERM_MAX),
+	       sr);
+
 }
 
 float readTemp()
@@ -53,6 +65,11 @@ float readTemp()
 		max31856_write_nregisters(&THERM_MAX, MAX31856_CJTH, raw, 2);
 	}
 
+	float cjTemp = max31856_read_CJ_temp(&THERM_MAX);
 	float temp = max31856_read_TC_temp(&THERM_MAX);
+
+	temp = cjTemp - temp;
+	temp += cjTemp;
+	printf("cj temp: %.2f\n", max31856_read_CJ_temp(&THERM_MAX));
 	return temp;
 }

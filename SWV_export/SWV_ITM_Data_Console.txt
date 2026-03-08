@@ -1,3 +1,14 @@
 SWV ITM Data Console - ITM Port: 0
-Running RTD Test...
-44	00	00	FF	FF	80	00	02	
+TC raw: 00 00 00, CJ: 0.00, SR: 0x00
+cj temp: 0.00
+Temp: 0.000
+cj temp: 25.42
+Temp: 26.047
+cj temp: 25.47
+Temp: 25.961
+cj temp: 25.53
+Temp: 26.055
+cj temp: 25.45
+Temp: 21.367
+cj temp: 25.50
+Temp: 17.000

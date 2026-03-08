@@ -32,7 +32,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FatFs/src/ff.h ../FATFS/Target/user_diskio.h \
  ../Core/Inc/sd_functions.h ../Core/Inc/max31865_stm32.h \
  ../Core/Inc/max31856_stm32.h ../Core/Inc/SD_Commands.h \
- ../Core/Inc/sd_functions.h
+ ../Core/Inc/sd_functions.h ../Core/Inc/MAX_Commands.h \
+ ../Core/Inc/max31856_stm32.h ../Core/Inc/max31865_stm32.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:
 ../Core/Inc/stm32f1xx_hal_conf.h:
@@ -74,3 +75,6 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/max31856_stm32.h:
 ../Core/Inc/SD_Commands.h:
 ../Core/Inc/sd_functions.h:
+../Core/Inc/MAX_Commands.h:
+../Core/Inc/max31856_stm32.h:
+../Core/Inc/max31865_stm32.h:
