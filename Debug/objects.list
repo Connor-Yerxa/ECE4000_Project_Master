@@ -1,5 +1,6 @@
 "./Core/Src/GPS.o"
 "./Core/Src/MAX_Commands.o"
+"./Core/Src/Menus.o"
 "./Core/Src/SD_Commands.o"
 "./Core/Src/main.o"
 "./Core/Src/max31856_stm32.o"
