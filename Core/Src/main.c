@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "MAX_Commands.h"
+#include "Menus.h"
 
 /* USER CODE END Includes */
 
@@ -283,6 +284,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  menus();
 	 // read_buttons();
 	  printf("b: %02x \n", buttons);
 //	  HAL_Delay(30);
@@ -294,6 +296,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
   }
   /* USER CODE END 3 */
 }
