@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 #include "Menus.h"
-//#include "read_Buttons.h" //not a thing anymore
+#include "read_Buttons.h"
 #include "selectNumber.h"
 #include "displayText.h"
 
@@ -60,14 +60,14 @@ void menus() {
 
             case 110: // Time select
                 displayText(screen, 0);
-                number = numberSelect('I', 4);
+ //               number = numberSelect('I', 4);
                 deltaTime = number;
                 screen = both ? 111 : 120;
                 break;
 
             case 111: // Temperature select (for both)
                 displayText(screen, 0);
-                number = numberSelect('E', 3);
+ //               number = numberSelect('E', 3);
                 deltaTemp = number;
                 screen = 120;
                 break;
@@ -135,19 +135,19 @@ void menus() {
 
             case 310: // Brightness
                 displayText(screen, 0);
-                brightness = numberSelect('B', 1);
+ //               brightness = numberSelect('B', 1);
                 screen = 300;
                 break;
 
             case 320: // Default temp
                 displayText(screen, 0);
-                deltaTempDefault = numberSelect('E', 3);
+//                deltaTempDefault = numberSelect('E', 3);
                 screen = 300;
                 break;
 
             case 330: // Default duration
                 displayText(screen, 0);
-                deltaTimeDefault = numberSelect('I', 4);
+//                deltaTimeDefault = numberSelect('I', 4);
                 screen = 300;
                 break;
 
