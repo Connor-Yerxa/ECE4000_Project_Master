@@ -1,0 +1,165 @@
+/*
+ * Menus.c
+ *
+ *  Created on: Mar 10, 2026
+ *      Author: nateh
+ */
+
+#include <stdio.h>
+#include "Menus.h"
+#include "read_Buttons.h"
+#include "selectNumber.h"
+#include "displayText.h"
+
+// variable setup
+int screen = 99; // main menu
+int button = 0;
+int number = 0;
+double deltaTemp = 100;
+double deltaTime = 180;
+double deltaTempDefault = 100;
+double deltaTimeDefault = 180;
+int brightness = 10;
+int both = 0;
+
+void menus() {
+    while(1) {
+        switch(screen) {
+
+            // ---------- MAIN MENU ----------
+            case 99:
+                displayText(screen, 0);
+                button = read_buttons();
+                switch(button) {
+                    case 1: screen = 100; break; // Testing
+                    case 2: screen = 200; break; // Calibration
+                    case 3: screen = 300; break; // Settings
+                    case 4: screen = 400; break; // Data
+                    default: screen = 99; break;
+                }
+                break;
+
+            // ---------- TEST MENU ----------
+            case 100:
+                both = 0;
+                displayText(screen, 0);
+                button = read_buttons();
+                switch(button) {
+                    case 1: // Default
+                        deltaTemp = deltaTempDefault;
+                        deltaTime = deltaTimeDefault;
+                        screen = 120;
+                        break;
+                    case 2: screen = 110; break; // Temp select
+                    case 3: both = 1; screen = 110; break; // Both
+                    case 4: screen = 110; break; // Time select
+                    case 6: screen = 99; break; // Back to main
+                    default: break;
+                }
+                break;
+
+            case 110: // Time select
+                displayText(screen, 0);
+                number = numberSelect('I', 4);
+                deltaTime = number;
+                screen = both ? 111 : 120;
+                break;
+
+            case 111: // Temperature select (for both)
+                displayText(screen, 0);
+                number = numberSelect('E', 3);
+                deltaTemp = number;
+                screen = 120;
+                break;
+
+            case 120: // Test running
+                displayText(screen, 0);
+                runTest(deltaTemp, deltaTime);
+                screen = 130;
+                break;
+
+            case 130: // Test finished
+                displayText(screen, 0);
+                button = read_buttons();
+                if (button == 1) saveTest();
+                else if (button == 2) deleteTest();
+                screen = 99; // Return to main menu
+                break;
+
+            // ---------- CALIBRATION MENU----------
+            case 200:
+                displayText(screen, 0);
+                button = read_buttons();
+                switch(button) {
+                    case 1: screen = 210; break;
+                    case 2: /* set default calibration */ break;
+                    case 6: screen = 99; break;
+                }
+                break;
+
+            case 210: // Material select
+                displayText(screen, 0);
+                button = read_buttons();
+                switch(button) {
+                    case 1: /* Material A calibration */ break;
+                    case 2: /* Material B calibration */ break;
+                    case 6: screen = 200; break;
+                }
+                break;
+
+            case 220: // Cancel (future)
+                displayText(screen, 0);
+                if (read_buttons() == 6) screen = 210;
+                break;
+
+            case 230: // Return
+                displayText(screen, 0);
+                if (read_buttons()) screen = 200;
+                break;
+
+            // ---------- SETTINGS ----------
+            case 300:
+                displayText(screen, 0);
+                button = read_buttons();
+                switch(button) {
+                    case 1: screen = 310; break;
+                    case 2: screen = 320; break;
+                    case 3: screen = 330; break;
+                    case 6: screen = 99; break;
+                }
+                break;
+
+            case 310: // Brightness
+                displayText(screen, 0);
+                brightness = numberSelect('B', 1);
+                screen = 300;
+                break;
+
+            case 320: // Default temp
+                displayText(screen, 0);
+                deltaTempDefault = numberSelect('E', 3);
+                screen = 300;
+                break;
+
+            case 330: // Default duration
+                displayText(screen, 0);
+                deltaTimeDefault = numberSelect('I', 4);
+                screen = 300;
+                break;
+
+            // ---------- OTHER ----------
+            case 400:
+                displayText(screen, 0);
+                // Future development
+                button = read_buttons();
+                break;
+
+
+            default:
+                printf("Error: screen out of range\n");
+                displayText(999, 0);
+                screen = 99;
+                break;
+        }
+    }
+}
