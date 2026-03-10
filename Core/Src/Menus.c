@@ -74,15 +74,19 @@ void menus() {
 
             case 120: // Test running
                 displayText(screen, 0);
-                runTest(deltaTemp, deltaTime);
+      //          runTest(deltaTemp, deltaTime);
                 screen = 130;
                 break;
 
             case 130: // Test finished
                 displayText(screen, 0);
                 button = read_buttons();
-                if (button == 1) saveTest();
-                else if (button == 2) deleteTest();
+                if (button == 1){
+//          		saveTest();
+                }
+                else if (button == 2){
+//             		deleteTest();
+                }
                 screen = 99; // Return to main menu
                 break;
 

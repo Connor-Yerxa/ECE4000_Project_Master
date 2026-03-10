@@ -8,6 +8,6 @@
 #ifndef INC_DISPLAYTEXT_H_
 #define INC_DISPLAYTEXT_H_
 
-
+void displayText(int screenID, int option);
 
 #endif /* INC_DISPLAYTEXT_H_ */
