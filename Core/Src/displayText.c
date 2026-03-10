@@ -7,10 +7,15 @@
 
 
 #include <stdio.h>
+//#include <SPI.h>
+//#include <Adafruit_GFX.h>
+//#include <adafruit_ILI9488.h>
+
 
 // Example displayText function
 void displayText(int screenID, int option) {
 
     printf("Displaying screen %d with option %d\n", screenID, option); //TEST
+    clearScreen(0xFFFF);
 
 }
