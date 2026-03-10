@@ -61,14 +61,14 @@ void menus() {
 
             case 110: // Time select
                 displayText(screen, 0);
- //               number = selectNumber('I', 4);
+                number = selectNumber('I', 0);
                 deltaTime = number;
                 screen = both ? 111 : 120;
                 break;
 
             case 111: // Temperature select (for both)
                 displayText(screen, 0);
- //               number = selectNumber('E', 3);
+                number = selectNumber('E', 0);
                 deltaTemp = number;
                 screen = 120;
                 break;
@@ -142,20 +142,20 @@ void menus() {
 
             case 320: // Default temperature
                 displayText(screen, 0);
-//                deltaTempDefault = selectNumber('E', 3);
+                deltaTempDefault = selectNumber('E', 3);
                 screen = 300;
                 break;
 
             case 330: // Default duration
                 displayText(screen, 0);
-//                deltaTimeDefault = selectNumber('I', 4);
+                deltaTimeDefault = selectNumber('I', 4);
                 screen = 300;
                 break;
 
             // ---------- OTHER ----------
             case 400:
                 displayText(screen, 0);
-                // Future development
+                // Future development?
                 button = read_buttons();
                 break;
 
