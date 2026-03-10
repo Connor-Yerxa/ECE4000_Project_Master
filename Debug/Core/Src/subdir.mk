@@ -18,6 +18,7 @@ C_SRCS += \
 ../Core/Src/sd_diskio_spi.c \
 ../Core/Src/sd_functions.c \
 ../Core/Src/sd_spi.c \
+../Core/Src/selectNumber.c \
 ../Core/Src/stm32f1xx_hal_msp.c \
 ../Core/Src/stm32f1xx_it.c \
 ../Core/Src/syscalls.c \
@@ -38,6 +39,7 @@ OBJS += \
 ./Core/Src/sd_diskio_spi.o \
 ./Core/Src/sd_functions.o \
 ./Core/Src/sd_spi.o \
+./Core/Src/selectNumber.o \
 ./Core/Src/stm32f1xx_hal_msp.o \
 ./Core/Src/stm32f1xx_it.o \
 ./Core/Src/syscalls.o \
@@ -58,6 +60,7 @@ C_DEPS += \
 ./Core/Src/sd_diskio_spi.d \
 ./Core/Src/sd_functions.d \
 ./Core/Src/sd_spi.d \
+./Core/Src/selectNumber.d \
 ./Core/Src/stm32f1xx_hal_msp.d \
 ./Core/Src/stm32f1xx_it.d \
 ./Core/Src/syscalls.d \
@@ -72,7 +75,7 @@ Core/Src/%.o Core/Src/%.su Core/Src/%.cyclo: ../Core/Src/%.c Core/Src/subdir.mk
 clean: clean-Core-2f-Src
 
 clean-Core-2f-Src:
-	-$(RM) ./Core/Src/GPS.cyclo ./Core/Src/GPS.d ./Core/Src/GPS.o ./Core/Src/GPS.su ./Core/Src/MAX_Commands.cyclo ./Core/Src/MAX_Commands.d ./Core/Src/MAX_Commands.o ./Core/Src/MAX_Commands.su ./Core/Src/Menus.cyclo ./Core/Src/Menus.d ./Core/Src/Menus.o ./Core/Src/Menus.su ./Core/Src/SD_Commands.cyclo ./Core/Src/SD_Commands.d ./Core/Src/SD_Commands.o ./Core/Src/SD_Commands.su ./Core/Src/displayText.cyclo ./Core/Src/displayText.d ./Core/Src/displayText.o ./Core/Src/displayText.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/max31856_stm32.cyclo ./Core/Src/max31856_stm32.d ./Core/Src/max31856_stm32.o ./Core/Src/max31856_stm32.su ./Core/Src/max31865_stm32.cyclo ./Core/Src/max31865_stm32.d ./Core/Src/max31865_stm32.o ./Core/Src/max31865_stm32.su ./Core/Src/read_buttons.cyclo ./Core/Src/read_buttons.d ./Core/Src/read_buttons.o ./Core/Src/read_buttons.su ./Core/Src/sd_benchmark.cyclo ./Core/Src/sd_benchmark.d ./Core/Src/sd_benchmark.o ./Core/Src/sd_benchmark.su ./Core/Src/sd_diskio_spi.cyclo ./Core/Src/sd_diskio_spi.d ./Core/Src/sd_diskio_spi.o ./Core/Src/sd_diskio_spi.su ./Core/Src/sd_functions.cyclo ./Core/Src/sd_functions.d ./Core/Src/sd_functions.o ./Core/Src/sd_functions.su ./Core/Src/sd_spi.cyclo ./Core/Src/sd_spi.d ./Core/Src/sd_spi.o ./Core/Src/sd_spi.su ./Core/Src/stm32f1xx_hal_msp.cyclo ./Core/Src/stm32f1xx_hal_msp.d ./Core/Src/stm32f1xx_hal_msp.o ./Core/Src/stm32f1xx_hal_msp.su ./Core/Src/stm32f1xx_it.cyclo ./Core/Src/stm32f1xx_it.d ./Core/Src/stm32f1xx_it.o ./Core/Src/stm32f1xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f1xx.cyclo ./Core/Src/system_stm32f1xx.d ./Core/Src/system_stm32f1xx.o ./Core/Src/system_stm32f1xx.su
+	-$(RM) ./Core/Src/GPS.cyclo ./Core/Src/GPS.d ./Core/Src/GPS.o ./Core/Src/GPS.su ./Core/Src/MAX_Commands.cyclo ./Core/Src/MAX_Commands.d ./Core/Src/MAX_Commands.o ./Core/Src/MAX_Commands.su ./Core/Src/Menus.cyclo ./Core/Src/Menus.d ./Core/Src/Menus.o ./Core/Src/Menus.su ./Core/Src/SD_Commands.cyclo ./Core/Src/SD_Commands.d ./Core/Src/SD_Commands.o ./Core/Src/SD_Commands.su ./Core/Src/displayText.cyclo ./Core/Src/displayText.d ./Core/Src/displayText.o ./Core/Src/displayText.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/max31856_stm32.cyclo ./Core/Src/max31856_stm32.d ./Core/Src/max31856_stm32.o ./Core/Src/max31856_stm32.su ./Core/Src/max31865_stm32.cyclo ./Core/Src/max31865_stm32.d ./Core/Src/max31865_stm32.o ./Core/Src/max31865_stm32.su ./Core/Src/read_buttons.cyclo ./Core/Src/read_buttons.d ./Core/Src/read_buttons.o ./Core/Src/read_buttons.su ./Core/Src/sd_benchmark.cyclo ./Core/Src/sd_benchmark.d ./Core/Src/sd_benchmark.o ./Core/Src/sd_benchmark.su ./Core/Src/sd_diskio_spi.cyclo ./Core/Src/sd_diskio_spi.d ./Core/Src/sd_diskio_spi.o ./Core/Src/sd_diskio_spi.su ./Core/Src/sd_functions.cyclo ./Core/Src/sd_functions.d ./Core/Src/sd_functions.o ./Core/Src/sd_functions.su ./Core/Src/sd_spi.cyclo ./Core/Src/sd_spi.d ./Core/Src/sd_spi.o ./Core/Src/sd_spi.su ./Core/Src/selectNumber.cyclo ./Core/Src/selectNumber.d ./Core/Src/selectNumber.o ./Core/Src/selectNumber.su ./Core/Src/stm32f1xx_hal_msp.cyclo ./Core/Src/stm32f1xx_hal_msp.d ./Core/Src/stm32f1xx_hal_msp.o ./Core/Src/stm32f1xx_hal_msp.su ./Core/Src/stm32f1xx_it.cyclo ./Core/Src/stm32f1xx_it.d ./Core/Src/stm32f1xx_it.o ./Core/Src/stm32f1xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f1xx.cyclo ./Core/Src/system_stm32f1xx.d ./Core/Src/system_stm32f1xx.o ./Core/Src/system_stm32f1xx.su
 
 .PHONY: clean-Core-2f-Src
 

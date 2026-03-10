@@ -13,9 +13,11 @@
 
 
 // Example displayText function
+
+// OPTION 0 = SCREEN, OPTION 1 = NUMBER
 void displayText(int screenID, int option) {
 
     printf("Displaying screen %d with option %d\n", screenID, option); //TEST
-    clearScreen(0xFFFF);
+ //   clearScreen(0xFFFF);
 
 }
