@@ -264,8 +264,8 @@ typedef enum {
 #define SET_DISPL_SPI_BAUDRATE			DISPL_SPI->CR1 &= (uint16_t) ~SPI_CR1_BR_Msk; \
 										DISPL_SPI->CR1 |= DISPL_PRESCALER
 
-//#define SET_TOUCH_SPI_BAUDRATE			TOUCH_SPI->CR1 &= (uint16_t) ~SPI_CR1_BR_Msk; \
-//										TOUCH_SPI->CR1 |= TOUCH_PRESCALER
+#define SET_TOUCH_SPI_BAUDRATE			TOUCH_SPI->CR1 &= (uint16_t) ~SPI_CR1_BR_Msk; \
+										TOUCH_SPI->CR1 |= TOUCH_PRESCALER
 /**********************************************************/
 
 #define _swap_int16_t(a, b)  { int16_t t = a; a = b; b = t; }

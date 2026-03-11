@@ -27,6 +27,7 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 00000029  00000000  00000000  000091e8  2**0
                   CONTENTS, READONLY
+<<<<<<< HEAD
  12 .debug_info   0000f61f  00000000  00000000  00009211  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  13 .debug_abbrev 00002581  00000000  00000000  00018830  2**0
@@ -46,6 +47,27 @@ Idx Name          Size      VMA       LMA       File off  Algn
  20 .debug_frame  00005538  00000000  00000000  000c1ad0  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  21 .debug_line_str 0000006d  00000000  00000000  000c7008  2**0
+=======
+ 12 .debug_info   0000f5b4  00000000  00000000  00009211  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 13 .debug_abbrev 0000257d  00000000  00000000  000187c5  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 14 .debug_aranges 00001010  00000000  00000000  0001ad48  2**3
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 15 .debug_macro  00002f6c  00000000  00000000  0001bd58  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 16 .debug_line   00011d96  00000000  00000000  0001ecc4  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 17 .debug_str    000902c8  00000000  00000000  00030a5a  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 18 .comment      00000043  00000000  00000000  000c0d22  2**0
+                  CONTENTS, READONLY
+ 19 .debug_rnglists 00000c7f  00000000  00000000  000c0d65  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 20 .debug_frame  000054ec  00000000  00000000  000c19e4  2**2
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 21 .debug_line_str 0000006d  00000000  00000000  000c6ed0  2**0
+>>>>>>> 928725bc776280fc3b4c89092f9a61b3862bd586
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -3491,6 +3513,7 @@ void SystemInit (void)
  80018d6:	4770      	bx	lr
 
 080018d8 <Displ_Select>:
+<<<<<<< HEAD
 
 /******************************************
  * @brief	enable display, disabling touch
@@ -4981,6 +5004,1444 @@ Infinite_Loop:
  80021e0:	e7fe      	b.n	80021e0 <ADC1_2_IRQHandler>
 	...
 
+=======
+
+/******************************************
+ * @brief	enable display, disabling touch
+ * 			device selected if CS low
+ ******************************************/
+void Displ_Select(void) {
+ 80018d8:	b580      	push	{r7, lr}
+ 80018da:	af00      	add	r7, sp, #0
+//	if (TOUCH_SPI==DISPL_SPI){														// if SPI port shared (display <-> touch)
+	if (1){
+		if (HAL_GPIO_ReadPin(DISPL_CS_GPIO_Port, DISPL_CS_Pin)) {					// if display not yet selected
+ 80018dc:	2108      	movs	r1, #8
+ 80018de:	480d      	ldr	r0, [pc, #52]	@ (8001914 <Displ_Select+0x3c>)
+ 80018e0:	f001 f8f8 	bl	8002ad4 <HAL_GPIO_ReadPin>
+ 80018e4:	4603      	mov	r3, r0
+ 80018e6:	2b00      	cmp	r3, #0
+ 80018e8:	d011      	beq.n	800190e <Displ_Select+0x36>
+//			HAL_GPIO_WritePin(TOUCH_CS_GPIO_Port, TOUCH_CS_Pin, GPIO_PIN_SET); 		// unselect touch
+			SET_DISPL_SPI_BAUDRATE;				   									//change SPI port speed as per display needs
+ 80018ea:	4b0b      	ldr	r3, [pc, #44]	@ (8001918 <Displ_Select+0x40>)
+ 80018ec:	681a      	ldr	r2, [r3, #0]
+ 80018ee:	490a      	ldr	r1, [pc, #40]	@ (8001918 <Displ_Select+0x40>)
+ 80018f0:	f64f 73c7 	movw	r3, #65479	@ 0xffc7
+ 80018f4:	4013      	ands	r3, r2
+ 80018f6:	600b      	str	r3, [r1, #0]
+ 80018f8:	4b07      	ldr	r3, [pc, #28]	@ (8001918 <Displ_Select+0x40>)
+ 80018fa:	681b      	ldr	r3, [r3, #0]
+ 80018fc:	4a06      	ldr	r2, [pc, #24]	@ (8001918 <Displ_Select+0x40>)
+ 80018fe:	f043 0308 	orr.w	r3, r3, #8
+ 8001902:	6013      	str	r3, [r2, #0]
+			HAL_GPIO_WritePin(DISPL_CS_GPIO_Port, DISPL_CS_Pin, GPIO_PIN_RESET);	// select display
+ 8001904:	2200      	movs	r2, #0
+ 8001906:	2108      	movs	r1, #8
+ 8001908:	4802      	ldr	r0, [pc, #8]	@ (8001914 <Displ_Select+0x3c>)
+ 800190a:	f001 f8fa 	bl	8002b02 <HAL_GPIO_WritePin>
+		}
+	}
+}
+ 800190e:	bf00      	nop
+ 8001910:	bd80      	pop	{r7, pc}
+ 8001912:	bf00      	nop
+ 8001914:	40011000 	.word	0x40011000
+ 8001918:	40013000 	.word	0x40013000
+
+0800191c <Displ_Transmit>:
+ * @PARAM	DC_Status 	indicates if sending command or data
+ * 			data		buffer data to send
+ * 			dataSize	number of bytes in "data" to be sent
+ * 			isTouchGFXBuffer 1 only when called by touchgfxDisplayDriverTransmitBlock (for byte endian conversion). All other cases 0
+ **************************/
+void Displ_Transmit(GPIO_PinState DC_Status, uint8_t* data, uint16_t dataSize, uint8_t isTouchGFXBuffer ){
+ 800191c:	b580      	push	{r7, lr}
+ 800191e:	b086      	sub	sp, #24
+ 8001920:	af00      	add	r7, sp, #0
+ 8001922:	6039      	str	r1, [r7, #0]
+ 8001924:	4611      	mov	r1, r2
+ 8001926:	461a      	mov	r2, r3
+ 8001928:	4603      	mov	r3, r0
+ 800192a:	71fb      	strb	r3, [r7, #7]
+ 800192c:	460b      	mov	r3, r1
+ 800192e:	80bb      	strh	r3, [r7, #4]
+ 8001930:	4613      	mov	r3, r2
+ 8001932:	71bb      	strb	r3, [r7, #6]
+
+	while (!Displ_SpiAvailable) {};  // waiting for a free SPI port. Flag is set to 1 by transmission-complete interrupt callback
+ 8001934:	bf00      	nop
+ 8001936:	4b33      	ldr	r3, [pc, #204]	@ (8001a04 <Displ_Transmit+0xe8>)
+ 8001938:	781b      	ldrb	r3, [r3, #0]
+ 800193a:	b2db      	uxtb	r3, r3
+ 800193c:	2b00      	cmp	r3, #0
+ 800193e:	d0fa      	beq.n	8001936 <Displ_Transmit+0x1a>
+
+	Displ_Select();
+ 8001940:	f7ff ffca 	bl	80018d8 <Displ_Select>
+	HAL_GPIO_WritePin(DISPL_DC_GPIO_Port, DISPL_DC_Pin, DC_Status);
+ 8001944:	79fb      	ldrb	r3, [r7, #7]
+ 8001946:	461a      	mov	r2, r3
+ 8001948:	2102      	movs	r1, #2
+ 800194a:	482f      	ldr	r0, [pc, #188]	@ (8001a08 <Displ_Transmit+0xec>)
+ 800194c:	f001 f8d9 	bl	8002b02 <HAL_GPIO_WritePin>
+
+	if (isTouchGFXBuffer){
+ 8001950:	79bb      	ldrb	r3, [r7, #6]
+ 8001952:	2b00      	cmp	r3, #0
+ 8001954:	d045      	beq.n	80019e2 <Displ_Transmit+0xc6>
+			*data32=__REV16(*data32);
+		}
+#else
+//if display color format is RGB666: convert RGB565 received by TouchGFX and swap bytes
+
+		uint8_t *buf8Pos=dispBuffer1; 							//using a local pointer
+ 8001956:	4b2d      	ldr	r3, [pc, #180]	@ (8001a0c <Displ_Transmit+0xf0>)
+ 8001958:	617b      	str	r3, [r7, #20]
+
+		uint16_t *limit=(uint16_t*)(data+dataSize);
+ 800195a:	88bb      	ldrh	r3, [r7, #4]
+ 800195c:	683a      	ldr	r2, [r7, #0]
+ 800195e:	4413      	add	r3, r2
+ 8001960:	60fb      	str	r3, [r7, #12]
+		for (uint16_t *data16=(uint16_t*)data; (data16<limit) & ((buf8Pos-dispBuffer1)<(SIZEBUF-3)); data16++) {
+ 8001962:	683b      	ldr	r3, [r7, #0]
+ 8001964:	613b      	str	r3, [r7, #16]
+ 8001966:	e021      	b.n	80019ac <Displ_Transmit+0x90>
+
+			*(buf8Pos++)=((*data16 & 0xF800)>>8);  // R color
+ 8001968:	693b      	ldr	r3, [r7, #16]
+ 800196a:	881b      	ldrh	r3, [r3, #0]
+ 800196c:	121b      	asrs	r3, r3, #8
+ 800196e:	b2da      	uxtb	r2, r3
+ 8001970:	697b      	ldr	r3, [r7, #20]
+ 8001972:	1c59      	adds	r1, r3, #1
+ 8001974:	6179      	str	r1, [r7, #20]
+ 8001976:	f022 0207 	bic.w	r2, r2, #7
+ 800197a:	b2d2      	uxtb	r2, r2
+ 800197c:	701a      	strb	r2, [r3, #0]
+			*(buf8Pos++)=((*data16 & 0x07E0)>>3);  // G color
+ 800197e:	693b      	ldr	r3, [r7, #16]
+ 8001980:	881b      	ldrh	r3, [r3, #0]
+ 8001982:	10db      	asrs	r3, r3, #3
+ 8001984:	b2da      	uxtb	r2, r3
+ 8001986:	697b      	ldr	r3, [r7, #20]
+ 8001988:	1c59      	adds	r1, r3, #1
+ 800198a:	6179      	str	r1, [r7, #20]
+ 800198c:	f022 0203 	bic.w	r2, r2, #3
+ 8001990:	b2d2      	uxtb	r2, r2
+ 8001992:	701a      	strb	r2, [r3, #0]
+			*(buf8Pos++)=((*data16 & 0x001F)<<3);  // B color
+ 8001994:	693b      	ldr	r3, [r7, #16]
+ 8001996:	881b      	ldrh	r3, [r3, #0]
+ 8001998:	b2da      	uxtb	r2, r3
+ 800199a:	697b      	ldr	r3, [r7, #20]
+ 800199c:	1c59      	adds	r1, r3, #1
+ 800199e:	6179      	str	r1, [r7, #20]
+ 80019a0:	00d2      	lsls	r2, r2, #3
+ 80019a2:	b2d2      	uxtb	r2, r2
+ 80019a4:	701a      	strb	r2, [r3, #0]
+		for (uint16_t *data16=(uint16_t*)data; (data16<limit) & ((buf8Pos-dispBuffer1)<(SIZEBUF-3)); data16++) {
+ 80019a6:	693b      	ldr	r3, [r7, #16]
+ 80019a8:	3302      	adds	r3, #2
+ 80019aa:	613b      	str	r3, [r7, #16]
+ 80019ac:	693a      	ldr	r2, [r7, #16]
+ 80019ae:	68fb      	ldr	r3, [r7, #12]
+ 80019b0:	429a      	cmp	r2, r3
+ 80019b2:	bf34      	ite	cc
+ 80019b4:	2301      	movcc	r3, #1
+ 80019b6:	2300      	movcs	r3, #0
+ 80019b8:	b2da      	uxtb	r2, r3
+ 80019ba:	697b      	ldr	r3, [r7, #20]
+ 80019bc:	4913      	ldr	r1, [pc, #76]	@ (8001a0c <Displ_Transmit+0xf0>)
+ 80019be:	1a5b      	subs	r3, r3, r1
+ 80019c0:	f240 71fc 	movw	r1, #2044	@ 0x7fc
+ 80019c4:	428b      	cmp	r3, r1
+ 80019c6:	bfd4      	ite	le
+ 80019c8:	2301      	movle	r3, #1
+ 80019ca:	2300      	movgt	r3, #0
+ 80019cc:	b2db      	uxtb	r3, r3
+ 80019ce:	4013      	ands	r3, r2
+ 80019d0:	b2db      	uxtb	r3, r3
+ 80019d2:	2b00      	cmp	r3, #0
+ 80019d4:	d1c8      	bne.n	8001968 <Displ_Transmit+0x4c>
+		}
+
+		data=dispBuffer1; 				//data (pointer to data to transfer via SPI) has to point to converted buffer
+ 80019d6:	4b0d      	ldr	r3, [pc, #52]	@ (8001a0c <Displ_Transmit+0xf0>)
+ 80019d8:	603b      	str	r3, [r7, #0]
+		dataSize=(buf8Pos-dispBuffer1);	//and dataSize has to contain the converted buffer size
+ 80019da:	697b      	ldr	r3, [r7, #20]
+ 80019dc:	4a0b      	ldr	r2, [pc, #44]	@ (8001a0c <Displ_Transmit+0xf0>)
+ 80019de:	1a9b      	subs	r3, r3, r2
+ 80019e0:	80bb      	strh	r3, [r7, #4]
+		HAL_SPI_Transmit_IT(&DISPL_SPI_PORT , data, dataSize);
+#else
+#ifdef DISPLAY_SPI_DMA_MODE
+		if (dataSize<DISPL_DMA_CUTOFF) {
+#endif //DISPLAY_SPI_DMA_MODE
+			Displ_SpiAvailable=0;
+ 80019e2:	4b08      	ldr	r3, [pc, #32]	@ (8001a04 <Displ_Transmit+0xe8>)
+ 80019e4:	2200      	movs	r2, #0
+ 80019e6:	701a      	strb	r2, [r3, #0]
+			HAL_SPI_Transmit(&DISPL_SPI_PORT , data, dataSize, HAL_MAX_DELAY);
+ 80019e8:	88ba      	ldrh	r2, [r7, #4]
+ 80019ea:	f04f 33ff 	mov.w	r3, #4294967295
+ 80019ee:	6839      	ldr	r1, [r7, #0]
+ 80019f0:	4807      	ldr	r0, [pc, #28]	@ (8001a10 <Displ_Transmit+0xf4>)
+ 80019f2:	f001 fd4b 	bl	800348c <HAL_SPI_Transmit>
+			Displ_SpiAvailable=1;
+ 80019f6:	4b03      	ldr	r3, [pc, #12]	@ (8001a04 <Displ_Transmit+0xe8>)
+ 80019f8:	2201      	movs	r2, #1
+ 80019fa:	701a      	strb	r2, [r3, #0]
+			Displ_SpiAvailable=0;
+			HAL_SPI_Transmit_DMA(&DISPL_SPI_PORT , data, dataSize);
+		}
+#endif //DISPLAY_SPI_DMA_MODE
+#endif //DISPLAY_SPI_INTERRUPT_MODE
+	}
+ 80019fc:	bf00      	nop
+ 80019fe:	3718      	adds	r7, #24
+ 8001a00:	46bd      	mov	sp, r7
+ 8001a02:	bd80      	pop	{r7, pc}
+ 8001a04:	20000010 	.word	0x20000010
+ 8001a08:	40011000 	.word	0x40011000
+ 8001a0c:	2000046c 	.word	0x2000046c
+ 8001a10:	20000204 	.word	0x20000204
+
+08001a14 <Displ_WriteCommand>:
+
+
+/**********************************
+ * @BRIEF	transmit a byte in a SPI_COMMAND format
+ **********************************/
+void Displ_WriteCommand(uint8_t cmd){
+ 8001a14:	b580      	push	{r7, lr}
+ 8001a16:	b082      	sub	sp, #8
+ 8001a18:	af00      	add	r7, sp, #0
+ 8001a1a:	4603      	mov	r3, r0
+ 8001a1c:	71fb      	strb	r3, [r7, #7]
+	Displ_Transmit(SPI_COMMAND, &cmd, sizeof(cmd),0);
+ 8001a1e:	1df9      	adds	r1, r7, #7
+ 8001a20:	2300      	movs	r3, #0
+ 8001a22:	2201      	movs	r2, #1
+ 8001a24:	2000      	movs	r0, #0
+ 8001a26:	f7ff ff79 	bl	800191c <Displ_Transmit>
+}
+ 8001a2a:	bf00      	nop
+ 8001a2c:	3708      	adds	r7, #8
+ 8001a2e:	46bd      	mov	sp, r7
+ 8001a30:	bd80      	pop	{r7, pc}
+
+08001a32 <Displ_WriteData>:
+ * @BRIEF	transmit a set of data in a SPI_DATA format
+ * @PARAM 	data		buffer data to send
+ * 			dataSize	number of bytes in "data" to be sent
+ * 			isTouchGFXBuffer 1 only when called by touchgfxDisplayDriverTransmitBlock (for byte endian conversion). All other cases 0
+ **********************************/
+void Displ_WriteData(uint8_t* buff, size_t buff_size, uint8_t isTouchGFXBuffer){
+ 8001a32:	b580      	push	{r7, lr}
+ 8001a34:	b084      	sub	sp, #16
+ 8001a36:	af00      	add	r7, sp, #0
+ 8001a38:	60f8      	str	r0, [r7, #12]
+ 8001a3a:	60b9      	str	r1, [r7, #8]
+ 8001a3c:	4613      	mov	r3, r2
+ 8001a3e:	71fb      	strb	r3, [r7, #7]
+	if (buff_size==0) return;
+ 8001a40:	68bb      	ldr	r3, [r7, #8]
+ 8001a42:	2b00      	cmp	r3, #0
+ 8001a44:	d007      	beq.n	8001a56 <Displ_WriteData+0x24>
+	Displ_Transmit(SPI_DATA, buff, buff_size, isTouchGFXBuffer);
+ 8001a46:	68bb      	ldr	r3, [r7, #8]
+ 8001a48:	b29a      	uxth	r2, r3
+ 8001a4a:	79fb      	ldrb	r3, [r7, #7]
+ 8001a4c:	68f9      	ldr	r1, [r7, #12]
+ 8001a4e:	2001      	movs	r0, #1
+ 8001a50:	f7ff ff64 	bl	800191c <Displ_Transmit>
+ 8001a54:	e000      	b.n	8001a58 <Displ_WriteData+0x26>
+	if (buff_size==0) return;
+ 8001a56:	bf00      	nop
+}
+ 8001a58:	3710      	adds	r7, #16
+ 8001a5a:	46bd      	mov	sp, r7
+ 8001a5c:	bd80      	pop	{r7, pc}
+	...
+
+08001a60 <ILI9XXX_Init>:
+
+
+/**********************************
+ * @brief	ILIXXX initialization sequence
+ **********************************/
+void ILI9XXX_Init(){
+ 8001a60:	b580      	push	{r7, lr}
+ 8001a62:	af00      	add	r7, sp, #0
+	Displ_Select();
+ 8001a64:	f7ff ff38 	bl	80018d8 <Displ_Select>
+
+	HAL_GPIO_WritePin(DISPL_RST_GPIO_Port, DISPL_RST_Pin, GPIO_PIN_RESET);
+ 8001a68:	2200      	movs	r2, #0
+ 8001a6a:	2104      	movs	r1, #4
+ 8001a6c:	4819      	ldr	r0, [pc, #100]	@ (8001ad4 <ILI9XXX_Init+0x74>)
+ 8001a6e:	f001 f848 	bl	8002b02 <HAL_GPIO_WritePin>
+	HAL_Delay(1);
+ 8001a72:	2001      	movs	r0, #1
+ 8001a74:	f000 fc18 	bl	80022a8 <HAL_Delay>
+	HAL_GPIO_WritePin(DISPL_RST_GPIO_Port, DISPL_RST_Pin, GPIO_PIN_SET);
+ 8001a78:	2201      	movs	r2, #1
+ 8001a7a:	2104      	movs	r1, #4
+ 8001a7c:	4815      	ldr	r0, [pc, #84]	@ (8001ad4 <ILI9XXX_Init+0x74>)
+ 8001a7e:	f001 f840 	bl	8002b02 <HAL_GPIO_WritePin>
+	HAL_Delay(150);
+ 8001a82:	2096      	movs	r0, #150	@ 0x96
+ 8001a84:	f000 fc10 	bl	80022a8 <HAL_Delay>
+		Displ_WriteData(data,3);
+	#endif
+*/
+
+
+	Displ_WriteCommand(ILI9XXX_PIXEL_FORMAT);
+ 8001a88:	203a      	movs	r0, #58	@ 0x3a
+ 8001a8a:	f7ff ffc3 	bl	8001a14 <Displ_WriteCommand>
+#ifdef Z_RGB666
+	Displ_WriteData((uint8_t *)"\x66",1,0);		// RGB666
+ 8001a8e:	2200      	movs	r2, #0
+ 8001a90:	2101      	movs	r1, #1
+ 8001a92:	4811      	ldr	r0, [pc, #68]	@ (8001ad8 <ILI9XXX_Init+0x78>)
+ 8001a94:	f7ff ffcd 	bl	8001a32 <Displ_WriteData>
+#endif
+#ifdef Z_RGB565
+	Displ_WriteData((uint8_t *)"\x55",1,0);		// RGB565
+#endif
+	Displ_WriteCommand(ILI9XXX_RGB_INTERFACE);
+ 8001a98:	20b0      	movs	r0, #176	@ 0xb0
+ 8001a9a:	f7ff ffbb 	bl	8001a14 <Displ_WriteCommand>
+	Displ_WriteData((uint8_t *)"\x80",1,0);        // disable MISO pin
+ 8001a9e:	2200      	movs	r2, #0
+ 8001aa0:	2101      	movs	r1, #1
+ 8001aa2:	480e      	ldr	r0, [pc, #56]	@ (8001adc <ILI9XXX_Init+0x7c>)
+ 8001aa4:	f7ff ffc5 	bl	8001a32 <Displ_WriteData>
+
+	Displ_WriteCommand(ILI9XXX_RGB_INTERFACE);
+ 8001aa8:	20b0      	movs	r0, #176	@ 0xb0
+ 8001aaa:	f7ff ffb3 	bl	8001a14 <Displ_WriteCommand>
+	Displ_WriteData((uint8_t *)"\x80",1,0);        // disable MISO pin
+ 8001aae:	2200      	movs	r2, #0
+ 8001ab0:	2101      	movs	r1, #1
+ 8001ab2:	480a      	ldr	r0, [pc, #40]	@ (8001adc <ILI9XXX_Init+0x7c>)
+ 8001ab4:	f7ff ffbd 	bl	8001a32 <Displ_WriteData>
+
+	Displ_WriteCommand(ILI9XXX_SLEEP_OUT);
+ 8001ab8:	2011      	movs	r0, #17
+ 8001aba:	f7ff ffab 	bl	8001a14 <Displ_WriteCommand>
+	HAL_Delay(120);
+ 8001abe:	2078      	movs	r0, #120	@ 0x78
+ 8001ac0:	f000 fbf2 	bl	80022a8 <HAL_Delay>
+
+	Displ_WriteCommand(ILI9XXX_DISPLAY_ON);
+ 8001ac4:	2029      	movs	r0, #41	@ 0x29
+ 8001ac6:	f7ff ffa5 	bl	8001a14 <Displ_WriteCommand>
+	HAL_Delay(5);
+ 8001aca:	2005      	movs	r0, #5
+ 8001acc:	f000 fbec 	bl	80022a8 <HAL_Delay>
+
+}
+ 8001ad0:	bf00      	nop
+ 8001ad2:	bd80      	pop	{r7, pc}
+ 8001ad4:	40011000 	.word	0x40011000
+ 8001ad8:	08006cb0 	.word	0x08006cb0
+ 8001adc:	08006cb4 	.word	0x08006cb4
+
+08001ae0 <Displ_SetAddressWindow>:
+ * 			information
+ * @param  x1,y1,x2,y2 top left and bottom
+ * 					   right corner of the area
+ * 					   to write
+ **********************************************/
+void Displ_SetAddressWindow(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2) {
+ 8001ae0:	b590      	push	{r4, r7, lr}
+ 8001ae2:	b083      	sub	sp, #12
+ 8001ae4:	af00      	add	r7, sp, #0
+ 8001ae6:	4604      	mov	r4, r0
+ 8001ae8:	4608      	mov	r0, r1
+ 8001aea:	4611      	mov	r1, r2
+ 8001aec:	461a      	mov	r2, r3
+ 8001aee:	4623      	mov	r3, r4
+ 8001af0:	80fb      	strh	r3, [r7, #6]
+ 8001af2:	4603      	mov	r3, r0
+ 8001af4:	80bb      	strh	r3, [r7, #4]
+ 8001af6:	460b      	mov	r3, r1
+ 8001af8:	807b      	strh	r3, [r7, #2]
+ 8001afa:	4613      	mov	r3, r2
+ 8001afc:	803b      	strh	r3, [r7, #0]
+	static uint8_t data[4];
+
+	((uint32_t *)data)[0]=(((x2 & 0xFF)<<24) | ((x2 & 0xFF00)<<8) | ((x1 & 0xFF)<<8) | ((x1 & 0xFF00)>>8) );
+ 8001afe:	887b      	ldrh	r3, [r7, #2]
+ 8001b00:	061a      	lsls	r2, r3, #24
+ 8001b02:	887b      	ldrh	r3, [r7, #2]
+ 8001b04:	021b      	lsls	r3, r3, #8
+ 8001b06:	f403 037f 	and.w	r3, r3, #16711680	@ 0xff0000
+ 8001b0a:	431a      	orrs	r2, r3
+ 8001b0c:	88fb      	ldrh	r3, [r7, #6]
+ 8001b0e:	021b      	lsls	r3, r3, #8
+ 8001b10:	b29b      	uxth	r3, r3
+ 8001b12:	4313      	orrs	r3, r2
+ 8001b14:	88fa      	ldrh	r2, [r7, #6]
+ 8001b16:	0a12      	lsrs	r2, r2, #8
+ 8001b18:	b292      	uxth	r2, r2
+ 8001b1a:	431a      	orrs	r2, r3
+ 8001b1c:	4b14      	ldr	r3, [pc, #80]	@ (8001b70 <Displ_SetAddressWindow+0x90>)
+ 8001b1e:	601a      	str	r2, [r3, #0]
+	Displ_WriteCommand(ILI9XXX_COLUMN_ADDR);
+ 8001b20:	202a      	movs	r0, #42	@ 0x2a
+ 8001b22:	f7ff ff77 	bl	8001a14 <Displ_WriteCommand>
+	Displ_WriteData(data, 4,0);
+ 8001b26:	2200      	movs	r2, #0
+ 8001b28:	2104      	movs	r1, #4
+ 8001b2a:	4811      	ldr	r0, [pc, #68]	@ (8001b70 <Displ_SetAddressWindow+0x90>)
+ 8001b2c:	f7ff ff81 	bl	8001a32 <Displ_WriteData>
+
+	((uint32_t *)data)[0]=(((y2 & 0xFF)<<24) | ((y2 & 0xFF00)<<8) | ((y1 & 0xFF)<<8) | ((y1 & 0xFF00)>>8) );
+ 8001b30:	883b      	ldrh	r3, [r7, #0]
+ 8001b32:	061a      	lsls	r2, r3, #24
+ 8001b34:	883b      	ldrh	r3, [r7, #0]
+ 8001b36:	021b      	lsls	r3, r3, #8
+ 8001b38:	f403 037f 	and.w	r3, r3, #16711680	@ 0xff0000
+ 8001b3c:	431a      	orrs	r2, r3
+ 8001b3e:	88bb      	ldrh	r3, [r7, #4]
+ 8001b40:	021b      	lsls	r3, r3, #8
+ 8001b42:	b29b      	uxth	r3, r3
+ 8001b44:	4313      	orrs	r3, r2
+ 8001b46:	88ba      	ldrh	r2, [r7, #4]
+ 8001b48:	0a12      	lsrs	r2, r2, #8
+ 8001b4a:	b292      	uxth	r2, r2
+ 8001b4c:	431a      	orrs	r2, r3
+ 8001b4e:	4b08      	ldr	r3, [pc, #32]	@ (8001b70 <Displ_SetAddressWindow+0x90>)
+ 8001b50:	601a      	str	r2, [r3, #0]
+	Displ_WriteCommand(ILI9XXX_PAGE_ADDR);
+ 8001b52:	202b      	movs	r0, #43	@ 0x2b
+ 8001b54:	f7ff ff5e 	bl	8001a14 <Displ_WriteCommand>
+	Displ_WriteData(data, 4,0);
+ 8001b58:	2200      	movs	r2, #0
+ 8001b5a:	2104      	movs	r1, #4
+ 8001b5c:	4804      	ldr	r0, [pc, #16]	@ (8001b70 <Displ_SetAddressWindow+0x90>)
+ 8001b5e:	f7ff ff68 	bl	8001a32 <Displ_WriteData>
+	Displ_WriteCommand(ILI9XXX_MEMWR);
+ 8001b62:	202c      	movs	r0, #44	@ 0x2c
+ 8001b64:	f7ff ff56 	bl	8001a14 <Displ_WriteCommand>
+}
+ 8001b68:	bf00      	nop
+ 8001b6a:	370c      	adds	r7, #12
+ 8001b6c:	46bd      	mov	sp, r7
+ 8001b6e:	bd90      	pop	{r4, r7, pc}
+ 8001b70:	2000146c 	.word	0x2000146c
+
+08001b74 <Displ_Init>:
+
+/*****************************************************
+ * @brief				first display initialization.
+ * @param	orientation	display orientation
+ *****************************************************/
+void Displ_Init(Displ_Orientat_e orientation){
+ 8001b74:	b580      	push	{r7, lr}
+ 8001b76:	b082      	sub	sp, #8
+ 8001b78:	af00      	add	r7, sp, #0
+ 8001b7a:	4603      	mov	r3, r0
+ 8001b7c:	71fb      	strb	r3, [r7, #7]
+//	if (TOUCH_SPI==DISPL_SPI){													// if touch and display share the same SPI port
+	if(1){
+		HAL_GPIO_WritePin(DISPL_CS_GPIO_Port, DISPL_CS_Pin, GPIO_PIN_SET); 		// unselect display (will be selected at writing time)
+ 8001b7e:	2201      	movs	r2, #1
+ 8001b80:	2108      	movs	r1, #8
+ 8001b82:	4806      	ldr	r0, [pc, #24]	@ (8001b9c <Displ_Init+0x28>)
+ 8001b84:	f000 ffbd 	bl	8002b02 <HAL_GPIO_WritePin>
+		HAL_GPIO_WritePin(DISPL_CS_GPIO_Port, DISPL_CS_Pin, GPIO_PIN_RESET); 	// select display
+		SET_DISPL_SPI_BAUDRATE;
+//		HAL_GPIO_WritePin(TOUCH_CS_GPIO_Port, TOUCH_CS_Pin, GPIO_PIN_RESET);	// select touch
+//		SET_TOUCH_SPI_BAUDRATE;
+	}
+	ILI9XXX_Init();
+ 8001b88:	f7ff ff6a 	bl	8001a60 <ILI9XXX_Init>
+	Displ_Orientation(orientation);
+ 8001b8c:	79fb      	ldrb	r3, [r7, #7]
+ 8001b8e:	4618      	mov	r0, r3
+ 8001b90:	f000 f806 	bl	8001ba0 <Displ_Orientation>
+}
+ 8001b94:	bf00      	nop
+ 8001b96:	3708      	adds	r7, #8
+ 8001b98:	46bd      	mov	sp, r7
+ 8001b9a:	bd80      	pop	{r7, pc}
+ 8001b9c:	40011000 	.word	0x40011000
+
+08001ba0 <Displ_Orientation>:
+
+/**********************************************
+ * @brief		set orientation of the display
+ * @param  	m	orientation
+ **********************************************/
+void Displ_Orientation(Displ_Orientat_e orientation){
+ 8001ba0:	b580      	push	{r7, lr}
+ 8001ba2:	b082      	sub	sp, #8
+ 8001ba4:	af00      	add	r7, sp, #0
+ 8001ba6:	4603      	mov	r3, r0
+ 8001ba8:	71fb      	strb	r3, [r7, #7]
+	static uint8_t data[1];
+	switch(orientation) {
+ 8001baa:	79fb      	ldrb	r3, [r7, #7]
+ 8001bac:	2b03      	cmp	r3, #3
+ 8001bae:	d83b      	bhi.n	8001c28 <Displ_Orientation+0x88>
+ 8001bb0:	a201      	add	r2, pc, #4	@ (adr r2, 8001bb8 <Displ_Orientation+0x18>)
+ 8001bb2:	f852 f023 	ldr.w	pc, [r2, r3, lsl #2]
+ 8001bb6:	bf00      	nop
+ 8001bb8:	08001bc9 	.word	0x08001bc9
+ 8001bbc:	08001be1 	.word	0x08001be1
+ 8001bc0:	08001bf9 	.word	0x08001bf9
+ 8001bc4:	08001c11 	.word	0x08001c11
+		case Displ_Orientat_0:
+			data[0]=ILI9XXX_MADCTL_0DEG;
+ 8001bc8:	4b1f      	ldr	r3, [pc, #124]	@ (8001c48 <Displ_Orientation+0xa8>)
+ 8001bca:	2288      	movs	r2, #136	@ 0x88
+ 8001bcc:	701a      	strb	r2, [r3, #0]
+			_height = DISPL_HEIGHT;
+ 8001bce:	4b1f      	ldr	r3, [pc, #124]	@ (8001c4c <Displ_Orientation+0xac>)
+ 8001bd0:	f44f 72f0 	mov.w	r2, #480	@ 0x1e0
+ 8001bd4:	801a      	strh	r2, [r3, #0]
+			_width = DISPL_WIDTH;
+ 8001bd6:	4b1e      	ldr	r3, [pc, #120]	@ (8001c50 <Displ_Orientation+0xb0>)
+ 8001bd8:	f44f 72a0 	mov.w	r2, #320	@ 0x140
+ 8001bdc:	801a      	strh	r2, [r3, #0]
+			break;
+ 8001bde:	e023      	b.n	8001c28 <Displ_Orientation+0x88>
+		case Displ_Orientat_90:
+			data[0]=ILI9XXX_MADCTL_90DEG;
+ 8001be0:	4b19      	ldr	r3, [pc, #100]	@ (8001c48 <Displ_Orientation+0xa8>)
+ 8001be2:	22e8      	movs	r2, #232	@ 0xe8
+ 8001be4:	701a      	strb	r2, [r3, #0]
+			_height = DISPL_WIDTH;
+ 8001be6:	4b19      	ldr	r3, [pc, #100]	@ (8001c4c <Displ_Orientation+0xac>)
+ 8001be8:	f44f 72a0 	mov.w	r2, #320	@ 0x140
+ 8001bec:	801a      	strh	r2, [r3, #0]
+			_width = DISPL_HEIGHT;
+ 8001bee:	4b18      	ldr	r3, [pc, #96]	@ (8001c50 <Displ_Orientation+0xb0>)
+ 8001bf0:	f44f 72f0 	mov.w	r2, #480	@ 0x1e0
+ 8001bf4:	801a      	strh	r2, [r3, #0]
+			break;
+ 8001bf6:	e017      	b.n	8001c28 <Displ_Orientation+0x88>
+		case Displ_Orientat_180:
+			data[0]=ILI9XXX_MADCTL_180DEG;
+ 8001bf8:	4b13      	ldr	r3, [pc, #76]	@ (8001c48 <Displ_Orientation+0xa8>)
+ 8001bfa:	2248      	movs	r2, #72	@ 0x48
+ 8001bfc:	701a      	strb	r2, [r3, #0]
+			_height = DISPL_HEIGHT;
+ 8001bfe:	4b13      	ldr	r3, [pc, #76]	@ (8001c4c <Displ_Orientation+0xac>)
+ 8001c00:	f44f 72f0 	mov.w	r2, #480	@ 0x1e0
+ 8001c04:	801a      	strh	r2, [r3, #0]
+			_width = DISPL_WIDTH;
+ 8001c06:	4b12      	ldr	r3, [pc, #72]	@ (8001c50 <Displ_Orientation+0xb0>)
+ 8001c08:	f44f 72a0 	mov.w	r2, #320	@ 0x140
+ 8001c0c:	801a      	strh	r2, [r3, #0]
+			break;
+ 8001c0e:	e00b      	b.n	8001c28 <Displ_Orientation+0x88>
+		case Displ_Orientat_270:
+			data[0]=ILI9XXX_MADCTL_270DEG;
+ 8001c10:	4b0d      	ldr	r3, [pc, #52]	@ (8001c48 <Displ_Orientation+0xa8>)
+ 8001c12:	2228      	movs	r2, #40	@ 0x28
+ 8001c14:	701a      	strb	r2, [r3, #0]
+			_height = DISPL_WIDTH;
+ 8001c16:	4b0d      	ldr	r3, [pc, #52]	@ (8001c4c <Displ_Orientation+0xac>)
+ 8001c18:	f44f 72a0 	mov.w	r2, #320	@ 0x140
+ 8001c1c:	801a      	strh	r2, [r3, #0]
+			_width = DISPL_HEIGHT;
+ 8001c1e:	4b0c      	ldr	r3, [pc, #48]	@ (8001c50 <Displ_Orientation+0xb0>)
+ 8001c20:	f44f 72f0 	mov.w	r2, #480	@ 0x1e0
+ 8001c24:	801a      	strh	r2, [r3, #0]
+			break;
+ 8001c26:	bf00      	nop
+	}
+	Displ_WriteCommand(ILI9XXX_MADCTL);
+ 8001c28:	2036      	movs	r0, #54	@ 0x36
+ 8001c2a:	f7ff fef3 	bl	8001a14 <Displ_WriteCommand>
+	Displ_WriteData(data,1,0);
+ 8001c2e:	2200      	movs	r2, #0
+ 8001c30:	2101      	movs	r1, #1
+ 8001c32:	4805      	ldr	r0, [pc, #20]	@ (8001c48 <Displ_Orientation+0xa8>)
+ 8001c34:	f7ff fefd 	bl	8001a32 <Displ_WriteData>
+	current_orientation = orientation;  //stores active orientation into a global variable for touch routines
+ 8001c38:	4a06      	ldr	r2, [pc, #24]	@ (8001c54 <Displ_Orientation+0xb4>)
+ 8001c3a:	79fb      	ldrb	r3, [r7, #7]
+ 8001c3c:	7013      	strb	r3, [r2, #0]
+}
+ 8001c3e:	bf00      	nop
+ 8001c40:	3708      	adds	r7, #8
+ 8001c42:	46bd      	mov	sp, r7
+ 8001c44:	bd80      	pop	{r7, pc}
+ 8001c46:	bf00      	nop
+ 8001c48:	20001470 	.word	0x20001470
+ 8001c4c:	20000468 	.word	0x20000468
+ 8001c50:	20000466 	.word	0x20000466
+ 8001c54:	20000464 	.word	0x20000464
+
+08001c58 <Displ_FillArea>:
+/*****************************
+ * @brief	fill a rectangle with a color
+ * @param	x, y	top left corner of the rectangle
+ * 			w, h 	width and height of the rectangle
+ ******************************/
+void Displ_FillArea(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color) {
+ 8001c58:	b590      	push	{r4, r7, lr}
+ 8001c5a:	b08b      	sub	sp, #44	@ 0x2c
+ 8001c5c:	af00      	add	r7, sp, #0
+ 8001c5e:	4604      	mov	r4, r0
+ 8001c60:	4608      	mov	r0, r1
+ 8001c62:	4611      	mov	r1, r2
+ 8001c64:	461a      	mov	r2, r3
+ 8001c66:	4623      	mov	r3, r4
+ 8001c68:	80fb      	strh	r3, [r7, #6]
+ 8001c6a:	4603      	mov	r3, r0
+ 8001c6c:	80bb      	strh	r3, [r7, #4]
+ 8001c6e:	460b      	mov	r3, r1
+ 8001c70:	807b      	strh	r3, [r7, #2]
+ 8001c72:	4613      	mov	r3, r2
+ 8001c74:	803b      	strh	r3, [r7, #0]
+ * -	swap buffers
+ */
+
+	uint32_t k,x1,y1,area,times;
+
+	if((x >= _width) || (y >= _height) || (w == 0) || (h == 0)) return;//
+ 8001c76:	88fb      	ldrh	r3, [r7, #6]
+ 8001c78:	4a5a      	ldr	r2, [pc, #360]	@ (8001de4 <Displ_FillArea+0x18c>)
+ 8001c7a:	f9b2 2000 	ldrsh.w	r2, [r2]
+ 8001c7e:	4293      	cmp	r3, r2
+ 8001c80:	f280 80ab 	bge.w	8001dda <Displ_FillArea+0x182>
+ 8001c84:	88bb      	ldrh	r3, [r7, #4]
+ 8001c86:	4a58      	ldr	r2, [pc, #352]	@ (8001de8 <Displ_FillArea+0x190>)
+ 8001c88:	f9b2 2000 	ldrsh.w	r2, [r2]
+ 8001c8c:	4293      	cmp	r3, r2
+ 8001c8e:	f280 80a4 	bge.w	8001dda <Displ_FillArea+0x182>
+ 8001c92:	887b      	ldrh	r3, [r7, #2]
+ 8001c94:	2b00      	cmp	r3, #0
+ 8001c96:	f000 80a0 	beq.w	8001dda <Displ_FillArea+0x182>
+ 8001c9a:	883b      	ldrh	r3, [r7, #0]
+ 8001c9c:	2b00      	cmp	r3, #0
+ 8001c9e:	f000 809c 	beq.w	8001dda <Displ_FillArea+0x182>
+
+	x1=x + w - 1;
+ 8001ca2:	88fa      	ldrh	r2, [r7, #6]
+ 8001ca4:	887b      	ldrh	r3, [r7, #2]
+ 8001ca6:	4413      	add	r3, r2
+ 8001ca8:	3b01      	subs	r3, #1
+ 8001caa:	623b      	str	r3, [r7, #32]
+	if (x1 > _width) {
+ 8001cac:	4b4d      	ldr	r3, [pc, #308]	@ (8001de4 <Displ_FillArea+0x18c>)
+ 8001cae:	f9b3 3000 	ldrsh.w	r3, [r3]
+ 8001cb2:	461a      	mov	r2, r3
+ 8001cb4:	6a3b      	ldr	r3, [r7, #32]
+ 8001cb6:	4293      	cmp	r3, r2
+ 8001cb8:	d903      	bls.n	8001cc2 <Displ_FillArea+0x6a>
+		x1=_width;
+ 8001cba:	4b4a      	ldr	r3, [pc, #296]	@ (8001de4 <Displ_FillArea+0x18c>)
+ 8001cbc:	f9b3 3000 	ldrsh.w	r3, [r3]
+ 8001cc0:	623b      	str	r3, [r7, #32]
+	}
+
+	y1=y + h - 1;
+ 8001cc2:	88ba      	ldrh	r2, [r7, #4]
+ 8001cc4:	883b      	ldrh	r3, [r7, #0]
+ 8001cc6:	4413      	add	r3, r2
+ 8001cc8:	3b01      	subs	r3, #1
+ 8001cca:	61fb      	str	r3, [r7, #28]
+	if (y1 > _height) {
+ 8001ccc:	4b46      	ldr	r3, [pc, #280]	@ (8001de8 <Displ_FillArea+0x190>)
+ 8001cce:	f9b3 3000 	ldrsh.w	r3, [r3]
+ 8001cd2:	461a      	mov	r2, r3
+ 8001cd4:	69fb      	ldr	r3, [r7, #28]
+ 8001cd6:	4293      	cmp	r3, r2
+ 8001cd8:	d903      	bls.n	8001ce2 <Displ_FillArea+0x8a>
+		y1=_height;
+ 8001cda:	4b43      	ldr	r3, [pc, #268]	@ (8001de8 <Displ_FillArea+0x190>)
+ 8001cdc:	f9b3 3000 	ldrsh.w	r3, [r3]
+ 8001ce0:	61fb      	str	r3, [r7, #28]
+
+#endif
+#ifdef Z_RGB666 // setting up dispBuffer in RGB666 format
+	uint32_t datasize;
+
+	uint8_t Rbyte=(color & 0xF800)>>8;
+ 8001ce2:	8f3b      	ldrh	r3, [r7, #56]	@ 0x38
+ 8001ce4:	121b      	asrs	r3, r3, #8
+ 8001ce6:	b2db      	uxtb	r3, r3
+ 8001ce8:	f023 0307 	bic.w	r3, r3, #7
+ 8001cec:	75fb      	strb	r3, [r7, #23]
+	uint8_t Gbyte=(color & 0x07E0)>>3;
+ 8001cee:	8f3b      	ldrh	r3, [r7, #56]	@ 0x38
+ 8001cf0:	10db      	asrs	r3, r3, #3
+ 8001cf2:	b2db      	uxtb	r3, r3
+ 8001cf4:	f023 0303 	bic.w	r3, r3, #3
+ 8001cf8:	75bb      	strb	r3, [r7, #22]
+	uint8_t Bbyte=(color & 0x001F)<<3;
+ 8001cfa:	8f3b      	ldrh	r3, [r7, #56]	@ 0x38
+ 8001cfc:	b2db      	uxtb	r3, r3
+ 8001cfe:	00db      	lsls	r3, r3, #3
+ 8001d00:	757b      	strb	r3, [r7, #21]
+
+	area=(((y1-y+1)*(x1-x+1))*3); 		// area to fill in bytes (3 bytes per pixel)
+ 8001d02:	88bb      	ldrh	r3, [r7, #4]
+ 8001d04:	69fa      	ldr	r2, [r7, #28]
+ 8001d06:	1ad3      	subs	r3, r2, r3
+ 8001d08:	3301      	adds	r3, #1
+ 8001d0a:	88fa      	ldrh	r2, [r7, #6]
+ 8001d0c:	6a39      	ldr	r1, [r7, #32]
+ 8001d0e:	1a8a      	subs	r2, r1, r2
+ 8001d10:	3201      	adds	r2, #1
+ 8001d12:	fb03 f202 	mul.w	r2, r3, r2
+ 8001d16:	4613      	mov	r3, r2
+ 8001d18:	005b      	lsls	r3, r3, #1
+ 8001d1a:	4413      	add	r3, r2
+ 8001d1c:	613b      	str	r3, [r7, #16]
+	uint8_t *buf8Pos=dispBuffer; 		//using a local pointer: changing values next
+ 8001d1e:	4b33      	ldr	r3, [pc, #204]	@ (8001dec <Displ_FillArea+0x194>)
+ 8001d20:	681b      	ldr	r3, [r3, #0]
+ 8001d22:	61bb      	str	r3, [r7, #24]
+
+	datasize = (area<(SIZEBUF-3) ? area : (SIZEBUF-3));  //as buf8Pos receives 3 bytes each cycle we must be sure that SIZEBUF will be not overridden in the next loop
+ 8001d24:	693b      	ldr	r3, [r7, #16]
+ 8001d26:	f240 72fd 	movw	r2, #2045	@ 0x7fd
+ 8001d2a:	4293      	cmp	r3, r2
+ 8001d2c:	bf28      	it	cs
+ 8001d2e:	4613      	movcs	r3, r2
+ 8001d30:	60fb      	str	r3, [r7, #12]
+
+	k=0;
+ 8001d32:	2300      	movs	r3, #0
+ 8001d34:	627b      	str	r3, [r7, #36]	@ 0x24
+	while ((buf8Pos-dispBuffer)<=datasize){
+ 8001d36:	e00e      	b.n	8001d56 <Displ_FillArea+0xfe>
+		*(buf8Pos++)=Rbyte;
+ 8001d38:	69bb      	ldr	r3, [r7, #24]
+ 8001d3a:	1c5a      	adds	r2, r3, #1
+ 8001d3c:	61ba      	str	r2, [r7, #24]
+ 8001d3e:	7dfa      	ldrb	r2, [r7, #23]
+ 8001d40:	701a      	strb	r2, [r3, #0]
+		*(buf8Pos++)=Gbyte;
+ 8001d42:	69bb      	ldr	r3, [r7, #24]
+ 8001d44:	1c5a      	adds	r2, r3, #1
+ 8001d46:	61ba      	str	r2, [r7, #24]
+ 8001d48:	7dba      	ldrb	r2, [r7, #22]
+ 8001d4a:	701a      	strb	r2, [r3, #0]
+		*(buf8Pos++)=Bbyte;
+ 8001d4c:	69bb      	ldr	r3, [r7, #24]
+ 8001d4e:	1c5a      	adds	r2, r3, #1
+ 8001d50:	61ba      	str	r2, [r7, #24]
+ 8001d52:	7d7a      	ldrb	r2, [r7, #21]
+ 8001d54:	701a      	strb	r2, [r3, #0]
+	while ((buf8Pos-dispBuffer)<=datasize){
+ 8001d56:	4b25      	ldr	r3, [pc, #148]	@ (8001dec <Displ_FillArea+0x194>)
+ 8001d58:	681b      	ldr	r3, [r3, #0]
+ 8001d5a:	69ba      	ldr	r2, [r7, #24]
+ 8001d5c:	1ad3      	subs	r3, r2, r3
+ 8001d5e:	461a      	mov	r2, r3
+ 8001d60:	68fb      	ldr	r3, [r7, #12]
+ 8001d62:	4293      	cmp	r3, r2
+ 8001d64:	d2e8      	bcs.n	8001d38 <Displ_FillArea+0xe0>
+	}
+	datasize=(buf8Pos-dispBuffer);
+ 8001d66:	4b21      	ldr	r3, [pc, #132]	@ (8001dec <Displ_FillArea+0x194>)
+ 8001d68:	681b      	ldr	r3, [r3, #0]
+ 8001d6a:	69ba      	ldr	r2, [r7, #24]
+ 8001d6c:	1ad3      	subs	r3, r2, r3
+ 8001d6e:	60fb      	str	r3, [r7, #12]
+#endif
+
+//START WRITING TO DISPLAY
+	Displ_SetAddressWindow(x, y, x1, y1);
+ 8001d70:	6a3b      	ldr	r3, [r7, #32]
+ 8001d72:	b29a      	uxth	r2, r3
+ 8001d74:	69fb      	ldr	r3, [r7, #28]
+ 8001d76:	b29b      	uxth	r3, r3
+ 8001d78:	88b9      	ldrh	r1, [r7, #4]
+ 8001d7a:	88f8      	ldrh	r0, [r7, #6]
+ 8001d7c:	f7ff feb0 	bl	8001ae0 <Displ_SetAddressWindow>
+		Displ_WriteData(dispBuffer,SIZEBUF,0);
+	}
+	Displ_WriteData(dispBuffer,(area<<1)-(times<<BUFLEVEL),0);
+#endif
+#ifdef Z_RGB666 // transferring RGB666 format dispBuffer
+	times=(area/datasize);  					//how many times buffer must be sent via SPI.
+ 8001d80:	693a      	ldr	r2, [r7, #16]
+ 8001d82:	68fb      	ldr	r3, [r7, #12]
+ 8001d84:	fbb2 f3f3 	udiv	r3, r2, r3
+ 8001d88:	60bb      	str	r3, [r7, #8]
+	for  (k=0;k<times;k++) {
+ 8001d8a:	2300      	movs	r3, #0
+ 8001d8c:	627b      	str	r3, [r7, #36]	@ 0x24
+ 8001d8e:	e009      	b.n	8001da4 <Displ_FillArea+0x14c>
+		Displ_WriteData(dispBuffer,datasize,0);
+ 8001d90:	4b16      	ldr	r3, [pc, #88]	@ (8001dec <Displ_FillArea+0x194>)
+ 8001d92:	681b      	ldr	r3, [r3, #0]
+ 8001d94:	2200      	movs	r2, #0
+ 8001d96:	68f9      	ldr	r1, [r7, #12]
+ 8001d98:	4618      	mov	r0, r3
+ 8001d9a:	f7ff fe4a 	bl	8001a32 <Displ_WriteData>
+	for  (k=0;k<times;k++) {
+ 8001d9e:	6a7b      	ldr	r3, [r7, #36]	@ 0x24
+ 8001da0:	3301      	adds	r3, #1
+ 8001da2:	627b      	str	r3, [r7, #36]	@ 0x24
+ 8001da4:	6a7a      	ldr	r2, [r7, #36]	@ 0x24
+ 8001da6:	68bb      	ldr	r3, [r7, #8]
+ 8001da8:	429a      	cmp	r2, r3
+ 8001daa:	d3f1      	bcc.n	8001d90 <Displ_FillArea+0x138>
+	}
+	Displ_WriteData(dispBuffer,(area-times*datasize),0);      //transfer last data frame
+ 8001dac:	4b0f      	ldr	r3, [pc, #60]	@ (8001dec <Displ_FillArea+0x194>)
+ 8001dae:	6818      	ldr	r0, [r3, #0]
+ 8001db0:	68bb      	ldr	r3, [r7, #8]
+ 8001db2:	68fa      	ldr	r2, [r7, #12]
+ 8001db4:	fb02 f303 	mul.w	r3, r2, r3
+ 8001db8:	693a      	ldr	r2, [r7, #16]
+ 8001dba:	1ad3      	subs	r3, r2, r3
+ 8001dbc:	2200      	movs	r2, #0
+ 8001dbe:	4619      	mov	r1, r3
+ 8001dc0:	f7ff fe37 	bl	8001a32 <Displ_WriteData>
+#endif
+
+//BUFFER SWAP
+	dispBuffer = (dispBuffer==dispBuffer1 ? dispBuffer2 : dispBuffer1); // swapping buffer
+ 8001dc4:	4b09      	ldr	r3, [pc, #36]	@ (8001dec <Displ_FillArea+0x194>)
+ 8001dc6:	681b      	ldr	r3, [r3, #0]
+ 8001dc8:	4a09      	ldr	r2, [pc, #36]	@ (8001df0 <Displ_FillArea+0x198>)
+ 8001dca:	4293      	cmp	r3, r2
+ 8001dcc:	d101      	bne.n	8001dd2 <Displ_FillArea+0x17a>
+ 8001dce:	4b09      	ldr	r3, [pc, #36]	@ (8001df4 <Displ_FillArea+0x19c>)
+ 8001dd0:	e000      	b.n	8001dd4 <Displ_FillArea+0x17c>
+ 8001dd2:	4b07      	ldr	r3, [pc, #28]	@ (8001df0 <Displ_FillArea+0x198>)
+ 8001dd4:	4a05      	ldr	r2, [pc, #20]	@ (8001dec <Displ_FillArea+0x194>)
+ 8001dd6:	6013      	str	r3, [r2, #0]
+ 8001dd8:	e000      	b.n	8001ddc <Displ_FillArea+0x184>
+	if((x >= _width) || (y >= _height) || (w == 0) || (h == 0)) return;//
+ 8001dda:	bf00      	nop
+
+}
+ 8001ddc:	372c      	adds	r7, #44	@ 0x2c
+ 8001dde:	46bd      	mov	sp, r7
+ 8001de0:	bd90      	pop	{r4, r7, pc}
+ 8001de2:	bf00      	nop
+ 8001de4:	20000466 	.word	0x20000466
+ 8001de8:	20000468 	.word	0x20000468
+ 8001dec:	20000014 	.word	0x20000014
+ 8001df0:	2000046c 	.word	0x2000046c
+ 8001df4:	20000c6c 	.word	0x20000c6c
+
+08001df8 <Displ_CLS>:
+
+/*****************
+ * @brief	clear display with a color.
+ * @param	bgcolor
+ *****************/
+void Displ_CLS(uint16_t bgcolor){
+ 8001df8:	b580      	push	{r7, lr}
+ 8001dfa:	b084      	sub	sp, #16
+ 8001dfc:	af02      	add	r7, sp, #8
+ 8001dfe:	4603      	mov	r3, r0
+ 8001e00:	80fb      	strh	r3, [r7, #6]
+	Displ_FillArea(0, 0, _width, _height, bgcolor);
+ 8001e02:	4b09      	ldr	r3, [pc, #36]	@ (8001e28 <Displ_CLS+0x30>)
+ 8001e04:	f9b3 3000 	ldrsh.w	r3, [r3]
+ 8001e08:	b29a      	uxth	r2, r3
+ 8001e0a:	4b08      	ldr	r3, [pc, #32]	@ (8001e2c <Displ_CLS+0x34>)
+ 8001e0c:	f9b3 3000 	ldrsh.w	r3, [r3]
+ 8001e10:	b299      	uxth	r1, r3
+ 8001e12:	88fb      	ldrh	r3, [r7, #6]
+ 8001e14:	9300      	str	r3, [sp, #0]
+ 8001e16:	460b      	mov	r3, r1
+ 8001e18:	2100      	movs	r1, #0
+ 8001e1a:	2000      	movs	r0, #0
+ 8001e1c:	f7ff ff1c 	bl	8001c58 <Displ_FillArea>
+}
+ 8001e20:	bf00      	nop
+ 8001e22:	3708      	adds	r7, #8
+ 8001e24:	46bd      	mov	sp, r7
+ 8001e26:	bd80      	pop	{r7, pc}
+ 8001e28:	20000466 	.word	0x20000466
+ 8001e2c:	20000468 	.word	0x20000468
+
+08001e30 <Displ_WChar>:
+ * @brief	display one character on the display
+ * @param 	x,y: top left corner of the character to be printed
+ * 			ch, font, color, bgcolor: as per parameter name
+ * 			size: (1 or 2) single or double wided printing
+ **********************/
+void Displ_WChar(uint16_t x, uint16_t y, char ch, sFONT font, uint8_t size, uint16_t color, uint16_t bgcolor) {
+ 8001e30:	b082      	sub	sp, #8
+ 8001e32:	b590      	push	{r4, r7, lr}
+ 8001e34:	b08d      	sub	sp, #52	@ 0x34
+ 8001e36:	af00      	add	r7, sp, #0
+ 8001e38:	647b      	str	r3, [r7, #68]	@ 0x44
+ 8001e3a:	4603      	mov	r3, r0
+ 8001e3c:	80fb      	strh	r3, [r7, #6]
+ 8001e3e:	460b      	mov	r3, r1
+ 8001e40:	80bb      	strh	r3, [r7, #4]
+ 8001e42:	4613      	mov	r3, r2
+ 8001e44:	70fb      	strb	r3, [r7, #3]
+    uint32_t i, b, bytes, j, bufSize, mask;
+
+    const uint8_t *pos;
+	uint8_t wsize=font.Width; //printing char width
+ 8001e46:	f8b7 3048 	ldrh.w	r3, [r7, #72]	@ 0x48
+ 8001e4a:	76fb      	strb	r3, [r7, #27]
+
+	if (size==2)
+ 8001e4c:	f897 3050 	ldrb.w	r3, [r7, #80]	@ 0x50
+ 8001e50:	2b02      	cmp	r3, #2
+ 8001e52:	d102      	bne.n	8001e5a <Displ_WChar+0x2a>
+		wsize<<= 1;
+ 8001e54:	7efb      	ldrb	r3, [r7, #27]
+ 8001e56:	005b      	lsls	r3, r3, #1
+ 8001e58:	76fb      	strb	r3, [r7, #27]
+	bufSize=0;
+ 8001e5a:	2300      	movs	r3, #0
+ 8001e5c:	623b      	str	r3, [r7, #32]
+	bytes=font.Height * font.Size ;
+ 8001e5e:	f8b7 304a 	ldrh.w	r3, [r7, #74]	@ 0x4a
+ 8001e62:	f897 204c 	ldrb.w	r2, [r7, #76]	@ 0x4c
+ 8001e66:	fb02 f303 	mul.w	r3, r2, r3
+ 8001e6a:	617b      	str	r3, [r7, #20]
+	pos=font.table+(ch - 32) * bytes ;//that's char position in table
+ 8001e6c:	6c7a      	ldr	r2, [r7, #68]	@ 0x44
+ 8001e6e:	78fb      	ldrb	r3, [r7, #3]
+ 8001e70:	3b20      	subs	r3, #32
+ 8001e72:	4619      	mov	r1, r3
+ 8001e74:	697b      	ldr	r3, [r7, #20]
+ 8001e76:	fb01 f303 	mul.w	r3, r1, r3
+ 8001e7a:	4413      	add	r3, r2
+ 8001e7c:	613b      	str	r3, [r7, #16]
+	switch (font.Size) {
+ 8001e7e:	f897 304c 	ldrb.w	r3, [r7, #76]	@ 0x4c
+ 8001e82:	2b02      	cmp	r3, #2
+ 8001e84:	d005      	beq.n	8001e92 <Displ_WChar+0x62>
+ 8001e86:	2b03      	cmp	r3, #3
+ 8001e88:	d107      	bne.n	8001e9a <Displ_WChar+0x6a>
+		case 3:
+			mask=0x800000;
+ 8001e8a:	f44f 0300 	mov.w	r3, #8388608	@ 0x800000
+ 8001e8e:	61fb      	str	r3, [r7, #28]
+			break;
+ 8001e90:	e005      	b.n	8001e9e <Displ_WChar+0x6e>
+		case 2:
+			mask=0x8000;
+ 8001e92:	f44f 4300 	mov.w	r3, #32768	@ 0x8000
+ 8001e96:	61fb      	str	r3, [r7, #28]
+			break;
+ 8001e98:	e001      	b.n	8001e9e <Displ_WChar+0x6e>
+		default:
+			mask=0x80;
+ 8001e9a:	2380      	movs	r3, #128	@ 0x80
+ 8001e9c:	61fb      	str	r3, [r7, #28]
+#endif
+
+#ifdef Z_RGB666
+//  setting up char image in RGB666 format
+
+	uint8_t Rcol=(color & 0xF800)>>8;
+ 8001e9e:	f8b7 3054 	ldrh.w	r3, [r7, #84]	@ 0x54
+ 8001ea2:	121b      	asrs	r3, r3, #8
+ 8001ea4:	b2db      	uxtb	r3, r3
+ 8001ea6:	f023 0307 	bic.w	r3, r3, #7
+ 8001eaa:	73fb      	strb	r3, [r7, #15]
+	uint8_t Gcol=(color & 0x07E0)>>3;
+ 8001eac:	f8b7 3054 	ldrh.w	r3, [r7, #84]	@ 0x54
+ 8001eb0:	10db      	asrs	r3, r3, #3
+ 8001eb2:	b2db      	uxtb	r3, r3
+ 8001eb4:	f023 0303 	bic.w	r3, r3, #3
+ 8001eb8:	73bb      	strb	r3, [r7, #14]
+	uint8_t Bcol=(color & 0x001F)<<3;
+ 8001eba:	f8b7 3054 	ldrh.w	r3, [r7, #84]	@ 0x54
+ 8001ebe:	b2db      	uxtb	r3, r3
+ 8001ec0:	00db      	lsls	r3, r3, #3
+ 8001ec2:	737b      	strb	r3, [r7, #13]
+	uint8_t Rbak=(bgcolor & 0xF800)>>8;
+ 8001ec4:	f8b7 3058 	ldrh.w	r3, [r7, #88]	@ 0x58
+ 8001ec8:	121b      	asrs	r3, r3, #8
+ 8001eca:	b2db      	uxtb	r3, r3
+ 8001ecc:	f023 0307 	bic.w	r3, r3, #7
+ 8001ed0:	733b      	strb	r3, [r7, #12]
+	uint8_t Gbak=(bgcolor & 0x07E0)>>3;
+ 8001ed2:	f8b7 3058 	ldrh.w	r3, [r7, #88]	@ 0x58
+ 8001ed6:	10db      	asrs	r3, r3, #3
+ 8001ed8:	b2db      	uxtb	r3, r3
+ 8001eda:	f023 0303 	bic.w	r3, r3, #3
+ 8001ede:	72fb      	strb	r3, [r7, #11]
+	uint8_t Bbak=(bgcolor & 0x001F)<<3;
+ 8001ee0:	f8b7 3058 	ldrh.w	r3, [r7, #88]	@ 0x58
+ 8001ee4:	b2db      	uxtb	r3, r3
+ 8001ee6:	00db      	lsls	r3, r3, #3
+ 8001ee8:	72bb      	strb	r3, [r7, #10]
+
+	for(i = 0; i < (bytes); i+=font.Size){
+ 8001eea:	2300      	movs	r3, #0
+ 8001eec:	62fb      	str	r3, [r7, #44]	@ 0x2c
+ 8001eee:	e0af      	b.n	8002050 <Displ_WChar+0x220>
+		b=0;
+ 8001ef0:	2300      	movs	r3, #0
+ 8001ef2:	62bb      	str	r3, [r7, #40]	@ 0x28
+		switch (font.Size) {
+ 8001ef4:	f897 304c 	ldrb.w	r3, [r7, #76]	@ 0x4c
+ 8001ef8:	2b02      	cmp	r3, #2
+ 8001efa:	d015      	beq.n	8001f28 <Displ_WChar+0xf8>
+ 8001efc:	2b03      	cmp	r3, #3
+ 8001efe:	d120      	bne.n	8001f42 <Displ_WChar+0x112>
+			case 3:
+				b=pos[i]<<16 | pos[i+1]<<8 | pos[i+2];
+ 8001f00:	693a      	ldr	r2, [r7, #16]
+ 8001f02:	6afb      	ldr	r3, [r7, #44]	@ 0x2c
+ 8001f04:	4413      	add	r3, r2
+ 8001f06:	781b      	ldrb	r3, [r3, #0]
+ 8001f08:	041a      	lsls	r2, r3, #16
+ 8001f0a:	6afb      	ldr	r3, [r7, #44]	@ 0x2c
+ 8001f0c:	3301      	adds	r3, #1
+ 8001f0e:	6939      	ldr	r1, [r7, #16]
+ 8001f10:	440b      	add	r3, r1
+ 8001f12:	781b      	ldrb	r3, [r3, #0]
+ 8001f14:	021b      	lsls	r3, r3, #8
+ 8001f16:	4313      	orrs	r3, r2
+ 8001f18:	6afa      	ldr	r2, [r7, #44]	@ 0x2c
+ 8001f1a:	3202      	adds	r2, #2
+ 8001f1c:	6939      	ldr	r1, [r7, #16]
+ 8001f1e:	440a      	add	r2, r1
+ 8001f20:	7812      	ldrb	r2, [r2, #0]
+ 8001f22:	4313      	orrs	r3, r2
+ 8001f24:	62bb      	str	r3, [r7, #40]	@ 0x28
+				break;
+ 8001f26:	e011      	b.n	8001f4c <Displ_WChar+0x11c>
+			case 2:
+				b=pos[i]<<8 | pos[i+1];
+ 8001f28:	693a      	ldr	r2, [r7, #16]
+ 8001f2a:	6afb      	ldr	r3, [r7, #44]	@ 0x2c
+ 8001f2c:	4413      	add	r3, r2
+ 8001f2e:	781b      	ldrb	r3, [r3, #0]
+ 8001f30:	021b      	lsls	r3, r3, #8
+ 8001f32:	6afa      	ldr	r2, [r7, #44]	@ 0x2c
+ 8001f34:	3201      	adds	r2, #1
+ 8001f36:	6939      	ldr	r1, [r7, #16]
+ 8001f38:	440a      	add	r2, r1
+ 8001f3a:	7812      	ldrb	r2, [r2, #0]
+ 8001f3c:	4313      	orrs	r3, r2
+ 8001f3e:	62bb      	str	r3, [r7, #40]	@ 0x28
+				break;
+ 8001f40:	e004      	b.n	8001f4c <Displ_WChar+0x11c>
+			default:
+				b=pos[i];
+ 8001f42:	693a      	ldr	r2, [r7, #16]
+ 8001f44:	6afb      	ldr	r3, [r7, #44]	@ 0x2c
+ 8001f46:	4413      	add	r3, r2
+ 8001f48:	781b      	ldrb	r3, [r3, #0]
+ 8001f4a:	62bb      	str	r3, [r7, #40]	@ 0x28
+		}
+
+		for(j = 0; j < font.Width; j++) {
+ 8001f4c:	2300      	movs	r3, #0
+ 8001f4e:	627b      	str	r3, [r7, #36]	@ 0x24
+ 8001f50:	e072      	b.n	8002038 <Displ_WChar+0x208>
+			if((b << j) & mask)  {
+ 8001f52:	6aba      	ldr	r2, [r7, #40]	@ 0x28
+ 8001f54:	6a7b      	ldr	r3, [r7, #36]	@ 0x24
+ 8001f56:	409a      	lsls	r2, r3
+ 8001f58:	69fb      	ldr	r3, [r7, #28]
+ 8001f5a:	4013      	ands	r3, r2
+ 8001f5c:	2b00      	cmp	r3, #0
+ 8001f5e:	d034      	beq.n	8001fca <Displ_WChar+0x19a>
+				dispBuffer[bufSize++] = Rcol;
+ 8001f60:	4b53      	ldr	r3, [pc, #332]	@ (80020b0 <Displ_WChar+0x280>)
+ 8001f62:	681a      	ldr	r2, [r3, #0]
+ 8001f64:	6a3b      	ldr	r3, [r7, #32]
+ 8001f66:	1c59      	adds	r1, r3, #1
+ 8001f68:	6239      	str	r1, [r7, #32]
+ 8001f6a:	4413      	add	r3, r2
+ 8001f6c:	7bfa      	ldrb	r2, [r7, #15]
+ 8001f6e:	701a      	strb	r2, [r3, #0]
+				dispBuffer[bufSize++] = Gcol;
+ 8001f70:	4b4f      	ldr	r3, [pc, #316]	@ (80020b0 <Displ_WChar+0x280>)
+ 8001f72:	681a      	ldr	r2, [r3, #0]
+ 8001f74:	6a3b      	ldr	r3, [r7, #32]
+ 8001f76:	1c59      	adds	r1, r3, #1
+ 8001f78:	6239      	str	r1, [r7, #32]
+ 8001f7a:	4413      	add	r3, r2
+ 8001f7c:	7bba      	ldrb	r2, [r7, #14]
+ 8001f7e:	701a      	strb	r2, [r3, #0]
+				dispBuffer[bufSize++] = Bcol;
+ 8001f80:	4b4b      	ldr	r3, [pc, #300]	@ (80020b0 <Displ_WChar+0x280>)
+ 8001f82:	681a      	ldr	r2, [r3, #0]
+ 8001f84:	6a3b      	ldr	r3, [r7, #32]
+ 8001f86:	1c59      	adds	r1, r3, #1
+ 8001f88:	6239      	str	r1, [r7, #32]
+ 8001f8a:	4413      	add	r3, r2
+ 8001f8c:	7b7a      	ldrb	r2, [r7, #13]
+ 8001f8e:	701a      	strb	r2, [r3, #0]
+
+				if (size==2){
+ 8001f90:	f897 3050 	ldrb.w	r3, [r7, #80]	@ 0x50
+ 8001f94:	2b02      	cmp	r3, #2
+ 8001f96:	d14c      	bne.n	8002032 <Displ_WChar+0x202>
+					dispBuffer[bufSize++] = Rcol;
+ 8001f98:	4b45      	ldr	r3, [pc, #276]	@ (80020b0 <Displ_WChar+0x280>)
+ 8001f9a:	681a      	ldr	r2, [r3, #0]
+ 8001f9c:	6a3b      	ldr	r3, [r7, #32]
+ 8001f9e:	1c59      	adds	r1, r3, #1
+ 8001fa0:	6239      	str	r1, [r7, #32]
+ 8001fa2:	4413      	add	r3, r2
+ 8001fa4:	7bfa      	ldrb	r2, [r7, #15]
+ 8001fa6:	701a      	strb	r2, [r3, #0]
+					dispBuffer[bufSize++] = Gcol;
+ 8001fa8:	4b41      	ldr	r3, [pc, #260]	@ (80020b0 <Displ_WChar+0x280>)
+ 8001faa:	681a      	ldr	r2, [r3, #0]
+ 8001fac:	6a3b      	ldr	r3, [r7, #32]
+ 8001fae:	1c59      	adds	r1, r3, #1
+ 8001fb0:	6239      	str	r1, [r7, #32]
+ 8001fb2:	4413      	add	r3, r2
+ 8001fb4:	7bba      	ldrb	r2, [r7, #14]
+ 8001fb6:	701a      	strb	r2, [r3, #0]
+					dispBuffer[bufSize++] = Bcol;
+ 8001fb8:	4b3d      	ldr	r3, [pc, #244]	@ (80020b0 <Displ_WChar+0x280>)
+ 8001fba:	681a      	ldr	r2, [r3, #0]
+ 8001fbc:	6a3b      	ldr	r3, [r7, #32]
+ 8001fbe:	1c59      	adds	r1, r3, #1
+ 8001fc0:	6239      	str	r1, [r7, #32]
+ 8001fc2:	4413      	add	r3, r2
+ 8001fc4:	7b7a      	ldrb	r2, [r7, #13]
+ 8001fc6:	701a      	strb	r2, [r3, #0]
+ 8001fc8:	e033      	b.n	8002032 <Displ_WChar+0x202>
+				}
+			} else {
+				dispBuffer[bufSize++] = Rbak;
+ 8001fca:	4b39      	ldr	r3, [pc, #228]	@ (80020b0 <Displ_WChar+0x280>)
+ 8001fcc:	681a      	ldr	r2, [r3, #0]
+ 8001fce:	6a3b      	ldr	r3, [r7, #32]
+ 8001fd0:	1c59      	adds	r1, r3, #1
+ 8001fd2:	6239      	str	r1, [r7, #32]
+ 8001fd4:	4413      	add	r3, r2
+ 8001fd6:	7b3a      	ldrb	r2, [r7, #12]
+ 8001fd8:	701a      	strb	r2, [r3, #0]
+				dispBuffer[bufSize++] = Gbak;
+ 8001fda:	4b35      	ldr	r3, [pc, #212]	@ (80020b0 <Displ_WChar+0x280>)
+ 8001fdc:	681a      	ldr	r2, [r3, #0]
+ 8001fde:	6a3b      	ldr	r3, [r7, #32]
+ 8001fe0:	1c59      	adds	r1, r3, #1
+ 8001fe2:	6239      	str	r1, [r7, #32]
+ 8001fe4:	4413      	add	r3, r2
+ 8001fe6:	7afa      	ldrb	r2, [r7, #11]
+ 8001fe8:	701a      	strb	r2, [r3, #0]
+				dispBuffer[bufSize++] = Bbak;
+ 8001fea:	4b31      	ldr	r3, [pc, #196]	@ (80020b0 <Displ_WChar+0x280>)
+ 8001fec:	681a      	ldr	r2, [r3, #0]
+ 8001fee:	6a3b      	ldr	r3, [r7, #32]
+ 8001ff0:	1c59      	adds	r1, r3, #1
+ 8001ff2:	6239      	str	r1, [r7, #32]
+ 8001ff4:	4413      	add	r3, r2
+ 8001ff6:	7aba      	ldrb	r2, [r7, #10]
+ 8001ff8:	701a      	strb	r2, [r3, #0]
+				if (size==2) {
+ 8001ffa:	f897 3050 	ldrb.w	r3, [r7, #80]	@ 0x50
+ 8001ffe:	2b02      	cmp	r3, #2
+ 8002000:	d117      	bne.n	8002032 <Displ_WChar+0x202>
+					dispBuffer[bufSize++] = Rbak;
+ 8002002:	4b2b      	ldr	r3, [pc, #172]	@ (80020b0 <Displ_WChar+0x280>)
+ 8002004:	681a      	ldr	r2, [r3, #0]
+ 8002006:	6a3b      	ldr	r3, [r7, #32]
+ 8002008:	1c59      	adds	r1, r3, #1
+ 800200a:	6239      	str	r1, [r7, #32]
+ 800200c:	4413      	add	r3, r2
+ 800200e:	7b3a      	ldrb	r2, [r7, #12]
+ 8002010:	701a      	strb	r2, [r3, #0]
+					dispBuffer[bufSize++] = Gbak;
+ 8002012:	4b27      	ldr	r3, [pc, #156]	@ (80020b0 <Displ_WChar+0x280>)
+ 8002014:	681a      	ldr	r2, [r3, #0]
+ 8002016:	6a3b      	ldr	r3, [r7, #32]
+ 8002018:	1c59      	adds	r1, r3, #1
+ 800201a:	6239      	str	r1, [r7, #32]
+ 800201c:	4413      	add	r3, r2
+ 800201e:	7afa      	ldrb	r2, [r7, #11]
+ 8002020:	701a      	strb	r2, [r3, #0]
+					dispBuffer[bufSize++] = Bbak;
+ 8002022:	4b23      	ldr	r3, [pc, #140]	@ (80020b0 <Displ_WChar+0x280>)
+ 8002024:	681a      	ldr	r2, [r3, #0]
+ 8002026:	6a3b      	ldr	r3, [r7, #32]
+ 8002028:	1c59      	adds	r1, r3, #1
+ 800202a:	6239      	str	r1, [r7, #32]
+ 800202c:	4413      	add	r3, r2
+ 800202e:	7aba      	ldrb	r2, [r7, #10]
+ 8002030:	701a      	strb	r2, [r3, #0]
+		for(j = 0; j < font.Width; j++) {
+ 8002032:	6a7b      	ldr	r3, [r7, #36]	@ 0x24
+ 8002034:	3301      	adds	r3, #1
+ 8002036:	627b      	str	r3, [r7, #36]	@ 0x24
+ 8002038:	f8b7 3048 	ldrh.w	r3, [r7, #72]	@ 0x48
+ 800203c:	461a      	mov	r2, r3
+ 800203e:	6a7b      	ldr	r3, [r7, #36]	@ 0x24
+ 8002040:	4293      	cmp	r3, r2
+ 8002042:	d386      	bcc.n	8001f52 <Displ_WChar+0x122>
+	for(i = 0; i < (bytes); i+=font.Size){
+ 8002044:	f897 304c 	ldrb.w	r3, [r7, #76]	@ 0x4c
+ 8002048:	461a      	mov	r2, r3
+ 800204a:	6afb      	ldr	r3, [r7, #44]	@ 0x2c
+ 800204c:	4413      	add	r3, r2
+ 800204e:	62fb      	str	r3, [r7, #44]	@ 0x2c
+ 8002050:	6afa      	ldr	r2, [r7, #44]	@ 0x2c
+ 8002052:	697b      	ldr	r3, [r7, #20]
+ 8002054:	429a      	cmp	r2, r3
+ 8002056:	f4ff af4b 	bcc.w	8001ef0 <Displ_WChar+0xc0>
+			}
+		}
+	}
+#endif
+
+	Displ_SetAddressWindow(x, y, x+wsize-1, y+font.Height-1);
+ 800205a:	7efb      	ldrb	r3, [r7, #27]
+ 800205c:	b29a      	uxth	r2, r3
+ 800205e:	88fb      	ldrh	r3, [r7, #6]
+ 8002060:	4413      	add	r3, r2
+ 8002062:	b29b      	uxth	r3, r3
+ 8002064:	3b01      	subs	r3, #1
+ 8002066:	b29c      	uxth	r4, r3
+ 8002068:	f8b7 204a 	ldrh.w	r2, [r7, #74]	@ 0x4a
+ 800206c:	88bb      	ldrh	r3, [r7, #4]
+ 800206e:	4413      	add	r3, r2
+ 8002070:	b29b      	uxth	r3, r3
+ 8002072:	3b01      	subs	r3, #1
+ 8002074:	b29b      	uxth	r3, r3
+ 8002076:	88b9      	ldrh	r1, [r7, #4]
+ 8002078:	88f8      	ldrh	r0, [r7, #6]
+ 800207a:	4622      	mov	r2, r4
+ 800207c:	f7ff fd30 	bl	8001ae0 <Displ_SetAddressWindow>
+	Displ_WriteData(dispBuffer,bufSize,0);
+ 8002080:	4b0b      	ldr	r3, [pc, #44]	@ (80020b0 <Displ_WChar+0x280>)
+ 8002082:	681b      	ldr	r3, [r3, #0]
+ 8002084:	2200      	movs	r2, #0
+ 8002086:	6a39      	ldr	r1, [r7, #32]
+ 8002088:	4618      	mov	r0, r3
+ 800208a:	f7ff fcd2 	bl	8001a32 <Displ_WriteData>
+	dispBuffer = (dispBuffer==dispBuffer1 ? dispBuffer2 : dispBuffer1); // swapping buffer
+ 800208e:	4b08      	ldr	r3, [pc, #32]	@ (80020b0 <Displ_WChar+0x280>)
+ 8002090:	681b      	ldr	r3, [r3, #0]
+ 8002092:	4a08      	ldr	r2, [pc, #32]	@ (80020b4 <Displ_WChar+0x284>)
+ 8002094:	4293      	cmp	r3, r2
+ 8002096:	d101      	bne.n	800209c <Displ_WChar+0x26c>
+ 8002098:	4b07      	ldr	r3, [pc, #28]	@ (80020b8 <Displ_WChar+0x288>)
+ 800209a:	e000      	b.n	800209e <Displ_WChar+0x26e>
+ 800209c:	4b05      	ldr	r3, [pc, #20]	@ (80020b4 <Displ_WChar+0x284>)
+ 800209e:	4a04      	ldr	r2, [pc, #16]	@ (80020b0 <Displ_WChar+0x280>)
+ 80020a0:	6013      	str	r3, [r2, #0]
+
+}
+ 80020a2:	bf00      	nop
+ 80020a4:	3734      	adds	r7, #52	@ 0x34
+ 80020a6:	46bd      	mov	sp, r7
+ 80020a8:	e8bd 4090 	ldmia.w	sp!, {r4, r7, lr}
+ 80020ac:	b002      	add	sp, #8
+ 80020ae:	4770      	bx	lr
+ 80020b0:	20000014 	.word	0x20000014
+ 80020b4:	2000046c 	.word	0x2000046c
+ 80020b8:	20000c6c 	.word	0x20000c6c
+
+080020bc <Displ_WString>:
+ * 			font	to bu used
+ * 			size	1 (normal), 2 (double width)
+ * 			color	font color
+ * 			bgcolor	background color
+ ************************/
+void Displ_WString(uint16_t x, uint16_t y, const char* str, sFONT font, uint8_t size, uint16_t color, uint16_t bgcolor) {
+ 80020bc:	b082      	sub	sp, #8
+ 80020be:	b5f0      	push	{r4, r5, r6, r7, lr}
+ 80020c0:	b08b      	sub	sp, #44	@ 0x2c
+ 80020c2:	af06      	add	r7, sp, #24
+ 80020c4:	603a      	str	r2, [r7, #0]
+ 80020c6:	62fb      	str	r3, [r7, #44]	@ 0x2c
+ 80020c8:	4603      	mov	r3, r0
+ 80020ca:	80fb      	strh	r3, [r7, #6]
+ 80020cc:	460b      	mov	r3, r1
+ 80020ce:	80bb      	strh	r3, [r7, #4]
+	uint16_t delta=font.Width;
+ 80020d0:	8e3b      	ldrh	r3, [r7, #48]	@ 0x30
+ 80020d2:	81fb      	strh	r3, [r7, #14]
+	if (size>1)
+ 80020d4:	f897 3038 	ldrb.w	r3, [r7, #56]	@ 0x38
+ 80020d8:	2b01      	cmp	r3, #1
+ 80020da:	d922      	bls.n	8002122 <Displ_WString+0x66>
+		delta<<=1;
+ 80020dc:	89fb      	ldrh	r3, [r7, #14]
+ 80020de:	005b      	lsls	r3, r3, #1
+ 80020e0:	81fb      	strh	r3, [r7, #14]
+
+    while(*str) {
+ 80020e2:	e01e      	b.n	8002122 <Displ_WString+0x66>
+                str++;
+                continue;
+            }
+        }
+ */
+        Displ_WChar(x, y, *str, font, size, color, bgcolor);
+ 80020e4:	683b      	ldr	r3, [r7, #0]
+ 80020e6:	781a      	ldrb	r2, [r3, #0]
+ 80020e8:	88bd      	ldrh	r5, [r7, #4]
+ 80020ea:	88fc      	ldrh	r4, [r7, #6]
+ 80020ec:	f8b7 3040 	ldrh.w	r3, [r7, #64]	@ 0x40
+ 80020f0:	9304      	str	r3, [sp, #16]
+ 80020f2:	8fbb      	ldrh	r3, [r7, #60]	@ 0x3c
+ 80020f4:	9303      	str	r3, [sp, #12]
+ 80020f6:	f897 3038 	ldrb.w	r3, [r7, #56]	@ 0x38
+ 80020fa:	9302      	str	r3, [sp, #8]
+ 80020fc:	466e      	mov	r6, sp
+ 80020fe:	f107 0330 	add.w	r3, r7, #48	@ 0x30
+ 8002102:	e893 0003 	ldmia.w	r3, {r0, r1}
+ 8002106:	e886 0003 	stmia.w	r6, {r0, r1}
+ 800210a:	6afb      	ldr	r3, [r7, #44]	@ 0x2c
+ 800210c:	4629      	mov	r1, r5
+ 800210e:	4620      	mov	r0, r4
+ 8002110:	f7ff fe8e 	bl	8001e30 <Displ_WChar>
+        x += delta;
+ 8002114:	88fa      	ldrh	r2, [r7, #6]
+ 8002116:	89fb      	ldrh	r3, [r7, #14]
+ 8002118:	4413      	add	r3, r2
+ 800211a:	80fb      	strh	r3, [r7, #6]
+        str++;
+ 800211c:	683b      	ldr	r3, [r7, #0]
+ 800211e:	3301      	adds	r3, #1
+ 8002120:	603b      	str	r3, [r7, #0]
+    while(*str) {
+ 8002122:	683b      	ldr	r3, [r7, #0]
+ 8002124:	781b      	ldrb	r3, [r3, #0]
+ 8002126:	2b00      	cmp	r3, #0
+ 8002128:	d1dc      	bne.n	80020e4 <Displ_WString+0x28>
+    }
+}
+ 800212a:	bf00      	nop
+ 800212c:	bf00      	nop
+ 800212e:	3714      	adds	r7, #20
+ 8002130:	46bd      	mov	sp, r7
+ 8002132:	e8bd 40f0 	ldmia.w	sp!, {r4, r5, r6, r7, lr}
+ 8002136:	b002      	add	sp, #8
+ 8002138:	4770      	bx	lr
+	...
+
+0800213c <Displ_BackLight>:
+ *				'0'		set the display level to 0 (off)
+ *				'I'		'Initialize'  IT MUST BE in dimming mode
+ *              'Q'		do nothing, just return current level
+ * @return		current backlight level
+ **************************************/
+uint32_t  Displ_BackLight(uint8_t cmd) {
+ 800213c:	b580      	push	{r7, lr}
+ 800213e:	b082      	sub	sp, #8
+ 8002140:	af00      	add	r7, sp, #0
+ 8002142:	4603      	mov	r3, r0
+ 8002144:	71fb      	strb	r3, [r7, #7]
+
+#ifdef DISPLAY_DIMMING_MODE
+	static uint16_t memCCR1=0;  			//it stores CCR1 value while in stand-by
+#endif
+
+	switch (cmd) {
+ 8002146:	79fb      	ldrb	r3, [r7, #7]
+ 8002148:	2b51      	cmp	r3, #81	@ 0x51
+ 800214a:	d00a      	beq.n	8002162 <Displ_BackLight+0x26>
+ 800214c:	2b51      	cmp	r3, #81	@ 0x51
+ 800214e:	dc16      	bgt.n	800217e <Displ_BackLight+0x42>
+ 8002150:	2b46      	cmp	r3, #70	@ 0x46
+ 8002152:	d008      	beq.n	8002166 <Displ_BackLight+0x2a>
+ 8002154:	2b46      	cmp	r3, #70	@ 0x46
+ 8002156:	dc12      	bgt.n	800217e <Displ_BackLight+0x42>
+ 8002158:	2b30      	cmp	r3, #48	@ 0x30
+ 800215a:	d00a      	beq.n	8002172 <Displ_BackLight+0x36>
+ 800215c:	2b31      	cmp	r3, #49	@ 0x31
+ 800215e:	d002      	beq.n	8002166 <Displ_BackLight+0x2a>
+	  	HAL_TIM_PWM_Start(&BKLIT_T, BKLIT_CHANNEL);
+		BKLIT_TIMER->BKLIT_CCR=BKLIT_INIT_LEVEL;
+		break;
+#endif
+	default:
+		break;
+ 8002160:	e00d      	b.n	800217e <Displ_BackLight+0x42>
+		__NOP();
+ 8002162:	bf00      	nop
+		break;
+ 8002164:	e00c      	b.n	8002180 <Displ_BackLight+0x44>
+		HAL_GPIO_WritePin(DISPL_LED_GPIO_Port, DISPL_LED_Pin, GPIO_PIN_SET);
+ 8002166:	2201      	movs	r2, #1
+ 8002168:	2101      	movs	r1, #1
+ 800216a:	480a      	ldr	r0, [pc, #40]	@ (8002194 <Displ_BackLight+0x58>)
+ 800216c:	f000 fcc9 	bl	8002b02 <HAL_GPIO_WritePin>
+		break;
+ 8002170:	e006      	b.n	8002180 <Displ_BackLight+0x44>
+		HAL_GPIO_WritePin(DISPL_LED_GPIO_Port, DISPL_LED_Pin, GPIO_PIN_RESET);
+ 8002172:	2200      	movs	r2, #0
+ 8002174:	2101      	movs	r1, #1
+ 8002176:	4807      	ldr	r0, [pc, #28]	@ (8002194 <Displ_BackLight+0x58>)
+ 8002178:	f000 fcc3 	bl	8002b02 <HAL_GPIO_WritePin>
+		break;
+ 800217c:	e000      	b.n	8002180 <Displ_BackLight+0x44>
+		break;
+ 800217e:	bf00      	nop
+	}
+#ifndef DISPLAY_DIMMING_MODE
+	return HAL_GPIO_ReadPin(DISPL_LED_GPIO_Port, DISPL_LED_Pin);
+ 8002180:	2101      	movs	r1, #1
+ 8002182:	4804      	ldr	r0, [pc, #16]	@ (8002194 <Displ_BackLight+0x58>)
+ 8002184:	f000 fca6 	bl	8002ad4 <HAL_GPIO_ReadPin>
+ 8002188:	4603      	mov	r3, r0
+#else
+	return (BKLIT_TIMER->BKLIT_CCR);
+#endif
+}
+ 800218a:	4618      	mov	r0, r3
+ 800218c:	3708      	adds	r7, #8
+ 800218e:	46bd      	mov	sp, r7
+ 8002190:	bd80      	pop	{r7, pc}
+ 8002192:	bf00      	nop
+ 8002194:	40011000 	.word	0x40011000
+
+08002198 <Reset_Handler>:
+ 8002198:	f7ff fb98 	bl	80018cc <SystemInit>
+ 800219c:	480b      	ldr	r0, [pc, #44]	@ (80021cc <LoopFillZerobss+0xe>)
+ 800219e:	490c      	ldr	r1, [pc, #48]	@ (80021d0 <LoopFillZerobss+0x12>)
+ 80021a0:	4a0c      	ldr	r2, [pc, #48]	@ (80021d4 <LoopFillZerobss+0x16>)
+ 80021a2:	2300      	movs	r3, #0
+ 80021a4:	e002      	b.n	80021ac <LoopCopyDataInit>
+
+080021a6 <CopyDataInit>:
+ 80021a6:	58d4      	ldr	r4, [r2, r3]
+ 80021a8:	50c4      	str	r4, [r0, r3]
+ 80021aa:	3304      	adds	r3, #4
+
+080021ac <LoopCopyDataInit>:
+ 80021ac:	18c4      	adds	r4, r0, r3
+ 80021ae:	428c      	cmp	r4, r1
+ 80021b0:	d3f9      	bcc.n	80021a6 <CopyDataInit>
+ 80021b2:	4a09      	ldr	r2, [pc, #36]	@ (80021d8 <LoopFillZerobss+0x1a>)
+ 80021b4:	4c09      	ldr	r4, [pc, #36]	@ (80021dc <LoopFillZerobss+0x1e>)
+ 80021b6:	2300      	movs	r3, #0
+ 80021b8:	e001      	b.n	80021be <LoopFillZerobss>
+
+080021ba <FillZerobss>:
+ 80021ba:	6013      	str	r3, [r2, #0]
+ 80021bc:	3204      	adds	r2, #4
+
+080021be <LoopFillZerobss>:
+ 80021be:	42a2      	cmp	r2, r4
+ 80021c0:	d3fb      	bcc.n	80021ba <FillZerobss>
+ 80021c2:	f002 fd39 	bl	8004c38 <__libc_init_array>
+ 80021c6:	f7fe fd33 	bl	8000c30 <main>
+ 80021ca:	4770      	bx	lr
+ 80021cc:	20000000 	.word	0x20000000
+ 80021d0:	200001e8 	.word	0x200001e8
+ 80021d4:	08007c40 	.word	0x08007c40
+ 80021d8:	200001e8 	.word	0x200001e8
+ 80021dc:	200015c4 	.word	0x200015c4
+
+080021e0 <ADC1_2_IRQHandler>:
+ 80021e0:	e7fe      	b.n	80021e0 <ADC1_2_IRQHandler>
+	...
+
+>>>>>>> 928725bc776280fc3b4c89092f9a61b3862bd586
 080021e4 <HAL_Init>:
   *         need to ensure that the SysTick time base is always set to 1 millisecond
   *         to have correct HAL operation.
