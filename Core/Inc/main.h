@@ -33,11 +33,14 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include "GPS.h"
 #include <math.h>
+#include "fonts.h"
+#include "z_displ_ILI9XXX.h"
+#include "z_displ_ILI9XXX_test.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-extern uint8_t buttons;
+extern volatile uint8_t buttons;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
