@@ -284,26 +284,14 @@ int main(void)
 //	  HAL_Delay(30);
 	  //buttons = 0;
 
-	  if (buttons & 0x01) { ui_sd_mounted  ^= 1; UI_DrawLine(0, "B1 - Mount SD Card",   ui_sd_mounted); buttons = 0;}
-	  if (buttons & 0x02) { ui_create_file ^= 1; UI_DrawLine(1, "B2 - Create file",     ui_create_file); buttons = 0;}
-	  if (buttons & 0x04) { ui_run_test    ^= 1; UI_DrawLine(2, "B3 - Run Test",        ui_run_test); buttons = 0;}
-	  if (buttons & 0x08) { ui_excit1      ^= 1; UI_DrawLine(3, "B4 - Exciter Relay 1", ui_excit1); buttons = 0;}
-	  if (buttons & 0x10) { ui_excit2      ^= 1; UI_DrawLine(4, "B5 - Exciter Relay 2", ui_excit2); buttons = 0;}
-
-	  uint8_t ev;
-	  __disable_irq();
-	  ev = buttons;
-	  buttons = 0;
-	  __enable_irq();
-
-	  if (ev & 0x01) { ui_sd_mounted  ^= 1; UI_DrawLine(0, "Mount SD Card",   ui_sd_mounted, 10, 30); }
-	  if (ev & 0x02) { ui_create_file ^= 1; UI_DrawLine(1, "Create file",     ui_create_file, 10, 150); }
-	  if (ev & 0x04) { ui_run_test    ^= 1; UI_DrawLine(2, "Run Test",        ui_run_test, 10, 300); }
-	  if (ev & 0x08) { ui_excit1      ^= 1; UI_DrawLine(3, "Exciter Relay 1", ui_excit1, 250, 30); }
-	  if (ev & 0x10) { ui_excit2      ^= 1; UI_DrawLine(4, "Exciter Relay 2", ui_excit2, 250, 150); }
+	  if (buttons & 0x01) { ui_sd_mounted  ^= 1; UI_DrawLine(0, "B1 - Mount SD Card",   ui_sd_mounted, 10, 30); buttons = 0;}
+	  if (buttons & 0x02) { ui_create_file ^= 1; UI_DrawLine(1, "B2 - Create file",     ui_create_file, 10, 150); buttons = 0;}
+	  if (buttons & 0x04) { ui_run_test    ^= 1; UI_DrawLine(2, "B3 - Run Test",        ui_run_test, 10, 300); buttons = 0;}
+	  if (buttons & 0x08) { ui_excit1      ^= 1; UI_DrawLine(3, "B4 - Exciter Relay 1", ui_excit1, 250, 30); buttons = 0;}
+	  if (buttons & 0x10) { ui_excit2      ^= 1; UI_DrawLine(4, "B5 - Exciter Relay 2", ui_excit2, 250, 150); buttons = 0;}
 	  // (PB-6 bit 0x20 ignored for now)
 	  char buf[32];
-	  sprintf(&buf, "Current Temp: %.2f C", current_temp);
+	  sprintf(buf, "Current Temp: %.2f C", current_temp);
 	  Displ_WString(250, 300, buf, Font16, 1, WHITE, BLACK);
 
 	  HAL_Delay(5);
