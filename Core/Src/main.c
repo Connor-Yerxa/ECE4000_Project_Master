@@ -53,11 +53,25 @@ SPI_HandleTypeDef hspi2;
 DMA_HandleTypeDef hdma_spi1_rx;
 DMA_HandleTypeDef hdma_spi1_tx;
 
+TIM_HandleTypeDef htim3;
+
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 DMA_HandleTypeDef hdma_usart1_rx;
 
 /* USER CODE BEGIN PV */
+
+// Faaiz UI 0/1 states
+static uint8_t ui_sd_mounted   = 0;
+static uint8_t ui_create_file  = 0;
+static uint8_t ui_run_test     = 0;
+static uint8_t ui_excit1       = 0;
+static uint8_t ui_excit2       = 0;
+
+// Faaiz screen Layout
+#define UI_X      20
+#define UI_Y0     40
+#define UI_DY     40
 
 /* USER CODE END PV */
 
@@ -69,13 +83,14 @@ static void MX_SPI1_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_USART1_UART_Init(void);
+static void MX_TIM3_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-uint8_t buttons = 0;
+volatile uint8_t buttons = 0;
 
 int _write(int file, char *ptr, int len) {
     for (int i = 0; i < len; i++) {
@@ -105,6 +120,28 @@ int SDMOUNT(SPI_HandleTypeDef *hspi)
 	return connected;
 }
 
+// Faaiz screen
+static void UI_DrawLine(uint8_t line, const char *text, uint8_t val)
+{
+  char buf[64];
+  snprintf(buf, sizeof(buf), "%s: %d", text, val);
+  Displ_WString(UI_X, (uint16_t)(UI_Y0 + line * UI_DY),
+                buf, Font16, 1, WHITE, BLACK);
+}
+
+static void UI_DrawAll(void)
+{
+  Displ_CLS(BLACK);
+
+  Displ_WString(UI_X, 10, "Button / Screen Test", Font16, 1, WHITE, BLACK);
+
+  UI_DrawLine(0, "B1 - Mount SD Card",   ui_sd_mounted);
+  UI_DrawLine(1, "B2 - Create file",     ui_create_file);
+  UI_DrawLine(2, "B3 - Run Test",        ui_run_test);
+  UI_DrawLine(3, "B4 - Exciter Relay 1", ui_excit1);
+  UI_DrawLine(4, "B5 - Exciter Relay 2", ui_excit2);
+}
+// Faaiz screen
 /* USER CODE END 0 */
 
 /**
@@ -142,6 +179,7 @@ int main(void)
   MX_SPI2_Init();
   MX_USART2_UART_Init();
   MX_USART1_UART_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 
 //  SD_CS_HIGH();  // Ensure card is deselected
@@ -215,7 +253,14 @@ int main(void)
 //  }
 //  printf("\n");
 
-
+  // Faaiz screen
+  // Display init
+  Displ_Init(Displ_Orientat_0);
+  Displ_CLS(BLACK);
+  Displ_BackLight('I');
+  // Draw the page once
+  UI_DrawAll();
+  // Faaiz screen
 
 
 
@@ -228,10 +273,26 @@ int main(void)
   while (1)
   {
 	 // read_buttons();
-	  uint8_t i=buttons;
-	  printf("b: %x \n", buttons);
-	  HAL_Delay(30);
+//	  uint8_t i=buttons;
+//	  printf("b: %x \n", buttons);
+//	  HAL_Delay(30);
 	  //buttons = 0;
+	  uint8_t ev;
+	  __disable_irq();
+	  ev = buttons;
+	  buttons = 0;
+	  __enable_irq();
+
+	  if (ev & 0x01) { ui_sd_mounted  ^= 1; UI_DrawLine(0, "B1 - Mount SD Card",   ui_sd_mounted); }
+	  if (ev & 0x02) { ui_create_file ^= 1; UI_DrawLine(1, "B2 - Create file",     ui_create_file); }
+	  if (ev & 0x04) { ui_run_test    ^= 1; UI_DrawLine(2, "B3 - Run Test",        ui_run_test); }
+	  if (ev & 0x08) { ui_excit1      ^= 1; UI_DrawLine(3, "B4 - Exciter Relay 1", ui_excit1); }
+	  if (ev & 0x10) { ui_excit2      ^= 1; UI_DrawLine(4, "B5 - Exciter Relay 2", ui_excit2); }
+
+	  // (PB-6 bit 0x20 ignored for now)
+
+	  HAL_Delay(5);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -351,6 +412,51 @@ static void MX_SPI2_Init(void)
   /* USER CODE BEGIN SPI2_Init 2 */
 
   /* USER CODE END SPI2_Init 2 */
+
+}
+
+/**
+  * @brief TIM3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM3_Init(void)
+{
+
+  /* USER CODE BEGIN TIM3_Init 0 */
+
+  /* USER CODE END TIM3_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM3_Init 1 */
+
+  /* USER CODE END TIM3_Init 1 */
+  htim3.Instance = TIM3;
+  htim3.Init.Prescaler = 0;
+  htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim3.Init.Period = 65535;
+  htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM3_Init 2 */
+
+  /* USER CODE END TIM3_Init 2 */
 
 }
 
@@ -572,6 +678,23 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   {
 	  buttons |= 0x20;
   }
+}
+
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+    // SD card SPI TX complete
+    if (hspi == &SD_SPI_HANDLE) {
+        dma_tx_done = 1;
+    }
+
+    // Display SPI TX complete
+    // Your display code checks the SPI instance, so we mirror that:
+    if (hspi->Instance == DISPL_SPI) {
+        Displ_SpiAvailable = 1;
+	#ifdef DISPLAY_USING_TOUCHGFX
+        DisplayDriver_TransferCompleteCallback();
+	#endif
+    }
 }
 /* USER CODE END 4 */
 

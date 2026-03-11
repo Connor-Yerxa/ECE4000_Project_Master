@@ -41,13 +41,30 @@ extern SPI_HandleTypeDef hspi1;
 volatile int dma_tx_done = 0;
 volatile int dma_rx_done = 0;
 
-void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi) {
-	if (hspi == &SD_SPI_HANDLE) dma_tx_done = 1;
-}
+//void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi) {
+//	if (hspi == &SD_SPI_HANDLE) dma_tx_done = 1;
+//}
+//void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
+//{
+//    // SD card SPI TX complete
+//    if (hspi == &SD_SPI_HANDLE) {
+//        dma_tx_done = 1;
+//    }
+//
+//    // Display SPI TX complete
+//    // Your display code checks the SPI instance, so we mirror that:
+//    if (hspi->Instance == DISPL_SPI) {
+//        Displ_SpiAvailable = 1;
+//	#ifdef DISPLAY_USING_TOUCHGFX
+//        DisplayDriver_TransferCompleteCallback();
+//	#endif
+//    }
+//}
 
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
 	if (hspi == &hspi1) dma_rx_done = 1;
 }
+
 #endif
 
 static void SD_TransmitByte(uint8_t data) {

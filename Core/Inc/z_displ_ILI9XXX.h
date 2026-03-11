@@ -42,7 +42,7 @@
  ***** If external flash handled by TOUCHGFX,******
  ************* let #define commented **************
  **************************************************/
-#define EXT_FLASH_BASEADDRESS 0X90000000 // mapped flash base address
+//#define EXT_FLASH_BASEADDRESS 0X90000000 // mapped flash base address
 
 /*****************     STEP 1      *****************
  ************ Enable TouchGFX interface ************

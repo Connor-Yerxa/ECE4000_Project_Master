@@ -342,16 +342,16 @@ void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi){
 
 
 
-void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi) {
-	if (hspi->Instance==DISPL_SPI) {
-		Displ_SpiAvailable=1;
+// void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi) {
+//	if (hspi->Instance==DISPL_SPI) {
+//		Displ_SpiAvailable=1;
 
-	#ifdef DISPLAY_USING_TOUCHGFX
-		DisplayDriver_TransferCompleteCallback();
-	#endif
+//	#ifdef DISPLAY_USING_TOUCHGFX
+//		DisplayDriver_TransferCompleteCallback();
+//	#endif
 
-	}
-}
+//	}
+//}
 
 
 
