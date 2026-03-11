@@ -22,7 +22,11 @@ void readMeasurementData(char * filename, int * tempsLen, int maxprintout)
 {
 	FIL file;
 	FRESULT fin = f_open(&file, filename, FA_READ);
-	if(fin != FR_OK) printf("Couln\'t open: %s", filename);
+	if(fin != FR_OK)
+	{
+		printf("Couln\'t open: %s", filename);
+		return;
+	}
 
 	*tempsLen = 0;
 
@@ -35,9 +39,13 @@ void readMeasurementData(char * filename, int * tempsLen, int maxprintout)
 	float newTemp;
 	while(f_gets((TCHAR*)line, 64, &file) != 0 && (i < maxprintout || maxprintout == 0))
 	{
-		newTemp = atof(line);
+		char * token = strtok(line, ",");
+		float time = atof(token);
+		token = strtok(NULL, ",");
+		token = strtok(NULL, ",");
+		newTemp = atof(token);
 
-		printf("Time %.2f: %.3f C\n", (float)i/15.0, newTemp);
+		printf("Time %.2f: %.3f C\n", time, newTemp);
 		i++;
 	}
 
@@ -129,7 +137,7 @@ uint8_t WriteMetaData(char * filename, METADATA md)
 	sprintf(field, "%s%s\n\n\n", MetadataLabelStrings[META_CALIBRATION_APPLIED], META_SPACE);
 	sd_append_file(filename, field);
 
-	sd_append_file(filename, "Delta Temperature (degC)\n");
+	sd_append_file(filename, "Time (s),lnTime (s),Delta Temperature (degC)");
 
 
 	return 0;
@@ -162,4 +170,16 @@ uint8_t createMeasurementFile(char ** filename,  METADATA * md)
 	}
 
 	return 0;
+}
+
+uint8_t appendTempMeasurement(char * filename, float delta_temp, uint32_t delta_time)
+{
+	float time = (float)delta_time / 1000;
+	float ln_time = log(time);
+
+	char line[64];
+
+	sprintf(line, "%.4f,%.4f,%.4f\n", time, ln_time, delta_temp);
+	uint8_t appended = sd_append_file(filename, line);
+	return appended;
 }

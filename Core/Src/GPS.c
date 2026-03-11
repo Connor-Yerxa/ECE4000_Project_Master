@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "sd_functions.h"
+#include "main.h"
 
 uint8_t gps_dma_buf[GPS_DMA_BUF_SIZE];
 
@@ -157,6 +158,12 @@ void GPS_oneshot()
 	while(!gps_data.valid && i < GPS_WAIT)
 	{
 		GPS_Process();
+		if(SKIP_GPS && buttons & 0x01)
+		{
+			buttons = 0;
+			printf("Skipping gps\n");
+			break;
+		}
 //		printGPSData(gps_data);
 		HAL_Delay(500);
 		i++;

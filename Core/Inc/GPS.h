@@ -34,6 +34,8 @@ extern GPS_Data_t gps_data;
 extern uint8_t TIME_ZONE;
 extern uint16_t GPS_WAIT;
 
+#define SKIP_GPS 1
+
 void GPS_Off_On(uint8_t state);
 void calc_timestamp();
 void GPS_default();
