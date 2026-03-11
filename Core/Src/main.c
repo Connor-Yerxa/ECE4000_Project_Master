@@ -69,10 +69,11 @@ static uint8_t ui_create_file  = 0;
 static uint8_t ui_run_test     = 0;
 static uint8_t ui_excit1       = 0;
 static uint8_t ui_excit2       = 0;
+static float current_temp      = 0;
 
 // Faaiz screen Layout
-#define UI_X      20
-#define UI_Y0     40
+//#define UI_X      20
+//#define UI_Y0     40
 #define UI_DY     40
 
 /* USER CODE END PV */
@@ -123,11 +124,11 @@ int SDMOUNT(SPI_HandleTypeDef *hspi)
 }
 
 // Faaiz screen
-static void UI_DrawLine(uint8_t line, const char *text, uint8_t val)
+static void UI_DrawLine(uint8_t line, const char *text, uint8_t val, uint16_t UI_X, uint16_t UI_Y0)
 {
   char buf[64];
   snprintf(buf, sizeof(buf), "%s: %d", text, val);
-  Displ_WString(UI_X, (uint16_t)(UI_Y0 + line * UI_DY),
+  Displ_WString(UI_X, UI_Y0,
                 buf, Font16, 1, WHITE, BLACK);
 }
 
@@ -135,13 +136,14 @@ static void UI_DrawAll(void)
 {
   Displ_CLS(BLACK);
 
-  Displ_WString(UI_X, 10, "Button / Screen Test", Font16, 1, WHITE, BLACK);
+  Displ_WString(130, 10, "Button / Screen Test", Font16, 1, WHITE, BLACK);
 
-  UI_DrawLine(0, "B1 - Mount SD Card",   ui_sd_mounted);
-  UI_DrawLine(1, "B2 - Create file",     ui_create_file);
-  UI_DrawLine(2, "B3 - Run Test",        ui_run_test);
-  UI_DrawLine(3, "B4 - Exciter Relay 1", ui_excit1);
-  UI_DrawLine(4, "B5 - Exciter Relay 2", ui_excit2);
+  UI_DrawLine(0, "Mount SD Card",   ui_sd_mounted, 10, 30);
+  UI_DrawLine(1, "Create file",     ui_create_file, 10, 150);
+  UI_DrawLine(2, "Run Test",        ui_run_test, 10, 300);
+  UI_DrawLine(3, "Exciter Relay 1", ui_excit1, 250, 30);
+  UI_DrawLine(4, "Exciter Relay 2", ui_excit2, 250, 150);
+  UI_DrawLine(5, "Current Temp", current_temp, 250, 300);
 }
 // Faaiz screen
 /* USER CODE END 0 */
@@ -286,13 +288,15 @@ int main(void)
 	  buttons = 0;
 	  __enable_irq();
 
-	  if (ev & 0x01) { ui_sd_mounted  ^= 1; UI_DrawLine(0, "B1 - Mount SD Card",   ui_sd_mounted); }
-	  if (ev & 0x02) { ui_create_file ^= 1; UI_DrawLine(1, "B2 - Create file",     ui_create_file); }
-	  if (ev & 0x04) { ui_run_test    ^= 1; UI_DrawLine(2, "B3 - Run Test",        ui_run_test); }
-	  if (ev & 0x08) { ui_excit1      ^= 1; UI_DrawLine(3, "B4 - Exciter Relay 1", ui_excit1); }
-	  if (ev & 0x10) { ui_excit2      ^= 1; UI_DrawLine(4, "B5 - Exciter Relay 2", ui_excit2); }
-
+	  if (ev & 0x01) { ui_sd_mounted  ^= 1; UI_DrawLine(0, "Mount SD Card",   ui_sd_mounted, 10, 30); }
+	  if (ev & 0x02) { ui_create_file ^= 1; UI_DrawLine(1, "Create file",     ui_create_file, 10, 150); }
+	  if (ev & 0x04) { ui_run_test    ^= 1; UI_DrawLine(2, "Run Test",        ui_run_test, 10, 300); }
+	  if (ev & 0x08) { ui_excit1      ^= 1; UI_DrawLine(3, "Exciter Relay 1", ui_excit1, 250, 30); }
+	  if (ev & 0x10) { ui_excit2      ^= 1; UI_DrawLine(4, "Exciter Relay 2", ui_excit2, 250, 150); }
 	  // (PB-6 bit 0x20 ignored for now)
+	  char buf[32];
+	  sprintf(&buf, "Current Temp: %.2f C", current_temp);
+	  Displ_WString(250, 300, buf, Font16, 1, WHITE, BLACK);
 
 	  HAL_Delay(5);
 
