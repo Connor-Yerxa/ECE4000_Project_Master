@@ -281,25 +281,20 @@ int main(void)
 //	  printf("b: %x \n", buttons);
 //	  HAL_Delay(30);
 	  //buttons = 0;
-	  uint8_t ev;
-	  __disable_irq();
-	  ev = buttons;
-	  buttons = 0;
-	  __enable_irq();
 
-	  if (ev & 0x01) { ui_sd_mounted  ^= 1; UI_DrawLine(0, "B1 - Mount SD Card",   ui_sd_mounted); }
-	  if (ev & 0x02) { ui_create_file ^= 1; UI_DrawLine(1, "B2 - Create file",     ui_create_file); }
-	  if (ev & 0x04) { ui_run_test    ^= 1; UI_DrawLine(2, "B3 - Run Test",        ui_run_test); }
-	  if (ev & 0x08) { ui_excit1      ^= 1; UI_DrawLine(3, "B4 - Exciter Relay 1", ui_excit1); }
-	  if (ev & 0x10) { ui_excit2      ^= 1; UI_DrawLine(4, "B5 - Exciter Relay 2", ui_excit2); }
+	  if (buttons & 0x01) { ui_sd_mounted  ^= 1; UI_DrawLine(0, "B1 - Mount SD Card",   ui_sd_mounted); buttons = 0;}
+	  if (buttons & 0x02) { ui_create_file ^= 1; UI_DrawLine(1, "B2 - Create file",     ui_create_file); buttons = 0;}
+	  if (buttons & 0x04) { ui_run_test    ^= 1; UI_DrawLine(2, "B3 - Run Test",        ui_run_test); buttons = 0;}
+	  if (buttons & 0x08) { ui_excit1      ^= 1; UI_DrawLine(3, "B4 - Exciter Relay 1", ui_excit1); buttons = 0;}
+	  if (buttons & 0x10) { ui_excit2      ^= 1; UI_DrawLine(4, "B5 - Exciter Relay 2", ui_excit2); buttons = 0;}
 
 	  // (PB-6 bit 0x20 ignored for now)
 
 	  HAL_Delay(5);
 
-	  printf("b: %02x \n", buttons);
+//	  printf("b: %02x \n", buttons);
 //	  HAL_Delay(30);
-	  buttons = 0;
+//	  buttons = 0;
 
 //	  float temp=readTemp();
 //	  printf("Temp: %2.3f\n", temp);
