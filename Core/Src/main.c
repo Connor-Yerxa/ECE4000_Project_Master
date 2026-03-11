@@ -268,10 +268,6 @@ int main(void)
   UI_DrawAll();
   // Faaiz screen
 
-
-
-
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -303,9 +299,9 @@ int main(void)
 //	  HAL_Delay(30);
 	  buttons = 0;
 
-	  float temp=readTemp();
-	  printf("Temp: %2.3f\n", temp);
-	  HAL_Delay(500);
+//	  float temp=readTemp();
+//	  printf("Temp: %2.3f\n", temp);
+//	  HAL_Delay(500);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
