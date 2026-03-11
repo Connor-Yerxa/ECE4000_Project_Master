@@ -23,10 +23,14 @@ Core/Src/MAX_Commands.o: ../Core/Src/MAX_Commands.c \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h \
+ ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h \
+ ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h \
  ../Core/Inc/max31865_stm32.h ../Core/Inc/max31856_stm32.h \
  ../Core/Inc/max31865_stm32.h ../Core/Inc/main.h ../Core/Inc/GPS.h \
- ../Core/Inc/main.h ../Middlewares/Third_Party/FatFs/src/integer.h
+ ../Core/Inc/main.h ../Middlewares/Third_Party/FatFs/src/integer.h \
+ ../Core/Inc/fonts.h ../Core/Inc/z_displ_ILI9XXX.h \
+ ../Core/Inc/z_displ_ILI9XXX_test.h
 ../Core/Inc/MAX_Commands.h:
 ../Core/Inc/max31856_stm32.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:
@@ -52,6 +56,8 @@ Core/Src/MAX_Commands.o: ../Core/Src/MAX_Commands.c \
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:
 ../Core/Inc/max31865_stm32.h:
 ../Core/Inc/max31856_stm32.h:
@@ -60,3 +66,6 @@ Core/Src/MAX_Commands.o: ../Core/Src/MAX_Commands.c \
 ../Core/Inc/GPS.h:
 ../Core/Inc/main.h:
 ../Middlewares/Third_Party/FatFs/src/integer.h:
+../Core/Inc/fonts.h:
+../Core/Inc/z_displ_ILI9XXX.h:
+../Core/Inc/z_displ_ILI9XXX_test.h:

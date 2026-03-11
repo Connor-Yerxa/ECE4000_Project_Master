@@ -39,7 +39,7 @@ DRESULT SD_disk_read(BYTE pdrv, BYTE *buff, DWORD sector, UINT count) {
     return (SD_ReadBlocks(buff, sector, count) == SD_OK) ? RES_OK : RES_ERROR;
 }
 
-DRESULT SD_disk_write(BYTE pdrv,  BYTE *buff, DWORD sector, UINT count) {
+DRESULT SD_disk_write(BYTE pdrv,  const BYTE *buff, DWORD sector, UINT count) {
     if (pdrv || !count) return RES_PARERR;
     if (!card_initialized) return RES_NOTRDY;
     return (SD_WriteBlocks(buff, sector, count) == SD_OK) ? RES_OK : RES_ERROR;
