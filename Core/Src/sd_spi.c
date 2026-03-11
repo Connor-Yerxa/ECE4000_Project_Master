@@ -60,6 +60,12 @@ volatile int dma_rx_done = 0;
 //	#endif
 //    }
 //}
+void SD_OnSpiTxComplete(SPI_HandleTypeDef *hspi)
+{
+    if (hspi == &SD_SPI_HANDLE) {
+        dma_tx_done = 1;
+    }
+}
 
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
 	if (hspi == &hspi1) dma_rx_done = 1;

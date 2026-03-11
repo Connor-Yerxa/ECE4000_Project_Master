@@ -337,11 +337,6 @@ void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi){
 	}
 }
 
-
-
-
-
-
 // void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi) {
 //	if (hspi->Instance==DISPL_SPI) {
 //		Displ_SpiAvailable=1;
@@ -352,7 +347,12 @@ void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi){
 
 //	}
 //}
-
+void Displ_OnSpiTxComplete(SPI_HandleTypeDef *hspi)
+{
+    if (hspi->Instance == DISPL_SPI) {
+        Displ_SpiAvailable = 1;
+    }
+}
 
 
 

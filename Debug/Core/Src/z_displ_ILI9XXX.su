@@ -7,6 +7,7 @@
 ../Core/Src/z_displ_ILI9XXX.c:277:6:Displ_Init	16	static
 ../Core/Src/z_displ_ILI9XXX.c:302:6:Displ_Orientation	16	static
 ../Core/Src/z_displ_ILI9XXX.c:334:6:HAL_SPI_ErrorCallback	16	static
+../Core/Src/z_displ_ILI9XXX.c:350:6:Displ_OnSpiTxComplete	16	static
 ../Core/Src/z_displ_ILI9XXX.c:365:6:Displ_FillArea	56	static
 ../Core/Src/z_displ_ILI9XXX.c:455:6:ILI9488_DrawImage	24	static
 ../Core/Src/z_displ_ILI9XXX.c:466:6:Displ_DrawImage	32	static
