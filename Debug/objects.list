@@ -1,4 +1,5 @@
 "./Core/Src/GPS.o"
+"./Core/Src/MAX_Commands.o"
 "./Core/Src/SD_Commands.o"
 "./Core/Src/font12.o"
 "./Core/Src/font16.o"
@@ -6,6 +7,7 @@
 "./Core/Src/font24.o"
 "./Core/Src/font8.o"
 "./Core/Src/main.o"
+"./Core/Src/max31856_stm32.o"
 "./Core/Src/max31865_stm32.o"
 "./Core/Src/sd_benchmark.o"
 "./Core/Src/sd_diskio_spi.o"

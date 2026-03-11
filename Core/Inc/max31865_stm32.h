@@ -36,6 +36,9 @@ extern "C" {
 #define MAX31865_FAULT_RTDINLOW      0x08
 #define MAX31865_FAULT_OVUV          0x04
 
+extern float RTD_NOMINAL_OHMS;
+extern float RREF_OHMS;
+
 typedef enum {
     MAX31865_WIRES_2 = 2,
     MAX31865_WIRES_3 = 3,

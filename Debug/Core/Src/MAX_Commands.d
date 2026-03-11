@@ -1,4 +1,5 @@
-Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
+Core/Src/MAX_Commands.o: ../Core/Src/MAX_Commands.c \
+ ../Core/Inc/MAX_Commands.h ../Core/Inc/max31856_stm32.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h \
  ../Core/Inc/stm32f1xx_hal_conf.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h \
@@ -22,27 +23,12 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h \
- ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h \
- ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h \
- ../Core/Inc/GPS.h ../Core/Inc/main.h \
- ../Middlewares/Third_Party/FatFs/src/integer.h ../Core/Inc/fonts.h \
- ../Core/Inc/z_displ_ILI9XXX.h ../Core/Inc/z_displ_ILI9XXX_test.h \
- ../FATFS/App/fatfs.h ../Middlewares/Third_Party/FatFs/src/ff.h \
- ../Middlewares/Third_Party/FatFs/src/integer.h ../FATFS/Target/ffconf.h \
- ../Middlewares/Third_Party/FatFs/src/ff_gen_drv.h \
- ../Middlewares/Third_Party/FatFs/src/diskio.h \
- ../Middlewares/Third_Party/FatFs/src/ff.h ../FATFS/Target/user_diskio.h \
- ../Core/Inc/sd_functions.h ../Core/Inc/max31865_stm32.h \
-<<<<<<< HEAD
- ../Core/Inc/SD_Commands.h ../Core/Inc/sd_functions.h \
- ../Core/Inc/sd_spi.h ../Core/Inc/z_displ_ILI9XXX.h
-=======
- ../Core/Inc/max31856_stm32.h ../Core/Inc/SD_Commands.h \
- ../Core/Inc/sd_functions.h ../Core/Inc/MAX_Commands.h \
- ../Core/Inc/max31856_stm32.h ../Core/Inc/max31865_stm32.h
->>>>>>> 2d2fc10e3837f463ece819466137dcbad5f69116
-../Core/Inc/main.h:
+ ../Core/Inc/max31865_stm32.h ../Core/Inc/max31856_stm32.h \
+ ../Core/Inc/max31865_stm32.h ../Core/Inc/main.h ../Core/Inc/GPS.h \
+ ../Core/Inc/main.h ../Middlewares/Third_Party/FatFs/src/integer.h
+../Core/Inc/MAX_Commands.h:
+../Core/Inc/max31856_stm32.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:
 ../Core/Inc/stm32f1xx_hal_conf.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h:
@@ -66,33 +52,11 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h:
-../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h:
-../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:
+../Core/Inc/max31865_stm32.h:
+../Core/Inc/max31856_stm32.h:
+../Core/Inc/max31865_stm32.h:
+../Core/Inc/main.h:
 ../Core/Inc/GPS.h:
 ../Core/Inc/main.h:
 ../Middlewares/Third_Party/FatFs/src/integer.h:
-../Core/Inc/fonts.h:
-../Core/Inc/z_displ_ILI9XXX.h:
-../Core/Inc/z_displ_ILI9XXX_test.h:
-../FATFS/App/fatfs.h:
-../Middlewares/Third_Party/FatFs/src/ff.h:
-../Middlewares/Third_Party/FatFs/src/integer.h:
-../FATFS/Target/ffconf.h:
-../Middlewares/Third_Party/FatFs/src/ff_gen_drv.h:
-../Middlewares/Third_Party/FatFs/src/diskio.h:
-../Middlewares/Third_Party/FatFs/src/ff.h:
-../FATFS/Target/user_diskio.h:
-../Core/Inc/sd_functions.h:
-../Core/Inc/max31865_stm32.h:
-../Core/Inc/max31856_stm32.h:
-../Core/Inc/SD_Commands.h:
-../Core/Inc/sd_functions.h:
-<<<<<<< HEAD
-../Core/Inc/sd_spi.h:
-../Core/Inc/z_displ_ILI9XXX.h:
-=======
-../Core/Inc/MAX_Commands.h:
-../Core/Inc/max31856_stm32.h:
-../Core/Inc/max31865_stm32.h:
->>>>>>> 2d2fc10e3837f463ece819466137dcbad5f69116
