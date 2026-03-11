@@ -680,22 +680,22 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   }
 }
 
-void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
-{
-    // SD card SPI TX complete
-    if (hspi == &SD_SPI_HANDLE) {
-        dma_tx_done = 1;
-    }
-
-    // Display SPI TX complete
-    // Your display code checks the SPI instance, so we mirror that:
-    if (hspi->Instance == DISPL_SPI) {
-        Displ_SpiAvailable = 1;
-	#ifdef DISPLAY_USING_TOUCHGFX
-        DisplayDriver_TransferCompleteCallback();
-	#endif
-    }
-}
+//void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
+//{
+//    // SD card SPI TX complete
+//    if (hspi == &SD_SPI_HANDLE) {
+//        dma_tx_done = 1;
+//    }
+//
+//    // Display SPI TX complete
+//    // Your display code checks the SPI instance, so we mirror that:
+//    if (hspi->Instance == DISPL_SPI) {
+//        Displ_SpiAvailable = 1;
+//	#ifdef DISPLAY_USING_TOUCHGFX
+//        DisplayDriver_TransferCompleteCallback();
+//	#endif
+//    }
+//}
 /* USER CODE END 4 */
 
 /**
