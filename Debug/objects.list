@@ -2,15 +2,12 @@
 "./Core/Src/MAX_Commands.o"
 "./Core/Src/Menus.o"
 "./Core/Src/SD_Commands.o"
-<<<<<<< HEAD
 "./Core/Src/displayText.o"
-=======
 "./Core/Src/font12.o"
 "./Core/Src/font16.o"
 "./Core/Src/font20.o"
 "./Core/Src/font24.o"
 "./Core/Src/font8.o"
->>>>>>> fae9f01f7622aee2ecaa7b11665c5239258a5984
 "./Core/Src/main.o"
 "./Core/Src/max31856_stm32.o"
 "./Core/Src/max31865_stm32.o"

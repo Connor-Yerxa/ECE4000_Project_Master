@@ -1,6 +1,6 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
-# Toolchain: GNU Tools for STM32 (14.3.rel1)
+# Toolchain: GNU Tools for STM32 (13.3.rel1)
 ################################################################################
 
 # Add inputs and outputs from these tool invocations to the build variables 
@@ -9,15 +9,12 @@ C_SRCS += \
 ../Core/Src/MAX_Commands.c \
 ../Core/Src/Menus.c \
 ../Core/Src/SD_Commands.c \
-<<<<<<< HEAD
 ../Core/Src/displayText.c \
-=======
 ../Core/Src/font12.c \
 ../Core/Src/font16.c \
 ../Core/Src/font20.c \
 ../Core/Src/font24.c \
 ../Core/Src/font8.c \
->>>>>>> fae9f01f7622aee2ecaa7b11665c5239258a5984
 ../Core/Src/main.c \
 ../Core/Src/max31856_stm32.c \
 ../Core/Src/max31865_stm32.c \
@@ -40,15 +37,12 @@ OBJS += \
 ./Core/Src/MAX_Commands.o \
 ./Core/Src/Menus.o \
 ./Core/Src/SD_Commands.o \
-<<<<<<< HEAD
 ./Core/Src/displayText.o \
-=======
 ./Core/Src/font12.o \
 ./Core/Src/font16.o \
 ./Core/Src/font20.o \
 ./Core/Src/font24.o \
 ./Core/Src/font8.o \
->>>>>>> fae9f01f7622aee2ecaa7b11665c5239258a5984
 ./Core/Src/main.o \
 ./Core/Src/max31856_stm32.o \
 ./Core/Src/max31865_stm32.o \
@@ -71,15 +65,12 @@ C_DEPS += \
 ./Core/Src/MAX_Commands.d \
 ./Core/Src/Menus.d \
 ./Core/Src/SD_Commands.d \
-<<<<<<< HEAD
 ./Core/Src/displayText.d \
-=======
 ./Core/Src/font12.d \
 ./Core/Src/font16.d \
 ./Core/Src/font20.d \
 ./Core/Src/font24.d \
 ./Core/Src/font8.d \
->>>>>>> fae9f01f7622aee2ecaa7b11665c5239258a5984
 ./Core/Src/main.d \
 ./Core/Src/max31856_stm32.d \
 ./Core/Src/max31865_stm32.d \
@@ -105,15 +96,7 @@ Core/Src/%.o Core/Src/%.su Core/Src/%.cyclo: ../Core/Src/%.c Core/Src/subdir.mk
 clean: clean-Core-2f-Src
 
 clean-Core-2f-Src:
-<<<<<<< HEAD
-	-$(RM) ./Core/Src/GPS.cyclo ./Core/Src/GPS.d ./Core/Src/GPS.o ./Core/Src/GPS.su ./Core/Src/MAX_Commands.cyclo ./Core/Src/MAX_Commands.d ./Core/Src/MAX_Commands.o ./Core/Src/MAX_Commands.su ./Core/Src/Menus.cyclo ./Core/Src/Menus.d ./Core/Src/Menus.o ./Core/Src/Menus.su ./Core/Src/SD_Commands.cyclo ./Core/Src/SD_Commands.d ./Core/Src/SD_Commands.o ./Core/Src/SD_Commands.su ./Core/Src/displayText.cyclo ./Core/Src/displayText.d ./Core/Src/displayText.o ./Core/Src/displayText.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/max31856_stm32.cyclo ./Core/Src/max31856_stm32.d ./Core/Src/max31856_stm32.o ./Core/Src/max31856_stm32.su ./Core/Src/max31865_stm32.cyclo ./Core/Src/max31865_stm32.d ./Core/Src/max31865_stm32.o ./Core/Src/max31865_stm32.su ./Core/Src/read_buttons.cyclo ./Core/Src/read_buttons.d ./Core/Src/read_buttons.o ./Core/Src/read_buttons.su ./Core/Src/sd_benchmark.cyclo ./Core/Src/sd_benchmark.d ./Core/Src/sd_benchmark.o ./Core/Src/sd_benchmark.su ./Core/Src/sd_diskio_spi.cyclo ./Core/Src/sd_diskio_spi.d ./Core/Src/sd_diskio_spi.o ./Core/Src/sd_diskio_spi.su ./Core/Src/sd_functions.cyclo ./Core/Src/sd_functions.d ./Core/Src/sd_functions.o ./Core/Src/sd_functions.su ./Core/Src/sd_spi.cyclo ./Core/Src/sd_spi.d ./Core/Src/sd_spi.o ./Core/Src/sd_spi.su ./Core/Src/selectNumber.cyclo ./Core/Src/selectNumber.d ./Core/Src/selectNumber.o ./Core/Src/selectNumber.su ./Core/Src/stm32f1xx_hal_msp.cyclo ./Core/Src/stm32f1xx_hal_msp.d ./Core/Src/stm32f1xx_hal_msp.o ./Core/Src/stm32f1xx_hal_msp.su ./Core/Src/stm32f1xx_it.cyclo ./Core/Src/stm32f1xx_it.d ./Core/Src/stm32f1xx_it.o ./Core/Src/stm32f1xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f1xx.cyclo ./Core/Src/system_stm32f1xx.d ./Core/Src/system_stm32f1xx.o ./Core/Src/system_stm32f1xx.su
-=======
-<<<<<<< HEAD
-	-$(RM) ./Core/Src/GPS.cyclo ./Core/Src/GPS.d ./Core/Src/GPS.o ./Core/Src/GPS.su ./Core/Src/SD_Commands.cyclo ./Core/Src/SD_Commands.d ./Core/Src/SD_Commands.o ./Core/Src/SD_Commands.su ./Core/Src/font12.cyclo ./Core/Src/font12.d ./Core/Src/font12.o ./Core/Src/font12.su ./Core/Src/font16.cyclo ./Core/Src/font16.d ./Core/Src/font16.o ./Core/Src/font16.su ./Core/Src/font20.cyclo ./Core/Src/font20.d ./Core/Src/font20.o ./Core/Src/font20.su ./Core/Src/font24.cyclo ./Core/Src/font24.d ./Core/Src/font24.o ./Core/Src/font24.su ./Core/Src/font8.cyclo ./Core/Src/font8.d ./Core/Src/font8.o ./Core/Src/font8.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/max31865_stm32.cyclo ./Core/Src/max31865_stm32.d ./Core/Src/max31865_stm32.o ./Core/Src/max31865_stm32.su ./Core/Src/sd_benchmark.cyclo ./Core/Src/sd_benchmark.d ./Core/Src/sd_benchmark.o ./Core/Src/sd_benchmark.su ./Core/Src/sd_diskio_spi.cyclo ./Core/Src/sd_diskio_spi.d ./Core/Src/sd_diskio_spi.o ./Core/Src/sd_diskio_spi.su ./Core/Src/sd_functions.cyclo ./Core/Src/sd_functions.d ./Core/Src/sd_functions.o ./Core/Src/sd_functions.su ./Core/Src/sd_spi.cyclo ./Core/Src/sd_spi.d ./Core/Src/sd_spi.o ./Core/Src/sd_spi.su ./Core/Src/stm32f1xx_hal_msp.cyclo ./Core/Src/stm32f1xx_hal_msp.d ./Core/Src/stm32f1xx_hal_msp.o ./Core/Src/stm32f1xx_hal_msp.su ./Core/Src/stm32f1xx_it.cyclo ./Core/Src/stm32f1xx_it.d ./Core/Src/stm32f1xx_it.o ./Core/Src/stm32f1xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f1xx.cyclo ./Core/Src/system_stm32f1xx.d ./Core/Src/system_stm32f1xx.o ./Core/Src/system_stm32f1xx.su ./Core/Src/z_displ_ILI9XXX.cyclo ./Core/Src/z_displ_ILI9XXX.d ./Core/Src/z_displ_ILI9XXX.o ./Core/Src/z_displ_ILI9XXX.su ./Core/Src/z_displ_ILI9XXX_test.cyclo ./Core/Src/z_displ_ILI9XXX_test.d ./Core/Src/z_displ_ILI9XXX_test.o ./Core/Src/z_displ_ILI9XXX_test.su
-=======
-	-$(RM) ./Core/Src/GPS.cyclo ./Core/Src/GPS.d ./Core/Src/GPS.o ./Core/Src/GPS.su ./Core/Src/MAX_Commands.cyclo ./Core/Src/MAX_Commands.d ./Core/Src/MAX_Commands.o ./Core/Src/MAX_Commands.su ./Core/Src/SD_Commands.cyclo ./Core/Src/SD_Commands.d ./Core/Src/SD_Commands.o ./Core/Src/SD_Commands.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/max31856_stm32.cyclo ./Core/Src/max31856_stm32.d ./Core/Src/max31856_stm32.o ./Core/Src/max31856_stm32.su ./Core/Src/max31865_stm32.cyclo ./Core/Src/max31865_stm32.d ./Core/Src/max31865_stm32.o ./Core/Src/max31865_stm32.su ./Core/Src/sd_benchmark.cyclo ./Core/Src/sd_benchmark.d ./Core/Src/sd_benchmark.o ./Core/Src/sd_benchmark.su ./Core/Src/sd_diskio_spi.cyclo ./Core/Src/sd_diskio_spi.d ./Core/Src/sd_diskio_spi.o ./Core/Src/sd_diskio_spi.su ./Core/Src/sd_functions.cyclo ./Core/Src/sd_functions.d ./Core/Src/sd_functions.o ./Core/Src/sd_functions.su ./Core/Src/sd_spi.cyclo ./Core/Src/sd_spi.d ./Core/Src/sd_spi.o ./Core/Src/sd_spi.su ./Core/Src/stm32f1xx_hal_msp.cyclo ./Core/Src/stm32f1xx_hal_msp.d ./Core/Src/stm32f1xx_hal_msp.o ./Core/Src/stm32f1xx_hal_msp.su ./Core/Src/stm32f1xx_it.cyclo ./Core/Src/stm32f1xx_it.d ./Core/Src/stm32f1xx_it.o ./Core/Src/stm32f1xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f1xx.cyclo ./Core/Src/system_stm32f1xx.d ./Core/Src/system_stm32f1xx.o ./Core/Src/system_stm32f1xx.su
->>>>>>> 2d2fc10e3837f463ece819466137dcbad5f69116
->>>>>>> fae9f01f7622aee2ecaa7b11665c5239258a5984
+	-$(RM) ./Core/Src/GPS.cyclo ./Core/Src/GPS.d ./Core/Src/GPS.o ./Core/Src/GPS.su ./Core/Src/MAX_Commands.cyclo ./Core/Src/MAX_Commands.d ./Core/Src/MAX_Commands.o ./Core/Src/MAX_Commands.su ./Core/Src/Menus.cyclo ./Core/Src/Menus.d ./Core/Src/Menus.o ./Core/Src/Menus.su ./Core/Src/SD_Commands.cyclo ./Core/Src/SD_Commands.d ./Core/Src/SD_Commands.o ./Core/Src/SD_Commands.su ./Core/Src/displayText.cyclo ./Core/Src/displayText.d ./Core/Src/displayText.o ./Core/Src/displayText.su ./Core/Src/font12.cyclo ./Core/Src/font12.d ./Core/Src/font12.o ./Core/Src/font12.su ./Core/Src/font16.cyclo ./Core/Src/font16.d ./Core/Src/font16.o ./Core/Src/font16.su ./Core/Src/font20.cyclo ./Core/Src/font20.d ./Core/Src/font20.o ./Core/Src/font20.su ./Core/Src/font24.cyclo ./Core/Src/font24.d ./Core/Src/font24.o ./Core/Src/font24.su ./Core/Src/font8.cyclo ./Core/Src/font8.d ./Core/Src/font8.o ./Core/Src/font8.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/max31856_stm32.cyclo ./Core/Src/max31856_stm32.d ./Core/Src/max31856_stm32.o ./Core/Src/max31856_stm32.su ./Core/Src/max31865_stm32.cyclo ./Core/Src/max31865_stm32.d ./Core/Src/max31865_stm32.o ./Core/Src/max31865_stm32.su ./Core/Src/read_buttons.cyclo ./Core/Src/read_buttons.d ./Core/Src/read_buttons.o ./Core/Src/read_buttons.su ./Core/Src/sd_benchmark.cyclo ./Core/Src/sd_benchmark.d ./Core/Src/sd_benchmark.o ./Core/Src/sd_benchmark.su ./Core/Src/sd_diskio_spi.cyclo ./Core/Src/sd_diskio_spi.d ./Core/Src/sd_diskio_spi.o ./Core/Src/sd_diskio_spi.su ./Core/Src/sd_functions.cyclo ./Core/Src/sd_functions.d ./Core/Src/sd_functions.o ./Core/Src/sd_functions.su ./Core/Src/sd_spi.cyclo ./Core/Src/sd_spi.d ./Core/Src/sd_spi.o ./Core/Src/sd_spi.su ./Core/Src/selectNumber.cyclo ./Core/Src/selectNumber.d ./Core/Src/selectNumber.o ./Core/Src/selectNumber.su ./Core/Src/stm32f1xx_hal_msp.cyclo ./Core/Src/stm32f1xx_hal_msp.d ./Core/Src/stm32f1xx_hal_msp.o ./Core/Src/stm32f1xx_hal_msp.su ./Core/Src/stm32f1xx_it.cyclo ./Core/Src/stm32f1xx_it.d ./Core/Src/stm32f1xx_it.o ./Core/Src/stm32f1xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f1xx.cyclo ./Core/Src/system_stm32f1xx.d ./Core/Src/system_stm32f1xx.o ./Core/Src/system_stm32f1xx.su ./Core/Src/z_displ_ILI9XXX.cyclo ./Core/Src/z_displ_ILI9XXX.d ./Core/Src/z_displ_ILI9XXX.o ./Core/Src/z_displ_ILI9XXX.su ./Core/Src/z_displ_ILI9XXX_test.cyclo ./Core/Src/z_displ_ILI9XXX_test.d ./Core/Src/z_displ_ILI9XXX_test.o ./Core/Src/z_displ_ILI9XXX_test.su
 
 .PHONY: clean-Core-2f-Src
 
