@@ -25,9 +25,12 @@ Middlewares/Third_Party/FatFs/src/ff.o: \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h \
+ ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h \
+ ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h \
  ../Core/Inc/GPS.h ../Core/Inc/main.h \
- ../Middlewares/Third_Party/FatFs/src/integer.h \
+ ../Middlewares/Third_Party/FatFs/src/integer.h ../Core/Inc/fonts.h \
+ ../Core/Inc/z_displ_ILI9XXX.h ../Core/Inc/z_displ_ILI9XXX_test.h \
  ../Middlewares/Third_Party/FatFs/src/diskio.h
 ../Middlewares/Third_Party/FatFs/src/ff.h:
 ../Middlewares/Third_Party/FatFs/src/integer.h:
@@ -56,8 +59,13 @@ Middlewares/Third_Party/FatFs/src/ff.o: \
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:
 ../Core/Inc/GPS.h:
 ../Core/Inc/main.h:
 ../Middlewares/Third_Party/FatFs/src/integer.h:
+../Core/Inc/fonts.h:
+../Core/Inc/z_displ_ILI9XXX.h:
+../Core/Inc/z_displ_ILI9XXX_test.h:
 ../Middlewares/Third_Party/FatFs/src/diskio.h:

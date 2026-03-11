@@ -34,6 +34,8 @@ typedef enum {
 
 extern uint8_t card_initialized;
 
+//Faaiz code
+void SD_OnSpiTxComplete(SPI_HandleTypeDef *hspi);
 SD_Status SD_SPI_Init(void);
 SD_Status SD_ReadBlocks(uint8_t *buff, uint32_t sector, uint32_t count);
 SD_Status SD_WriteBlocks(const uint8_t *buff, uint32_t sector, uint32_t count);
