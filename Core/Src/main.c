@@ -186,9 +186,9 @@ int main(void)
 
 //  SD_CS_HIGH();  // Ensure card is deselected
   HAL_Delay(30);
-  int connected = sd_mount();
-  sd_test_read_raw();
-  sd_write_file("test1.txt", "hello from STM32\r\n");
+//  int connected = sd_mount();
+//  sd_test_read_raw();
+//  sd_write_file("test1.txt", "hello from STM32\r\n");
 
 //////  char buf[64];
 //////  UINT br;
@@ -217,23 +217,23 @@ int main(void)
 //  //TLS-CRC-2025-10-30-11-29-14A.csv - 6485
 ////  readMeasurementData("TLS-CRC-2025-10-30-11-29-14A.csv", &tempsLen, 15);
 //
-  METADATA md;
-  char * filename = "TLS-SIN";
-  createMeasurementFile(&filename, &md);
-
-//  float mins = 4;
-  float mins = 0.2;
-  float t=0;
-  float sampleTime = 1.0/15.0;
-  char text[10];
-  while(t < mins * 60)
-  {
-	  sprintf(text, "%.3f\n", sin(t));
-	  sd_append_file(filename, text);
-	  t += sampleTime;
-  }
-
-  sd_unmount();
+//  METADATA md;
+//  char * filename = "TLS-SIN";
+//  createMeasurementFile(&filename, &md);
+//
+////  float mins = 4;
+//  float mins = 0.02;
+//  float t=0;
+//  float sampleTime = 1.0/15.0;
+//  char text[10];
+//  while(t < mins * 60)
+//  {
+//	  sprintf(text, "%.3f\n", sin(t));
+//	  sd_append_file(filename, text);
+//	  t += sampleTime;
+//  }
+//
+//  sd_unmount();
 
 //  GPS_Data_t gps = {0};
 //  GPS_oneshot(&gps);
@@ -257,9 +257,10 @@ int main(void)
 
   // Faaiz screen
   // Display init
-  Displ_Init(Displ_Orientat_0);
+  Displ_Init(Displ_Orientat_90);
   Displ_CLS(BLACK);
   Displ_BackLight('I');
+  HAL_GPIO_WritePin(DISPL_LED_GPIO_Port, DISPL_LED_Pin, 1);
   // Draw the page once
   UI_DrawAll();
   // Faaiz screen
