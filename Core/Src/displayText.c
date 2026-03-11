@@ -20,4 +20,14 @@ void displayText(int screenID, int option) {
     printf("Displaying screen %d with option %d\n", screenID, option); //TEST
  //   clearScreen(0xFFFF);
 
+    if (option == 0){
+
+    }
+    else if(option ==1){
+
+    }
+
+    //display output on the actual screen
+
+
 }
