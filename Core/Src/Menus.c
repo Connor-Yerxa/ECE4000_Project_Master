@@ -22,6 +22,8 @@ double deltaTempDefault = 100;
 double deltaTimeDefault = 180;
 int brightness = 10;
 int both = 0;
+int heater = 0;
+int heaterDefault = 0;
 
 void menus() {
     while(1) {
@@ -54,6 +56,7 @@ void menus() {
                     case 2: screen = 110; break; // Temp select
                     case 3: both = 1; screen = 110; break; // Both
                     case 4: screen = 110; break; // Time select
+                    case 5: screen = 115; break; //heater selection
                     case 6: screen = 99; break; // Back to main
                     default: break;
                 }
@@ -63,7 +66,10 @@ void menus() {
                 displayText(screen, 0);
                 number = selectNumber('I', 0);
                 deltaTime = number;
-                screen = both ? 111 : 120;
+                if (both == 1){
+                	screen = 111; break;
+                }
+                screen = 120;
                 break;
 
             case 111: // Temperature select (for both)
@@ -73,9 +79,16 @@ void menus() {
                 screen = 120;
                 break;
 
+            case 115: //heater selection
+            	displayText(screen, 0);
+            	number = selectNumber('H', 0);
+            	heater = number;
+            	screen = 100;
+            	break;
+
             case 120: // Test running
                 displayText(screen, 0);
-      //          runTest(deltaTemp, deltaTime);
+      //        runTest(deltaTemp, deltaTime);
                 screen = 130;
                 break;
 

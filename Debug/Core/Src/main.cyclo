@@ -2,8 +2,8 @@
 ../Core/Src/main.c:100:5:_write	2
 ../Core/Src/main.c:107:5:SDMOUNT	1
 ../Core/Src/main.c:130:6:UI_DrawLine	1
-../Core/Src/main.c:138:13:UI_DrawAll	1
-../Core/Src/main.c:157:5:main	6
+../Core/Src/main.c:138:6:UI_DrawAll	1
+../Core/Src/main.c:157:5:main	1
 ../Core/Src/main.c:315:6:SystemClock_Config	3
 ../Core/Src/main.c:355:13:MX_SPI1_Init	2
 ../Core/Src/main.c:393:13:MX_SPI2_Init	2

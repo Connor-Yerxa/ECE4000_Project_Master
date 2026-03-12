@@ -16,21 +16,130 @@
 // Example displayText function
 
 // OPTION 0 = SCREEN, OPTION 1 = NUMBER
-void displayText(int screenID, int option) {
 
-    printf("Displaying screen %d with option %d\n", screenID, option); //TEST
- //   clearScreen(0xFFFF);
-    UI_DrawLine(0,"Screen:             ",   screenID);
-    //UI_DrawLine()
+#include <string.h>
+#include "main.h"
 
-    if (option == 0){
+char text[6][30];   // 6 buttons, 20 chars each
+char display[60];   // main display text
+char buffer[60];
 
-    }
-    else if(option ==1){
+void displayText(int ID,  int extra)
+{
+	// Clear previous text
+	strcpy(display, "");
+	for(int i = 0; i < 6; i++)
+	    strcpy(text[i], "");
 
-    }
+	if (extra == 0){
+	    if (ID == 99){
+	        strcpy(display, "Menu");
+	        strcpy(text[0], "Run Test");
+	        strcpy(text[1], "Calibration");
+	        strcpy(text[2], "Settings");
 
-    //display output on the actual screen
+	    }
 
+	    else if (ID == 100){
+	        strcpy(display, "Select testing limit");
+	        strcpy(text[0], "Default");
+	        strcpy(text[1], "Temperature");
+	        strcpy(text[2], "Both");
+	        strcpy(text[3], "Time");
+	        strcpy(text[4], "Change Heater Selection");
+	        strcpy(text[5], "Return");
+	    }
 
+	    else if (ID == 110){
+	        strcpy(display, "Select time limit"); //NUMBER SELECT
+	    }
+
+	    else if (ID == 111){
+	        strcpy(display, "Select maximum temp change (XX.xx), max: 10.00"); //NUMBER SELECT
+	    }
+
+	    else if (ID == 120){
+	        strcpy(display, "Test Underway");
+	    }
+	    else if (ID == 130){
+	    	strcpy(display, "Test Complete");
+	    	strcpy(text[0], "Press any button to continue");
+	    }
+
+	    else if (ID == 200){
+	        strcpy(display, "Calibration");
+	        strcpy(text[0], "Physical Material");
+	        strcpy(text[1], "Default");
+	        strcpy(text[5], "Return");
+	    }
+
+	    else if (ID == 210){
+	        strcpy(display, "Select material");
+	        strcpy(text[0], "Material A - Water");
+	        strcpy(text[1], "Material B - Glycerin");
+	        strcpy(text[5], "Return");
+	    }
+
+	    else if (ID == 220){
+	        strcpy(display, "Running calibration");
+	        strcpy(text[5], "Cancel");
+	    }
+
+	    else if (ID == 230){
+	        strcpy(display, "Calibration complete");
+	        strcpy(text[0], "Press any button to continue");
+	    }
+
+	    else if (ID == 300){
+	        strcpy(display, "Settings");
+	        strcpy(text[0], "Brightness");
+	        strcpy(text[1], "Set default sample time");
+	        strcpy(text[2], "Set default temperature shut-off delta");
+	        strcpy(text[3], "Set default heater selection");
+	        strcpy(text[5], "Return");
+	    }
+
+	    else if (ID == 310){
+	        strcpy(display, "Brightness 0-9"); //Number select
+	    }
+
+	    else if (ID == 320){
+	        strcpy(display, "Temperature change"); //Number select
+	    }
+
+	    else if (ID == 330){
+	        strcpy(display, "Sample duration"); //Number select
+	    }
+
+	    else if (ID == 400){
+	        strcpy(display, "Data");
+	        strcpy(text[5], "Return");
+	    }
+
+	    else if (ID == 999){
+	        strcpy(display, "ERROR: out of range, returning to safe parameters");
+	    }
+
+	    Displ_CLS(BLACK);
+
+	    snprintf(buffer, sizeof(buffer), "%s", display); //UPDATE THIS TO BE TITLE?
+	    UI_DrawLine(0, buffer, ID);
+	    snprintf(buffer, sizeof(buffer), "%s", text[0]);
+	    UI_DrawLine(1, buffer, 1);
+	    snprintf(buffer, sizeof(buffer), "%s", text[1]);
+	    UI_DrawLine(2, buffer, 2);
+	    snprintf(buffer, sizeof(buffer), "%s", text[2]);
+	    UI_DrawLine(3, buffer, 3);
+	    snprintf(buffer, sizeof(buffer), "%s", text[3]);
+	    UI_DrawLine(4, buffer, 4);
+	    snprintf(buffer, sizeof(buffer), "%s", text[4]);
+	    UI_DrawLine(5, buffer, 5);
+	    snprintf(buffer, sizeof(buffer), "%s", text[5]);
+	    UI_DrawLine(6, buffer, 6);
+	}
+	if (extra == 1){
+	    Displ_CLS(BLACK);
+	    strcpy(buffer, "Digit selection");
+	    UI_DrawLine(2, buffer, ID);
+	}
 }

@@ -34,6 +34,10 @@ int selectNumber(char Type, int a) {
         numbersToReturn = 1;
         base = 10;
     }
+    else if (Type == 'H') { //heater selection
+    	numbersToReturn = 1;
+    	base = 3;
+    }
     else {
         return 0;
     }
