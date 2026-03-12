@@ -81,8 +81,13 @@ void menus() {
 
             case 115: //heater selection
             	displayText(screen, 0);
-            	number = selectNumber('H', 0);
-            	heater = number;
+            	button = read_buttons();
+            	switch(button){
+            		case 1: heaterDefault = 1; break;
+            		case 2: heaterDefault = 2; break;
+            		case 3: heaterDefault = 3; break;
+            		default: heaterDefault = 1; break;
+            	}
             	screen = 100;
             	break;
 
@@ -143,27 +148,40 @@ void menus() {
                     case 1: screen = 310; break;
                     case 2: screen = 320; break;
                     case 3: screen = 330; break;
+                    case 4: screen = 340; break;
                     case 6: screen = 99; break;
                 }
                 break;
 
             case 310: // Brightness
                 displayText(screen, 0);
-                brightness = selectNumber('B', 1);
+                brightness = selectNumber('B', 0);
                 screen = 300;
                 break;
 
             case 320: // Default temperature
                 displayText(screen, 0);
-                deltaTempDefault = selectNumber('E', 3);
+                deltaTempDefault = selectNumber('E', 0);
                 screen = 300;
                 break;
 
             case 330: // Default duration
                 displayText(screen, 0);
-                deltaTimeDefault = selectNumber('I', 4);
+                deltaTimeDefault = selectNumber('I', 0);
                 screen = 300;
                 break;
+
+            case 340: //heater default power
+            	displayText(screen, 0);
+            	button = read_buttons();
+            	switch(button){
+            		case 1: heaterDefault = 1; break;
+            		case 2: heaterDefault = 2; break;
+            		case 3: heaterDefault = 3; break;
+            		default: heaterDefault = 1; break;
+            	}
+            	screen = 300;
+            	break;
 
             // ---------- OTHER ----------
             case 400:

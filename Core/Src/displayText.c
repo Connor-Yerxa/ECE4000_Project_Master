@@ -94,7 +94,7 @@ void displayText(int ID,  int extra)
 	        strcpy(display, "Settings");
 	        strcpy(text[0], "Brightness");
 	        strcpy(text[1], "Set default sample time");
-	        strcpy(text[2], "Set default temperature shut-off delta");
+	        strcpy(text[2], "Set default temp delta");
 	        strcpy(text[3], "Set default heater selection");
 	        strcpy(text[5], "Return");
 	    }
@@ -109,6 +109,12 @@ void displayText(int ID,  int extra)
 
 	    else if (ID == 330){
 	        strcpy(display, "Sample duration"); //Number select
+	    }
+	    else if (ID == 340){
+	        strcpy(display, "Default Heater Selection"); //Number select
+	        strcpy(text[0], "Heater 1 - 0.1 W");
+	        strcpy(text[1], "Heater 2 - 0.3 W");
+	        strcpy(text[2], "Heater 3 - 0.5 W");
 	    }
 
 	    else if (ID == 400){
