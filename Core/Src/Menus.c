@@ -51,6 +51,7 @@ void menus() {
                     case 1: // Default
                         deltaTemp = deltaTempDefault;
                         deltaTime = deltaTimeDefault;
+                        heater = heaterDefault;
                         screen = 120;
                         break;
                     case 2: screen = 110; break; // Temp select
@@ -83,17 +84,17 @@ void menus() {
             	displayText(screen, 0);
             	button = read_buttons();
             	switch(button){
-            		case 1: heaterDefault = 1; break;
-            		case 2: heaterDefault = 2; break;
-            		case 3: heaterDefault = 3; break;
-            		default: heaterDefault = 1; break;
+            		case 1: heater = 1; break;
+            		case 2: heater = 2; break;
+            		case 3: heater = 3; break;
+            		default: heater = 1; break;
             	}
             	screen = 100;
             	break;
 
             case 120: // Test running
                 displayText(screen, 0);
-      //        runTest(deltaTemp, deltaTime);
+      //        runTest(deltaTemp, deltaTime, heater);
                 screen = 130;
                 break;
 
