@@ -277,18 +277,27 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  menus();
+	 // menus();
 	 // read_buttons();
 //	  uint8_t i=buttons;
 //	  printf("b: %x \n", buttons);
 //	  HAL_Delay(30);
 	  //buttons = 0;
-
-	  if (buttons & 0x01) { ui_sd_mounted  ^= 1; UI_DrawLine(0, "B1 - Mount SD Card",   ui_sd_mounted, 10, 30); buttons = 0;}
-	  if (buttons & 0x02) { ui_create_file ^= 1; UI_DrawLine(1, "B2 - Create file",     ui_create_file, 10, 150); buttons = 0;}
-	  if (buttons & 0x04) { ui_run_test    ^= 1; UI_DrawLine(2, "B3 - Run Test",        ui_run_test, 10, 300); buttons = 0;}
-	  if (buttons & 0x08) { ui_excit1      ^= 1; UI_DrawLine(3, "B4 - Exciter Relay 1", ui_excit1, 250, 30); buttons = 0;}
-	  if (buttons & 0x10) { ui_excit2      ^= 1; UI_DrawLine(4, "B5 - Exciter Relay 2", ui_excit2, 250, 150); buttons = 0;}
+	  if (buttons & 0x01) { ui_sd_mounted  ^= 1; UI_DrawLine(0, "Mount SD Card",   ui_sd_mounted, 10, 30); buttons = 0;}
+	  if (buttons & 0x02) { ui_create_file ^= 1; UI_DrawLine(1, "Create file",     ui_create_file, 10, 150); buttons = 0;}
+	  if (buttons & 0x04) { ui_run_test    ^= 1; UI_DrawLine(2, "Run Test",        ui_run_test, 10, 300); buttons = 0;}
+	  if (buttons & 0x08) {
+		  ui_excit1      ^= 1;
+		  UI_DrawLine(3, "Exciter Relay 1", ui_excit1, 250, 30);
+		  buttons = 0;
+		  HAL_GPIO_TogglePin(EXCIT1_GPIO_Port, EXCIT1_Pin);
+	  }
+	  if (buttons & 0x10) {
+		  ui_excit2      ^= 1;
+		  UI_DrawLine(4, "Exciter Relay 2", ui_excit2, 250, 150);
+		  buttons = 0;
+		  HAL_GPIO_TogglePin(EXCIT2_GPIO_Port, EXCIT2_Pin);
+	  }
 	  // (PB-6 bit 0x20 ignored for now)
 	  char buf[32];
 	  sprintf(buf, "Current Temp: %.2f C", current_temp);
