@@ -46,25 +46,32 @@ int selectNumber(char Type, int a) {
 
         pressed = read_buttons();
 
-
         if (pressed == 1) {         // increase digit
             value++;
+            tempValue = (totalValue * (10^numbersToReturn) + value * (10^(numbersToReturn - 1)));
+            displayText(tempValue, 1);
             if (value >= base)
                 value = 0;
         }
         else if (pressed == 3) {         // decrease digit
-            if (value == 0)
+            if (value == 0){
                 value = base - 1;
-            else
+            }
+            else{
                 value--;
+            }
+            tempValue = (totalValue * (10^numbersToReturn) + value * (10^(numbersToReturn - 1)));
+            displayText(tempValue, 1);
         }
         else if (pressed == 2) {         // confirm digit
             totalValue = totalValue * 10 + value;
             value = 0;
+            tempValue = (totalValue * (10^numbersToReturn) + value * (10^(numbersToReturn - 1)));
+            displayText(tempValue, 1);
             numbersToReturn--;
         }
-        tempValue = totalValue * 10 + value;
-        displayText(tempValue, 1);
+
+
     }
 
     // final limits

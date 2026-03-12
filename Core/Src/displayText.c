@@ -140,6 +140,6 @@ void displayText(int ID,  int extra)
 	if (extra == 1){
 	    Displ_CLS(BLACK);
 	    strcpy(buffer, "Digit selection");
-	    UI_DrawLine(2, buffer, ID);
+	    UI_DrawLine(5, buffer, ID);
 	}
 }

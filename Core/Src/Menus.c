@@ -170,6 +170,9 @@ void menus() {
                 displayText(screen, 0);
                 // Future development?
                 button = read_buttons();
+                switch(button) {
+                    case 6: screen = 99; break;
+                }
                 break;
 
 

@@ -291,7 +291,7 @@ int main(void)
 */
 	  // (PB-6 bit 0x20 ignored for now)
 
-	  HAL_Delay(5);
+	  HAL_Delay(10);
 
 //	  printf("b: %02x \n", buttons);
 //	  HAL_Delay(30);

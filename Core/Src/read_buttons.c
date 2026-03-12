@@ -7,6 +7,7 @@
 
 
 // read_Buttons.c
+//#include "main.h"
 #include "read_Buttons.h"
 
 // External global variable, set elsewhere (e.g., via interrupt or input polling)
@@ -21,8 +22,6 @@ int read_buttons(void) {
     }
 
     // Reset buttons to 0 after reading
-    buttons = 0;
-
     switch(pressed) { //convert pressed to 1-6
         case 1:
             pressed = 1;
@@ -45,5 +44,6 @@ int read_buttons(void) {
         default:
             break;
     }
+    buttons = 0;
     return pressed;
 }
