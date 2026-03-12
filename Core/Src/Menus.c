@@ -11,6 +11,8 @@
 #include "selectNumber.h"
 #include "displayText.h"
 #include "selectNumber.h"
+#include "runTest.h"
+#include "runCalibration.h"
 
 // variable setup
 int screen = 99; // main menu
@@ -51,6 +53,7 @@ void menus() {
                     case 1: // Default
                         deltaTemp = deltaTempDefault;
                         deltaTime = deltaTimeDefault;
+                        heater = heaterDefault;
                         screen = 120;
                         break;
                     case 2: screen = 110; break; // Temp select
@@ -83,17 +86,17 @@ void menus() {
             	displayText(screen, 0);
             	button = read_buttons();
             	switch(button){
-            		case 1: heaterDefault = 1; break;
-            		case 2: heaterDefault = 2; break;
-            		case 3: heaterDefault = 3; break;
-            		default: heaterDefault = 1; break;
+            		case 1: heater = 1; break;
+            		case 2: heater = 2; break;
+            		case 3: heater = 3; break;
+            		default: heater = 1; break;
             	}
             	screen = 100;
             	break;
 
             case 120: // Test running
                 displayText(screen, 0);
-      //        runTest(deltaTemp, deltaTime);
+                runTest(deltaTemp, deltaTime, heater);
                 screen = 130;
                 break;
 
@@ -101,7 +104,7 @@ void menus() {
                 displayText(screen, 0);
                 button = read_buttons();
                 if (button == 1){
-//          		saveTest();
+                	break;
                 }
                 else if (button == 2){
 //             		deleteTest();
@@ -124,8 +127,8 @@ void menus() {
                 displayText(screen, 0);
                 button = read_buttons();
                 switch(button) {
-                    case 1: /* Material A calibration */ break;
-                    case 2: /* Material B calibration */ break;
+                    case 1: runCalibration(1); break; /* Material A calibration */
+                    case 2: runCalibration(2); break; /* Material B calibration */
                     case 6: screen = 200; break;
                 }
                 break;

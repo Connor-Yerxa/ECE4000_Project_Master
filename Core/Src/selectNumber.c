@@ -39,10 +39,6 @@ int selectNumber(char Type, int a) {
         numbersToReturn = 1;
         base = 10;
     }
-    else if (Type == 'H') { //heater selection
-    	numbersToReturn = 1;
-    	base = 3;
-    }
     else {
         return 0;
     }
@@ -98,9 +94,6 @@ int selectNumber(char Type, int a) {
 	}
     if (Type == 'E' && totalValue > 100){
     	totalValue = 100;
-	}
-    if (Type == 'H' && totalValue > 3){
-    	totalValue = 3;
 	}
 
     return totalValue;

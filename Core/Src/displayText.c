@@ -57,6 +57,12 @@ void displayText(int ID,  int extra)
 	    else if (ID == 111){
 	        strcpy(display, "Select maximum temp change (xx.x), max: 10.0"); //NUMBER SELECT
 	    }
+	    else if (ID == 115){
+	        strcpy(display, "Heater Selection"); //Number select
+	        strcpy(text[0], "Heater 1 - 0.1 W");
+	        strcpy(text[1], "Heater 2 - 0.3 W");
+	        strcpy(text[2], "Heater 3 - 0.5 W");
+	    }
 
 	    else if (ID == 120){
 	        strcpy(display, "Test Underway");
