@@ -126,7 +126,8 @@ int SDMOUNT(SPI_HandleTypeDef *hspi)
 }
 
 // Faaiz screen
-static void UI_DrawLine(uint8_t line, const char *text, uint8_t val)
+//static void UI_DrawLine(uint8_t line, const char *text, uint8_t val)
+void UI_DrawLine(uint8_t line, const char *text, uint8_t val)
 {
   char buf[64];
   snprintf(buf, sizeof(buf), "%s: %d", text, val);

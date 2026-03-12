@@ -7,6 +7,7 @@
 
 
 #include <stdio.h>
+#include "main.h"
 //#include <SPI.h>
 //#include <Adafruit_GFX.h>
 //#include <adafruit_ILI9488.h>
@@ -19,6 +20,8 @@ void displayText(int screenID, int option) {
 
     printf("Displaying screen %d with option %d\n", screenID, option); //TEST
  //   clearScreen(0xFFFF);
+    UI_DrawLine(0,"Screen:             ",   screenID);
+    //UI_DrawLine()
 
     if (option == 0){
 

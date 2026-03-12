@@ -55,6 +55,7 @@ extern volatile uint8_t buttons;
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
+void UI_DrawLine(uint8_t line, const char *text, uint8_t val); //Adding this so I, Nathan, can use it in displayText
 
 /* USER CODE BEGIN EFP */
 
