@@ -11,6 +11,7 @@
 #include "selectNumber.h"
 #include "displayText.h"
 #include "selectNumber.h"
+#include "runTest.h"
 
 // variable setup
 int screen = 99; // main menu
@@ -94,7 +95,7 @@ void menus() {
 
             case 120: // Test running
                 displayText(screen, 0);
-      //        runTest(deltaTemp, deltaTime, heater);
+                runTest(deltaTemp, deltaTime, heater);
                 screen = 130;
                 break;
 
@@ -102,7 +103,7 @@ void menus() {
                 displayText(screen, 0);
                 button = read_buttons();
                 if (button == 1){
-//          		saveTest();
+                	break;
                 }
                 else if (button == 2){
 //             		deleteTest();
@@ -125,8 +126,8 @@ void menus() {
                 displayText(screen, 0);
                 button = read_buttons();
                 switch(button) {
-                    case 1: /* Material A calibration */ break;
-                    case 2: /* Material B calibration */ break;
+                    case 1: runCalibration(1) break; /* Material A calibration */
+                    case 2: runCalibration(2) break; /* Material B calibration */
                     case 6: screen = 200; break;
                 }
                 break;
