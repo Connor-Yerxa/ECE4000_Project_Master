@@ -52,11 +52,14 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 		HAL_GPIO_WritePin(EXCIT2_GPIO_Port, EXCIT2_Pin, 0);
 		break;
 
-
-
 	}
 
 	while ((samplesLeft > 0) && (deltaTemp > runDeltaTemp)){
+		if(TEMP_TIMER){
+			TEMP_TIMER = 0;
+
+
+		}
 		//READ TEMP A & B
 
 		//PROCESS A SAMPLE
