@@ -267,7 +267,7 @@ int main(void)
   Displ_BackLight('I');
   HAL_GPIO_WritePin(DISPL_LED_GPIO_Port, DISPL_LED_Pin, 1);
   // Draw the page once
-  UI_DrawAll();
+ // UI_DrawAll();
   // Faaiz screen
 
   /* USER CODE END 2 */

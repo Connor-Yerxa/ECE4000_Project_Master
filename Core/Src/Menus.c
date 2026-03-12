@@ -12,6 +12,7 @@
 #include "displayText.h"
 #include "selectNumber.h"
 #include "runTest.h"
+#include "runCalibration.h"
 
 // variable setup
 int screen = 99; // main menu
@@ -126,8 +127,8 @@ void menus() {
                 displayText(screen, 0);
                 button = read_buttons();
                 switch(button) {
-                    case 1: runCalibration(1) break; /* Material A calibration */
-                    case 2: runCalibration(2) break; /* Material B calibration */
+                    case 1: runCalibration(1); break; /* Material A calibration */
+                    case 2: runCalibration(2); break; /* Material B calibration */
                     case 6: screen = 200; break;
                 }
                 break;

@@ -8,6 +8,6 @@
 #ifndef INC_RUNTEST_H_
 #define INC_RUNTEST_H_
 
-void runTest(int time, int temp, int heater);
+double runTest(int time, int temp, int heater);
 
 #endif /* INC_RUNTEST_H_ */

@@ -12,6 +12,7 @@
 "./Core/Src/max31856_stm32.o"
 "./Core/Src/max31865_stm32.o"
 "./Core/Src/read_buttons.o"
+"./Core/Src/runCalibration.o"
 "./Core/Src/runTest.o"
 "./Core/Src/sd_benchmark.o"
 "./Core/Src/sd_diskio_spi.o"
