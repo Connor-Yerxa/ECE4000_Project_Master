@@ -2,3 +2,4 @@
 ../Core/Src/SD_Commands.c:47:9:updateMetaData	760	static
 ../Core/Src/SD_Commands.c:82:9:WriteMetaData	80	static
 ../Core/Src/SD_Commands.c:138:9:createMeasurementFile	664	static
+../Core/Src/SD_Commands.c:167:9:appendTemp	136	static

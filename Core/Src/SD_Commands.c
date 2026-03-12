@@ -18,7 +18,7 @@ const char * const MetadataLabelStrings[META_LABEL_COUNT] = {
 };
 
 // Don't forget to free temps after use!
-void readMeasurementData(char * filename, int * tempsLen, int maxprintout)
+void readMeasurementData(char * filename, int * tempsLen, int maxprintout) //broken, needs adjusting for time added.
 {
 	FIL file;
 	FRESULT fin = f_open(&file, filename, FA_READ);
@@ -129,7 +129,7 @@ uint8_t WriteMetaData(char * filename, METADATA md)
 	sprintf(field, "%s%s\n\n\n", MetadataLabelStrings[META_CALIBRATION_APPLIED], META_SPACE);
 	sd_append_file(filename, field);
 
-	sd_append_file(filename, "Delta Temperature (degC)\n");
+	sd_append_file(filename, "Time (s),lnTime (s),Delta Temperature (degC)\n");
 
 
 	return 0;
@@ -162,4 +162,14 @@ uint8_t createMeasurementFile(char ** filename,  METADATA * md)
 	}
 
 	return 0;
+}
+
+uint8_t appendTemp(char * filename, float delta_temp, uint32_t delta_time)
+{
+	char line[64];
+	float t = (float)delta_time;
+	float lnt = logf(t);
+	sprintf(line, "%.4f,%.4f,%.4f", t, lnt, delta_temp);
+	FRESULT res = sd_append_file(filename, line);
+	return (uint8_t)res;
 }
