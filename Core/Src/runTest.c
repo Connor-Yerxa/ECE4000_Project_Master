@@ -8,6 +8,8 @@
 
 #include <stdio.h>
 #include "SD_Commands.h"
+#include "MAX_Commands.h"
+#include "main.h"
 
 double runTest(int deltaTime, int deltaTemp, int heater){
 
@@ -19,15 +21,40 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 	double tempB = 0; //Sensor B
 	double runDeltaTemp; //change from start
 	double k_TC;// thermal conductivity
+	uint32_t startTime;
 
-	// tempA = READ FUNCTION;
-	// tempB = READ FUNCTION;
-	tempStart = tempA - tempB;// READ START TEMPERATURE no, just temo
+	MAX_INITs(&hspi2);
+	startTime = HAL_GetTick();
+	tempStart = readTemp();
+	HAL_TIM_Base_Start_IT(&htim2);
+
 	samplesLeft = deltaTime * hz; //samples per second * seconds = samples
 
-	// note starting location on SD
+	METADATA md;
+	char* filename = "TESTTESTTEST";
+	createMeasurementFile(&filename, &md);	// note starting location on SD
 
-	//Turn on heater
+	switch(heater){ 	//Turn on heater
+	case 1: //0.1
+		HAL_GPIO_WritePin(EXCIT1_GPIO_Port, EXCIT1_Pin, 1);
+		HAL_GPIO_WritePin(EXCIT2_GPIO_Port, EXCIT2_Pin, 0);
+		break;
+	case 2: //0.27
+		HAL_GPIO_WritePin(EXCIT1_GPIO_Port, EXCIT1_Pin, 0);
+		HAL_GPIO_WritePin(EXCIT2_GPIO_Port, EXCIT2_Pin, 1);
+		break;
+	case 3: //0.5
+		HAL_GPIO_WritePin(EXCIT1_GPIO_Port, EXCIT1_Pin, 1);
+		HAL_GPIO_WritePin(EXCIT2_GPIO_Port, EXCIT2_Pin, 1);
+		break;
+	default:
+		HAL_GPIO_WritePin(EXCIT1_GPIO_Port, EXCIT1_Pin, 0);
+		HAL_GPIO_WritePin(EXCIT2_GPIO_Port, EXCIT2_Pin, 0);
+		break;
+
+
+
+	}
 
 	while ((samplesLeft > 0) && (deltaTemp > runDeltaTemp)){
 		//READ TEMP A & B
@@ -45,5 +72,8 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 	//WriteMetaData()
 
 	//return start location, length and ?
+
+	HAL_GPIO_WritePin(EXCIT1_GPIO_Port, EXCIT1_Pin, 0); //Turn off heaters
+	HAL_GPIO_WritePin(EXCIT2_GPIO_Port, EXCIT2_Pin, 0);
 	return k_TC;
 }

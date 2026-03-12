@@ -152,7 +152,7 @@ uint8_t createMeasurementFile(char ** filename,  METADATA * md)
 	f_close(&file);
 	*filename = strdup(newfilename);
 
-//	GPS_oneshot();
+	GPS_oneshot();
 
 	sd_write_file(newfilename, "");
 

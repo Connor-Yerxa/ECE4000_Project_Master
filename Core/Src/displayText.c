@@ -17,9 +17,6 @@
 
 // OPTION 0 = SCREEN, OPTION 1 = NUMBER
 
-#include <string.h>
-#include "main.h"
-
 char text[6][30];   // 6 buttons, 20 chars each
 char display[60];   // main display text
 char buffer[60];

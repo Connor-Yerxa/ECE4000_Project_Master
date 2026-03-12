@@ -41,11 +41,16 @@ extern "C" {
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
 extern volatile uint8_t buttons;
+extern volatile uint8_t TEMP_TIMER;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-
+extern TIM_HandleTypeDef htim2;
+extern SPI_HandleTypeDef hspi2;
+//extern
+//extern
+//extern
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -55,7 +60,6 @@ extern volatile uint8_t buttons;
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
-void UI_DrawLine(uint8_t line, const char *text, uint8_t val); //Adding this so I, Nathan, can use it in displayText
 
 /* USER CODE BEGIN EFP */
 
@@ -116,7 +120,7 @@ void UI_DrawLine(uint8_t line, const char *text, uint8_t val); //Adding this so 
 #define B1_EXTI_IRQn EXTI2_IRQn
 
 /* USER CODE BEGIN Private defines */
-
+void UI_DrawLine(uint8_t line, const char *text, uint8_t val);
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
