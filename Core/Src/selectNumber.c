@@ -7,28 +7,33 @@
 #include <stdio.h>
 #include "read_buttons.h"
 #include "displayText.h"
+#include <math.h>
 
-int pressed;
-int value;
-int totalValue;
-int numbersToReturn;
-int base;
-int tempValue;
+
+int power10(int n){
+    int result = 1;
+    for(int i = 0; i < n; i++)
+        result *= 10;
+    return result;
+}
+
 int selectNumber(char Type, int a) {
 
-    int base;
-    int numbersToReturn;
-    int value = 0;
-    int totalValue = 0;
-    int pressed;
+	int base = 0;
+	int tempValue = 0;
+	int numbersToReturn;
+	int value = 0;
+	int totalValue = 0;
+	int pressed = 0;
+	int ntrn = 0;
 
     if (Type == 'E') {        // temperature
-        numbersToReturn = 4;
+        numbersToReturn = 3;
         base = 10;
     }
-    else if (Type == 'I') {   // time
+    else if (Type == 'I') {   // time (IN SECONDS)
         numbersToReturn = 3;
-        base = 6;
+        base = 10;
     }
     else if (Type == 'B') {   // brightness
         numbersToReturn = 1;
@@ -44,30 +49,40 @@ int selectNumber(char Type, int a) {
 
     while (numbersToReturn > 0) {
 
+    	ntrn = numbersToReturn - 1;
         pressed = read_buttons();
 
         if (pressed == 1) {         // increase digit
             value++;
-            tempValue = (totalValue * (10^numbersToReturn) + value * (10^(numbersToReturn - 1)));
-            displayText(tempValue, 1);
-            if (value >= base)
+            if (value >= base){
                 value = 0;
+            }
+            tempValue = value * power10(ntrn);
+            if (tempValue > 200){
+            	value = 1;
+            	tempValue = value * power10(ntrn);
+            }
+            tempValue = tempValue + (totalValue * power10(numbersToReturn));
+            displayText(tempValue, 1);
         }
         else if (pressed == 3) {         // decrease digit
-            if (value == 0){
+        	value--;
+            if (0 > value){
                 value = base - 1;
             }
-            else{
-                value--;
+            tempValue = value* power10(ntrn);
+            if (tempValue > 200){
+            	value = 1;
+            	tempValue = value * power10(ntrn);
             }
-            tempValue = (totalValue * (10^numbersToReturn) + value * (10^(numbersToReturn - 1)));
+            tempValue = tempValue + (totalValue * power10(numbersToReturn));
             displayText(tempValue, 1);
         }
         else if (pressed == 2) {         // confirm digit
             totalValue = totalValue * 10 + value;
-            value = 0;
-            tempValue = (totalValue * (10^numbersToReturn) + value * (10^(numbersToReturn - 1)));
+            tempValue = (totalValue*power10(ntrn));
             displayText(tempValue, 1);
+            value = 0;
             numbersToReturn--;
         }
 
@@ -78,11 +93,14 @@ int selectNumber(char Type, int a) {
     if (Type == 'B' && totalValue > 9){
         totalValue = 9;
 	}
-    if (Type == 'I' && totalValue > 300){
-        totalValue = 300;
+    if (Type == 'I' && totalValue > 180){
+        totalValue = 180;
 	}
-    if (Type == 'E' && totalValue > 1000){
-    	totalValue = 1000;
+    if (Type == 'E' && totalValue > 100){
+    	totalValue = 100;
+	}
+    if (Type == 'H' && totalValue > 3){
+    	totalValue = 3;
 	}
 
     return totalValue;

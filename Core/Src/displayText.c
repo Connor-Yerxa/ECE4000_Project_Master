@@ -51,11 +51,11 @@ void displayText(int ID,  int extra)
 	    }
 
 	    else if (ID == 110){
-	        strcpy(display, "Select time limit"); //NUMBER SELECT
+	        strcpy(display, "Select time limit in sec, max: 180"); //NUMBER SELECT
 	    }
 
 	    else if (ID == 111){
-	        strcpy(display, "Select maximum temp change (XX.xx), max: 10.00"); //NUMBER SELECT
+	        strcpy(display, "Select maximum temp change (xx.x), max: 10.0"); //NUMBER SELECT
 	    }
 
 	    else if (ID == 120){

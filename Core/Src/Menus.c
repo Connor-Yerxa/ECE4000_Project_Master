@@ -62,9 +62,9 @@ void menus() {
                 }
                 break;
 
-            case 110: // Time select
+            case 110: // Temp
                 displayText(screen, 0);
-                number = selectNumber('I', 0);
+                number = selectNumber('E', 0);
                 deltaTime = number;
                 if (both == 1){
                 	screen = 111; break;
@@ -72,9 +72,9 @@ void menus() {
                 screen = 120;
                 break;
 
-            case 111: // Temperature select (for both)
+            case 111: // Time
                 displayText(screen, 0);
-                number = selectNumber('E', 0);
+                number = selectNumber('I', 0);
                 deltaTemp = number;
                 screen = 120;
                 break;
