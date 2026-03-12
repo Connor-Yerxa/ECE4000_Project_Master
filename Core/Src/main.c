@@ -747,7 +747,7 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-  if (htim->Instance == TIM2) // Check if the interrupt is from TIM2
+  if (htim->Instance == TIM1) // Check if the interrupt is from TIM2
   {
 	  TEMP_TIMER = 1;
   }
