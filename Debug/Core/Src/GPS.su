@@ -1,9 +1,0 @@
-../Core/Src/GPS.c:25:6:GPS_Off_On	16	static
-../Core/Src/GPS.c:42:14:gps_convert_deg	32	static
-../Core/Src/GPS.c:49:13:gps_parse_rmc	24	static
-../Core/Src/GPS.c:73:6:calc_timestamp	16	static
-../Core/Src/GPS.c:88:6:GPS_default	8	static
-../Core/Src/GPS.c:100:6:GPS_Init	16	static
-../Core/Src/GPS.c:110:6:GPS_Process	16	static
-../Core/Src/GPS.c:140:6:printGPSData	8	static
-../Core/Src/GPS.c:152:6:GPS_oneshot	16	static

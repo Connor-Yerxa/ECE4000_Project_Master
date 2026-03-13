@@ -58,6 +58,7 @@ SPI_HandleTypeDef hspi2;
 DMA_HandleTypeDef hdma_spi1_rx;
 DMA_HandleTypeDef hdma_spi1_tx;
 
+TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 
 UART_HandleTypeDef huart1;
@@ -78,6 +79,11 @@ static uint8_t ui_excit2       = 0;
 #define UI_Y0     40
 #define UI_DY     40
 
+
+volatile uint8_t TEMP_TIMER = 0;
+
+char filename[32] = "TESTTESTTEST";
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -89,6 +95,7 @@ static void MX_SPI2_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_TIM3_Init(void);
+static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -126,7 +133,8 @@ int SDMOUNT(SPI_HandleTypeDef *hspi)
 }
 
 // Faaiz screen
-static void UI_DrawLine(uint8_t line, const char *text, uint8_t val)
+//static void UI_DrawLine(uint8_t line, const char *text, uint8_t val)
+void UI_DrawLine(uint8_t line, const char *text, uint8_t val)
 {
   char buf[64];
   snprintf(buf, sizeof(buf), "%s: %d", text, val);
@@ -134,7 +142,7 @@ static void UI_DrawLine(uint8_t line, const char *text, uint8_t val)
                 buf, Font16, 1, WHITE, BLACK);
 }
 
-static void UI_DrawAll(void)
+void UI_DrawAll(void)
 {
   Displ_CLS(BLACK);
 
@@ -186,6 +194,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART1_UART_Init();
   MX_TIM3_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 
 //  SD_CS_HIGH();  // Ensure card is deselected
@@ -204,7 +213,7 @@ int main(void)
 ////  //TLS-CRC-2025-10-30-11-29-14A.csv
 ////  readMeasurementData("readMeasurementData.csv", 6485);
 ////  sd_unmount();
-//    GPS_Init(&huart1);
+    GPS_Init(&huart1);
 //
 //  int connected = SDMOUNT(&hspi1);
 //  printf("Connected: %d\n", connected);
@@ -240,7 +249,7 @@ int main(void)
 //  sd_unmount();
 
 //  GPS_Data_t gps = {0};
-//  GPS_oneshot(&gps);
+//  GPS_oneshot();
 //  printGPSData(&gps);
 
 //  printf("Running RTD Test...\n");
@@ -266,8 +275,16 @@ int main(void)
   Displ_BackLight('I');
   HAL_GPIO_WritePin(DISPL_LED_GPIO_Port, DISPL_LED_Pin, 1);
   // Draw the page once
-  UI_DrawAll();
+ // UI_DrawAll();
   // Faaiz screen
+
+
+	int connected;
+	do
+	{
+		connected = SDMOUNT(&hspi1);
+		HAL_Delay(1000);
+	}while(connected != FR_OK);
 
   /* USER CODE END 2 */
 
@@ -276,21 +293,22 @@ int main(void)
   while (1)
   {
 	  menus();
+	  sd_unmount();
 	 // read_buttons();
 //	  uint8_t i=buttons;
 //	  printf("b: %x \n", buttons);
 //	  HAL_Delay(30);
 	  //buttons = 0;
-
+/*
 	  if (buttons & 0x01) { ui_sd_mounted  ^= 1; UI_DrawLine(0, "B1 - Mount SD Card",   ui_sd_mounted); buttons = 0;}
 	  if (buttons & 0x02) { ui_create_file ^= 1; UI_DrawLine(1, "B2 - Create file",     ui_create_file); buttons = 0;}
 	  if (buttons & 0x04) { ui_run_test    ^= 1; UI_DrawLine(2, "B3 - Run Test",        ui_run_test); buttons = 0;}
 	  if (buttons & 0x08) { ui_excit1      ^= 1; UI_DrawLine(3, "B4 - Exciter Relay 1", ui_excit1); buttons = 0;}
 	  if (buttons & 0x10) { ui_excit2      ^= 1; UI_DrawLine(4, "B5 - Exciter Relay 2", ui_excit2); buttons = 0;}
-
+*/
 	  // (PB-6 bit 0x20 ignored for now)
 
-	  HAL_Delay(5);
+	  HAL_Delay(10);
 
 //	  printf("b: %02x \n", buttons);
 //	  HAL_Delay(30);
@@ -419,6 +437,51 @@ static void MX_SPI2_Init(void)
   /* USER CODE BEGIN SPI2_Init 2 */
 
   /* USER CODE END SPI2_Init 2 */
+
+}
+
+/**
+  * @brief TIM2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM2_Init(void)
+{
+
+  /* USER CODE BEGIN TIM2_Init 0 */
+
+  /* USER CODE END TIM2_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM2_Init 1 */
+
+  /* USER CODE END TIM2_Init 1 */
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 7200-1;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 1000-1;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM2_Init 2 */
+
+  /* USER CODE END TIM2_Init 2 */
 
 }
 
@@ -691,6 +754,14 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 {
     SD_OnSpiTxComplete(hspi);
     Displ_OnSpiTxComplete(hspi);
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  if (htim->Instance == TIM2) // Check if the interrupt is from TIM2
+  {
+	  TEMP_TIMER = 1;
+  }
 }
 /* USER CODE END 4 */
 

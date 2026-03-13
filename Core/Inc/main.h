@@ -41,11 +41,18 @@ extern "C" {
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
 extern volatile uint8_t buttons;
+extern volatile uint8_t TEMP_TIMER;
+extern char filename[];
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-
+extern TIM_HandleTypeDef htim2;
+extern SPI_HandleTypeDef hspi2;
+extern SPI_HandleTypeDef hspi1;
+//extern
+//extern
+//extern
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -115,7 +122,8 @@ void Error_Handler(void);
 #define B1_EXTI_IRQn EXTI2_IRQn
 
 /* USER CODE BEGIN Private defines */
-
+int SDMOUNT(SPI_HandleTypeDef *hspi);
+void UI_DrawLine(uint8_t line, const char *text, uint8_t val);
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

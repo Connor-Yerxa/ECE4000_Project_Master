@@ -1,4 +1,9 @@
 #include "SD_Commands.h"
+#include "main.h"
+#include "runCalibration.h"
+#include "Menus.h"
+
+#define USE_LINEAR_REGRESSION 0
 
 
 const char * const MetadataLabelStrings[META_LABEL_COUNT] = {
@@ -17,8 +22,9 @@ const char * const MetadataLabelStrings[META_LABEL_COUNT] = {
     [META_CALIBRATION_APPLIED] = "#,Calibration Applied:,"
 };
 
+
 // Don't forget to free temps after use!
-void readMeasurementData(char * filename, int * tempsLen, int maxprintout)
+void readMeasurementData(int * tempsLen, int maxprintout) //broken, needs adjusting for time added.
 {
 	FIL file;
 	FRESULT fin = f_open(&file, filename, FA_READ);
@@ -44,39 +50,108 @@ void readMeasurementData(char * filename, int * tempsLen, int maxprintout)
 	f_close(&file);
 }
 
+//uint8_t updateMetaData(char * filename, MetadataLabel fieldLabel, char * newValue)
+//{
+//	const char * fl = MetadataLabelStrings[fieldLabel];
+//	FIL file;
+//	FRESULT fin = f_open(&file, filename, FA_READ | FA_WRITE);
+//	if(fin != FR_OK) printf("Couln\'t open: %s", filename);
+//
+//	char line[64];
+//	DWORD lineStart = f_tell(&file);
+//	while(f_gets((TCHAR*)line, 64, &file) != 0 && strstr(line, (char*)fl) == NULL)
+//	{
+//		lineStart = f_tell(&file);
+//	}
+//
+//	size_t originalLen = strlen(line);
+//	char newLine[64];
+//	char spaces[space_count + 1]; //max_spacees + '\0'
+//	int i;
+//	for(i=0;i<(originalLen-strlen(fl)-strlen(newValue));i++)
+//	{
+//		spaces[i] = ' ';
+//	}
+//	spaces[i] = '\0';
+//
+//	sprintf(newLine, "%s%s%s\n", fl, newValue, spaces);
+//
+//	UINT bw;
+//	f_lseek(&file, lineStart);
+//	f_write(&file, newLine, originalLen, &bw);
+//
+//
+//	f_close(&file);
+//	return 0;
+//}
+
 uint8_t updateMetaData(char * filename, MetadataLabel fieldLabel, char * newValue)
 {
-	const char * fl = MetadataLabelStrings[fieldLabel];
-	FIL file;
-	FRESULT fin = f_open(&file, filename, FA_READ | FA_WRITE);
-	if(fin != FR_OK) printf("Couln\'t open: %s", filename);
+    const char * fl = MetadataLabelStrings[fieldLabel];
 
-	char line[64];
-	DWORD lineStart = f_tell(&file);
-	while(f_gets((TCHAR*)line, 64, &file) != 0 && strstr(line, (char*)fl) == NULL)
-	{
-		lineStart = f_tell(&file);
-	}
+    FIL file;
+    if (f_open(&file, filename, FA_READ | FA_WRITE) != FR_OK)
+        return 1;
 
-	size_t originalLen = strlen(line);
-	char newLine[64];
-	char spaces[space_count + 1]; //max_spacees + '\0'
-	int i;
-	for(i=0;i<(originalLen-strlen(fl)-strlen(newValue));i++)
-	{
-		spaces[i] = ' ';
-	}
-	spaces[i] = '\0';
+    char line[128];
+    DWORD lineStart = 0;
 
-	sprintf(newLine, "%s%s%s", fl, newValue, spaces);
+    while (1)
+    {
+        lineStart = f_tell(&file);
 
-	UINT bw;
-	f_lseek(&file, lineStart);
-	f_write(&file, newLine, originalLen, &bw);
+        if (!f_gets(line, sizeof(line), &file))
+            break; // EOF
 
+        if (strstr(line, fl))
+            break; // found
+    }
 
-	f_close(&file);
-	return 0;
+    // Not found
+    if (!strstr(line, fl)) {
+        f_close(&file);
+        return 2;
+    }
+
+    size_t originalLen = strlen(line);
+
+    // Remove newline(s)
+    while (originalLen > 0 && (line[originalLen-1] == '\n' || line[originalLen-1] == '\r'))
+        originalLen--;
+
+    size_t flLen = strlen(fl);
+    size_t newLen = strlen(newValue);
+
+    int spaceCount = originalLen - flLen - newLen;
+    if (spaceCount < 0) spaceCount = 0;
+
+    char newLine[128];
+    int pos = 0;
+
+    memcpy(newLine + pos, fl, flLen);
+    pos += flLen;
+
+    memcpy(newLine + pos, newValue, newLen);
+    pos += newLen;
+
+    memset(newLine + pos, ' ', spaceCount);
+    pos += spaceCount;
+
+    // Restore newline
+    newLine[pos++] = '\n';
+
+    // Write back
+    f_lseek(&file, lineStart);
+    UINT bw;
+    f_write(&file, newLine, pos, &bw);
+
+    FILINFO fno;
+    fno.fdate = (gps_data.full_timestamp >> 16) & 0xFFFF;
+    fno.ftime = gps_data.full_timestamp & 0xFFFF;
+    f_utime(filename, &fno);
+
+    f_close(&file);
+    return 0;
 }
 
 uint8_t WriteMetaData(char * filename, METADATA md)
@@ -129,30 +204,38 @@ uint8_t WriteMetaData(char * filename, METADATA md)
 	sprintf(field, "%s%s\n\n\n", MetadataLabelStrings[META_CALIBRATION_APPLIED], META_SPACE);
 	sd_append_file(filename, field);
 
-	sd_append_file(filename, "Delta Temperature (degC)\n");
+	sd_append_file(filename, "Time (s),lnTime (s),Delta Temperature (degC)\n");
 
 
 	return 0;
 }
 
-uint8_t createMeasurementFile(char ** filename,  METADATA * md)
+uint8_t createMeasurementFile(METADATA * md)
 {
-	char newfilename[32];
-	snprintf(newfilename, 32, "%s.csv", *filename);
-	int i=1;
+	char filenameSnipped[28];
+	strcpy(filenameSnipped, filename);
+
+	char *dot = strtok(filenameSnipped, ".");
+	strcpy(filenameSnipped, dot);
+
+	printf("snipped: %s\n", filenameSnipped);
+
+	uint8_t i=1;
 
 	FIL file;
+	char newfilename[32];
+	snprintf(newfilename, 32, "%s.csv", filenameSnipped);
 	FRESULT res = f_open(&file, newfilename, FA_READ);
 	while(res == FR_OK)
 	{
 		f_close(&file);
-		snprintf(newfilename, 32, "%s%d.csv", *filename, i++);
+		sprintf(newfilename, "%s%d.csv", filenameSnipped, i++);
 		res = f_open(&file, newfilename, FA_READ);
 	}
 	f_close(&file);
-	*filename = strdup(newfilename);
+	strcpy(filename, newfilename);
 
-//	GPS_oneshot();
+	GPS_oneshot();
 
 	sd_write_file(newfilename, "");
 
@@ -162,4 +245,82 @@ uint8_t createMeasurementFile(char ** filename,  METADATA * md)
 	}
 
 	return 0;
+}
+
+uint8_t appendTemp(char * filename, float delta_temp, uint32_t delta_time)
+{
+	char line[64];
+	float t = (float)delta_time / 1000;
+	float lnt = logf(t);
+	sprintf(line, "%.4f,%.4f,%.4f\n", t, lnt, delta_temp);
+	FRESULT res = sd_append_file(filename, line);
+	return (uint8_t)res;
+}
+
+
+float calculateK(float startTime, float stopTime, char* filename, float power){ //pick start & stoptimes
+	FIL file;
+	FRESULT fin = f_open(&file, filename, FA_READ);
+	if(fin != FR_OK) printf("Couln\'t open: %s", filename);
+
+	char line[64];
+	char * token;
+
+	while(f_gets((TCHAR*)line, 64, &file) && !strstr(line, "Delta Temperature (degC)"));
+	while(f_gets((TCHAR*)line, 64, &file) != 0)
+	{
+		token = strtok(line, ",");
+		float currentTime = atof(token);
+		if(currentTime >= startTime) break;
+	}
+	token = strtok(NULL, ",");
+	float lnstarttime = atof(token);
+	token = strtok(NULL, ",");
+	float starttemp = atof(token);
+
+
+	while(f_gets((TCHAR*)line, 64, &file) != 0)
+	{
+		token = strtok(line, ",");
+		float currentTime = atof(token);
+		if(currentTime >= startTime) break;
+	}
+	token = strtok(NULL, ",");
+	float lnstoptime = atof(token);
+	token = strtok(NULL, ",");
+	float stoptemp = atof(token);
+
+	float slope = (stoptemp - starttemp) / (lnstoptime - lnstarttime);
+
+	float k;
+	if(USE_LINEAR_REGRESSION)
+	{
+		// Linear regression code
+		k = 0;
+	}else
+	{
+		k = power / (4 * M_PI * slope *0.15) * calCoef;
+	}
+
+	f_close(&file);
+	return k;
+}
+
+char * getMetaData(char * filename, MetadataLabel label){
+	FIL file;
+	FRESULT fin = f_open(&file, filename, FA_READ);
+	if(fin != FR_OK) printf("Couln\'t open: %s", filename);
+
+	char line[64];
+
+	while(f_gets((TCHAR*)line, 64, &file) != 0 && strstr(line, (char*)label) == NULL);
+
+	char * token = strtok(line, ",");
+	token = strtok(NULL, ",");
+	token = strtok(NULL, ",");
+
+	char * buf = strdup(token);
+
+	f_close(&file);
+	return buf;
 }
