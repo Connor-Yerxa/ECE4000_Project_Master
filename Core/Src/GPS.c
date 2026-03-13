@@ -109,31 +109,32 @@ void GPS_Init(UART_HandleTypeDef *huart)
 
 void GPS_Process()
 {
-    while (1) {
-        uint8_t c = gps_dma_buf[dma_idx];
+	while (1) {
+//		printf("%s", gps_dma_buf);
+		uint8_t c = gps_dma_buf[dma_idx];
 
-        dma_idx++;
-        if (dma_idx >= GPS_DMA_BUF_SIZE)
-        {
-            dma_idx = 0;
-        }
+		dma_idx++;
+		if (dma_idx >= GPS_DMA_BUF_SIZE)
+		{
+			dma_idx = 0;
+		}
 
-        if (c == '\n')
-        {
-            line_buf[line_pos] = '\0';
+		if (c == '\n')
+		{
+			line_buf[line_pos] = '\0';
 
-            if (strncmp(line_buf, "$GNRMC", 6) == 0)
-            {
-                gps_parse_rmc(line_buf);
-                line_pos = 0;
-                break;
-            } else line_pos = 0;
-        } else
-        {
-            if (line_pos < GPS_LINE_BUF_SIZE - 1)
-                line_buf[line_pos++] = c;
-        }
-    }
+			if (strncmp(line_buf, "$GNRMC", 6) == 0)
+			{
+				gps_parse_rmc(line_buf);
+				line_pos = 0;
+				break;
+			} else line_pos = 0;
+		} else
+		{
+			if (line_pos < GPS_LINE_BUF_SIZE - 1)
+				line_buf[line_pos++] = c;
+		}
+	}
     calc_timestamp();
 }
 

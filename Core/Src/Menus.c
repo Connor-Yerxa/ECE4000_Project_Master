@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "main.h"
 #include "Menus.h"
 #include "read_Buttons.h"
 #include "selectNumber.h"
@@ -30,7 +31,6 @@ int both = 0;
 int heater = 0;
 int heaterDefault = 0;
 
-char filename[32];
 
 void menus() {
 	sprintf(filename, "TESTTESTTEST.csv");

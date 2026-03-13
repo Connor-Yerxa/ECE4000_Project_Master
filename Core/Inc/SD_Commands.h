@@ -65,10 +65,10 @@ typedef struct {
 	uint8_t calibrationApplied; //0
 }METADATA;
 
-void readMeasurementData(char * filename, int * tempsLen, int maxprintout);
+void readMeasurementData(int * tempsLen, int maxprintout);
 uint8_t updateMetaData(char * filename, MetadataLabel fieldLabel, char * newValue);
 uint8_t WriteMetaData(char * filename, METADATA md);
-uint8_t createMeasurementFile(char ** filename,  METADATA * md);
+uint8_t createMeasurementFile(METADATA * md);
 
 uint8_t appendTemp(char * filename, float delta_temp, uint32_t delta_time);
 

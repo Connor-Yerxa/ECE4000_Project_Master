@@ -42,6 +42,7 @@ extern "C" {
 /* USER CODE BEGIN ET */
 extern volatile uint8_t buttons;
 extern volatile uint8_t TEMP_TIMER;
+extern char filename[];
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/

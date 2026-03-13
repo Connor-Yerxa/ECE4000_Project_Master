@@ -21,7 +21,7 @@ const char * const MetadataLabelStrings[META_LABEL_COUNT] = {
 };
 
 // Don't forget to free temps after use!
-void readMeasurementData(char * filename, int * tempsLen, int maxprintout) //broken, needs adjusting for time added.
+void readMeasurementData(int * tempsLen, int maxprintout) //broken, needs adjusting for time added.
 {
 	FIL file;
 	FRESULT fin = f_open(&file, filename, FA_READ);
@@ -138,22 +138,30 @@ uint8_t WriteMetaData(char * filename, METADATA md)
 	return 0;
 }
 
-uint8_t createMeasurementFile(char ** filename, METADATA * md)
+uint8_t createMeasurementFile(METADATA * md)
 {
-	char newfilename[32];
-	snprintf(newfilename, 32, "%s.csv", *filename);
-	int i=1;
+	char filenameSnipped[28];
+	strcpy(filenameSnipped, filename);
+
+	char *dot = strrchr(filename, '.');
+	if (dot && strcmp(dot, ".csv") == 0) {
+	    *dot = '\0';   // terminate the string at the dot
+	}
+
+	uint8_t i=1;
 
 	FIL file;
+	char newfilename[32];
+	snprintf(newfilename, 32, "%s.csv", filenameSnipped);
 	FRESULT res = f_open(&file, newfilename, FA_READ);
 	while(res == FR_OK)
 	{
 		f_close(&file);
-		snprintf(newfilename, 32, "%s%d.csv", *filename, i++);
+		sprintf(newfilename, "%s%d.csv", filenameSnipped, i++);
 		res = f_open(&file, newfilename, FA_READ);
 	}
 	f_close(&file);
-	*filename = strdup(newfilename);
+	strcpy(filename, newfilename);
 
 	GPS_oneshot();
 

@@ -39,12 +39,12 @@ void MAX_INITs(SPI_HandleTypeDef * hspi)
 	uint8_t tc_raw[3];
 	max31856_read_nregisters(&THERM_MAX, MAX31856_LTCBH, tc_raw, 3);
 
-	uint8_t sr = max31856_read_register(&THERM_MAX, MAX31856_SR);
+//	uint8_t sr = max31856_read_register(&THERM_MAX, MAX31856_SR);
 
-	printf("TC raw: %02X %02X %02X, CJ: %.2f, SR: 0x%02X\n",
-	       tc_raw[0], tc_raw[1], tc_raw[2],
-	       max31856_read_CJ_temp(&THERM_MAX),
-	       sr);
+//	printf("TC raw: %02X %02X %02X, CJ: %.2f, SR: 0x%02X\n",
+//	       tc_raw[0], tc_raw[1], tc_raw[2],
+//	       max31856_read_CJ_temp(&THERM_MAX),
+//	       sr);
 
 }
 
@@ -70,6 +70,6 @@ float readTemp()
 
 	temp = cjTemp - temp;
 	temp += cjTemp;
-	printf("cj temp: %.2f\n", max31856_read_CJ_temp(&THERM_MAX));
+//	printf("cj temp: %.2f\n", max31856_read_CJ_temp(&THERM_MAX));
 	return temp;
 }

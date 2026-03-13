@@ -82,6 +82,8 @@ static uint8_t ui_excit2       = 0;
 
 volatile uint8_t TEMP_TIMER = 0;
 
+char filename[32] = "TESTTESTTEST";
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

@@ -34,8 +34,9 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 	samplesLeft = deltaTime * hz; //samples per second * seconds = samples
 
 	METADATA md;
-	char* filename = "TESTTESTTEST";
-	createMeasurementFile(&filename, &md);	// note starting location on SD
+	printf("Creating File.\n");
+	createMeasurementFile(&md);	// note starting location on SD
+	printf("FileCreated");
 
 	switch(heater){ 	//Turn on heater
 	case 1: //0.1
