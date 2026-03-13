@@ -13,6 +13,7 @@
 #include "selectNumber.h"
 #include "runTest.h"
 #include "runCalibration.h"
+#include "showGraph.h"
 
 // variable setup
 int screen = 99; // main menu
@@ -104,6 +105,7 @@ void menus() {
                 displayText(screen, 0);
                 button = read_buttons();
                 if (button == 1){
+                	showGraph();
                 	break;
                 }
                 else if (button == 2){

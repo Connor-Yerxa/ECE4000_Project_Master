@@ -135,7 +135,7 @@ uint8_t WriteMetaData(char * filename, METADATA md)
 	return 0;
 }
 
-uint8_t createMeasurementFile(char ** filename,  METADATA * md)
+uint8_t createMeasurementFile(char ** filename, METADATA * md)
 {
 	char newfilename[32];
 	snprintf(newfilename, 32, "%s.csv", *filename);
@@ -172,4 +172,16 @@ uint8_t appendTemp(char * filename, float delta_temp, uint32_t delta_time)
 	sprintf(line, "%.4f,%.4f,%.4f", t, lnt, delta_temp);
 	FRESULT res = sd_append_file(filename, line);
 	return (uint8_t)res;
+}
+
+float calculateK(float startTime, float stopTime, char* filename){ //pick start & stoptimes
+
+	return 0;
+}
+
+char * getMetaData(MetadataLabel label){
+	char * buf = "99";
+	char * buf1 = strdup(buf);
+
+	return buf1;
 }

@@ -10,18 +10,20 @@
 #include "SD_Commands.h"
 #include "MAX_Commands.h"
 #include "main.h"
+#include "displayText.h"
 
 double runTest(int deltaTime, int deltaTemp, int heater){
 
 	int samplesLeft;
 	const int hz = 10;
-	double tempStart; //temperature at start
+	float tempStart; //temperature at start
 	double tempNow; //difference between A & B
 	double tempA = 0; //Sensor A
 	double tempB = 0; //Sensor B
 	double runDeltaTemp; //change from start
-	double k_TC;// thermal conductivity
 	uint32_t startTime;
+	uint32_t currentTime;
+	float currentTemp;
 
 	MAX_INITs(&hspi2);
 	startTime = HAL_GetTick();
@@ -57,26 +59,20 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 	while ((samplesLeft > 0) && (deltaTemp > runDeltaTemp)){
 		if(TEMP_TIMER){
 			TEMP_TIMER = 0;
-
-
+			currentTemp = readTemp();
+			runDeltaTemp = currentTemp - tempStart;
+			currentTime = HAL_GetTick() - startTime;
+			appendTemp(filename, runDeltaTemp, currentTime);
+			displayText(currentTemp, 1);
+			samplesLeft--;
 		}
-		//READ TEMP A & B
-
-		//PROCESS A SAMPLE
-		tempNow = tempA - tempB; //Get current temp
-		//Cold junction compensation
-		runDeltaTemp = tempStart - tempNow;
-
-		//Put sample on card at next available spot
-
-		samplesLeft--;
 	}
-	//get metadata
-	//WriteMetaData()
+	char buf[64];
+	sprintf(buf, "%.4f", (float)currentTime * 1000);
+	updateMetaData(filename, META_REGION_END, buf);
 
-	//return start location, length and ?
-
+	HAL_TIM_Base_Stop_IT(&htim2);
 	HAL_GPIO_WritePin(EXCIT1_GPIO_Port, EXCIT1_Pin, 0); //Turn off heaters
 	HAL_GPIO_WritePin(EXCIT2_GPIO_Port, EXCIT2_Pin, 0);
-	return k_TC;
+	return 0;
 }

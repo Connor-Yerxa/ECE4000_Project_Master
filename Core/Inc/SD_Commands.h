@@ -71,6 +71,12 @@ uint8_t updateMetaData(char * filename, MetadataLabel fieldLabel, char * newValu
 uint8_t WriteMetaData(char * filename, METADATA md);
 uint8_t createMeasurementFile(char ** filename,  METADATA * md);
 
+uint8_t appendTemp(char * filename, float delta_temp, uint32_t delta_time);
+
+
+float calculateK(float startTime, float stopTime, char* filename);
+char * getMetaData(MetadataLabel label);
+
 #ifdef __cplusplus
 	}
 #endif

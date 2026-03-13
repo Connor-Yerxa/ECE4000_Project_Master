@@ -66,7 +66,8 @@ void displayText(int ID,  int extra)
 	    }
 	    else if (ID == 130){
 	    	strcpy(display, "Test Complete");
-	    	strcpy(text[0], "Press any button to continue");
+	    	strcpy(text[0], "Show Graph");
+	    	strcpy(text[0], "Delete Test");
 	    }
 
 	    else if (ID == 200){
