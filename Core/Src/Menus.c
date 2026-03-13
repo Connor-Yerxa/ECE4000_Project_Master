@@ -6,6 +6,7 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 #include "Menus.h"
 #include "read_Buttons.h"
 #include "selectNumber.h"
@@ -14,6 +15,7 @@
 #include "runTest.h"
 #include "runCalibration.h"
 #include "showGraph.h"
+#include "SD_COmmands.h"
 
 // variable setup
 int screen = 99; // main menu
@@ -28,7 +30,10 @@ int both = 0;
 int heater = 0;
 int heaterDefault = 0;
 
+char filename[32];
+
 void menus() {
+	sprintf(filename, "TESTTESTTEST.csv");
     while(1) {
         switch(screen) {
 
@@ -105,7 +110,10 @@ void menus() {
                 displayText(screen, 0);
                 button = read_buttons();
                 if (button == 1){
-                	showGraph();
+                	float k = showGraph();
+                	char buf[16];
+                	sprintf(buf, "%.5f", k);
+                	updateMetaData(filename, META_CONDUCTIVITY, buf);
                 	break;
                 }
                 else if (button == 2){

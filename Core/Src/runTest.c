@@ -11,6 +11,7 @@
 #include "MAX_Commands.h"
 #include "main.h"
 #include "displayText.h"
+#include "GPS.h"
 
 double runTest(int deltaTime, int deltaTemp, int heater){
 
@@ -71,8 +72,10 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 	sprintf(buf, "%.4f", (float)currentTime * 1000);
 	updateMetaData(filename, META_REGION_END, buf);
 
-	sprintf(buf, "%.5f", (float)currentTime * 1000);
-	updateMetaData(filename, META_REGION_END, buf);
+	sprintf(buf, "%.5f", gps_data.latitude);
+	updateMetaData(filename, META_LATITUDE, buf);
+	sprintf(buf, "%.5f", gps_data.longitude);
+	updateMetaData(filename, META_LONGITUDE, buf);
 
 	HAL_TIM_Base_Stop_IT(&htim2);
 	HAL_GPIO_WritePin(EXCIT1_GPIO_Port, EXCIT1_Pin, 0); //Turn off heaters

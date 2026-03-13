@@ -8,6 +8,6 @@
 #ifndef INC_SHOWGRAPH_H_
 #define INC_SHOWGRAPH_H_
 
-void showGraph();
+float showGraph();
 
 #endif /* INC_SHOWGRAPH_H_ */

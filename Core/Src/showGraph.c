@@ -8,9 +8,10 @@
 #include "main.h"
 #include "displayText.h"
 #include "menus.h"
+#include "showGraph.h"
+#include "Menus.h"
 
-void showGraph(){
-	char *filename = "TESTTESTTEST.csv";
+float showGraph(){
 	char * bufs;
 
 	bufs = getMetaData(filename, META_REGION_START);
@@ -42,5 +43,5 @@ void showGraph(){
 	// Log the graph
 	// Find the 2 points
 	// use those 2 points & values for the calculation of k
-	// return a k value
+	return k;
 }
