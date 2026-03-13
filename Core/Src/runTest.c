@@ -5,7 +5,7 @@
  *      Author: nateh
  */
 
-
+#include "runTest.h"
 #include <stdio.h>
 #include "SD_Commands.h"
 #include "MAX_Commands.h"
@@ -17,9 +17,9 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 	int samplesLeft;
 	const int hz = 10;
 	float tempStart; //temperature at start
-	double tempNow; //difference between A & B
-	double tempA = 0; //Sensor A
-	double tempB = 0; //Sensor B
+//	double tempNow; //difference between A & B
+//	double tempA = 0; //Sensor A
+//	double tempB = 0; //Sensor B
 	double runDeltaTemp; //change from start
 	uint32_t startTime;
 	uint32_t currentTime;

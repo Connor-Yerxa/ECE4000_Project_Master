@@ -7,6 +7,7 @@
 #include "SD_Commands.h"
 #include "main.h"
 #include "displayText.h"
+#include "menus.h"
 
 void showGraph(){
 	char *filename = "TESTTESTTEST.csv";
@@ -16,7 +17,23 @@ void showGraph(){
 	float startTime = atof(bufs);
 	bufs = getMetaData(META_REGION_END);
 	float stopTime = atof(bufs);
-	float k = calculateK(startTime, stopTime, filename); //needs 3 arguments
+	float power;
+	switch(heater){ 	//Turn on heater
+		case 1: //0.1
+			power = 0.1;
+			break;
+		case 2: //0.27
+			power = 0.27;
+			break;
+		case 3: //0.5
+			power = 0.5;
+			break;
+		default:
+			power = 0;
+			break;
+
+		}
+	float k = calculateK(startTime, stopTime, filename, power); //needs 3 arguments
 
 	displayText(startTime,1);
 	displayText(stopTime,1);

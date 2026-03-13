@@ -20,6 +20,7 @@ extern double deltaTempDefault;  // Default temperature
 extern double deltaTimeDefault;  // Default duration
 extern int brightness;       // Display brightness
 extern int both;             // Flag for "both" option in test
+extern int heater;
 
 // ---------- Functions ----------
 void menus();                // Main menu loop

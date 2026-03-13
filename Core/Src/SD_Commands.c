@@ -1,4 +1,7 @@
 #include "SD_Commands.h"
+#include "main.h"
+
+#define USE_LINEAR_REGRESSION 0
 
 
 const char * const MetadataLabelStrings[META_LABEL_COUNT] = {
@@ -174,9 +177,51 @@ uint8_t appendTemp(char * filename, float delta_temp, uint32_t delta_time)
 	return (uint8_t)res;
 }
 
-float calculateK(float startTime, float stopTime, char* filename){ //pick start & stoptimes
+float calculateK(float startTime, float stopTime, char* filename, float power){ //pick start & stoptimes
+	FIL file;
+	FRESULT fin = f_open(&file, filename, FA_READ);
+	if(fin != FR_OK) printf("Couln\'t open: %s", filename);
 
-	return 0;
+	char line[64];
+	char * token;
+
+	while(f_gets((TCHAR*)line, 64, &file) && !strstr(line, "Delta Temperature (degC)"));
+	while(f_gets((TCHAR*)line, 64, &file) != 0)
+	{
+		token = strtok(line, ",");
+		float currentTime = atof(token);
+		if(currentTime >= startTime) break;
+	}
+	token = strtok(NULL, ",");
+	float lnstarttime = atof(token);
+	token = strtok(NULL, ",");
+	float starttemp = atof(token);
+
+
+	while(f_gets((TCHAR*)line, 64, &file) != 0)
+	{
+		token = strtok(line, ",");
+		float currentTime = atof(token);
+		if(currentTime >= startTime) break;
+	}
+	token = strtok(NULL, ",");
+	float lnstoptime = atof(token);
+	token = strtok(NULL, ",");
+	float stoptemp = atof(token);
+
+	float slope = (stoptemp - starttemp) / (lnstoptime - lnstarttime);
+
+	float k;
+	if(USE_LINEAR_REGRESSION)
+	{
+		// Linear regression code
+		k = 0;
+	}else
+	{
+		k = power / (4 * M_PI * slope);
+	}
+
+	return k;
 }
 
 char * getMetaData(MetadataLabel label){
