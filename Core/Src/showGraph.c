@@ -14,6 +14,8 @@
 float showGraph(){
 	char * bufs;
 
+	SDMOUNT(&hspi1);
+
 	bufs = getMetaData(filename, META_REGION_START);
 	float startTime = atof(bufs);
 	bufs = getMetaData(filename, META_REGION_END);
@@ -36,6 +38,7 @@ float showGraph(){
 		}
 	float k = calculateK(startTime, stopTime, filename, power); //needs 3 arguments
 
+	sd_unmount();
 	displayText(startTime,1);
 	displayText(stopTime,1);
 	displayText(k,1);

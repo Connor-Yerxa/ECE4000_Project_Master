@@ -213,7 +213,7 @@ int main(void)
 ////  //TLS-CRC-2025-10-30-11-29-14A.csv
 ////  readMeasurementData("readMeasurementData.csv", 6485);
 ////  sd_unmount();
-//    GPS_Init(&huart1);
+    GPS_Init(&huart1);
 //
 //  int connected = SDMOUNT(&hspi1);
 //  printf("Connected: %d\n", connected);
@@ -249,7 +249,7 @@ int main(void)
 //  sd_unmount();
 
 //  GPS_Data_t gps = {0};
-//  GPS_oneshot(&gps);
+//  GPS_oneshot();
 //  printGPSData(&gps);
 
 //  printf("Running RTD Test...\n");
@@ -749,7 +749,7 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-  if (htim->Instance == TIM1) // Check if the interrupt is from TIM2
+  if (htim->Instance == TIM2) // Check if the interrupt is from TIM2
   {
 	  TEMP_TIMER = 1;
   }
