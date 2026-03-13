@@ -278,6 +278,14 @@ int main(void)
  // UI_DrawAll();
   // Faaiz screen
 
+
+	int connected;
+	do
+	{
+		connected = SDMOUNT(&hspi1);
+		HAL_Delay(1000);
+	}while(connected != FR_OK);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -285,6 +293,7 @@ int main(void)
   while (1)
   {
 	  menus();
+	  sd_unmount();
 	 // read_buttons();
 //	  uint8_t i=buttons;
 //	  printf("b: %x \n", buttons);

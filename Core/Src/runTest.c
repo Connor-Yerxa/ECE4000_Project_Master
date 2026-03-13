@@ -33,7 +33,7 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 	samplesLeft = 5 * hz; //samples per second * seconds = samples
 
 	METADATA md;
-	SDMOUNT(&hspi1);
+
 	printf("Creating File.\n");
 	createMeasurementFile(&md);	// note starting location on SD
 	printf("FileCreated\n");
@@ -94,7 +94,7 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 
 	printf("Writing metadata done\n");
 
-	sd_unmount();
+//	sd_unmount();
 
 	HAL_GPIO_WritePin(EXCIT1_GPIO_Port, EXCIT1_Pin, 0); //Turn off heaters
 	HAL_GPIO_WritePin(EXCIT2_GPIO_Port, EXCIT2_Pin, 0);
