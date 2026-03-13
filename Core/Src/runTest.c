@@ -71,6 +71,9 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 	sprintf(buf, "%.4f", (float)currentTime * 1000);
 	updateMetaData(filename, META_REGION_END, buf);
 
+	sprintf(buf, "%.5f", (float)currentTime * 1000);
+	updateMetaData(filename, META_REGION_END, buf);
+
 	HAL_TIM_Base_Stop_IT(&htim2);
 	HAL_GPIO_WritePin(EXCIT1_GPIO_Port, EXCIT1_Pin, 0); //Turn off heaters
 	HAL_GPIO_WritePin(EXCIT2_GPIO_Port, EXCIT2_Pin, 0);

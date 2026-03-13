@@ -13,9 +13,9 @@ void showGraph(){
 	char *filename = "TESTTESTTEST.csv";
 	char * bufs;
 
-	bufs = getMetaData(META_REGION_START);
+	bufs = getMetaData(filename, META_REGION_START);
 	float startTime = atof(bufs);
-	bufs = getMetaData(META_REGION_END);
+	bufs = getMetaData(filename, META_REGION_END);
 	float stopTime = atof(bufs);
 	float power;
 	switch(heater){ 	//Turn on heater

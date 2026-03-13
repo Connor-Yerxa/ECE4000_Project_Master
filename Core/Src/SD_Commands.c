@@ -221,12 +221,25 @@ float calculateK(float startTime, float stopTime, char* filename, float power){ 
 		k = power / (4 * M_PI * slope);
 	}
 
+	f_close(&file);
 	return k;
 }
 
-char * getMetaData(MetadataLabel label){
-	char * buf = "99";
-	char * buf1 = strdup(buf);
+char * getMetaData(char * filename, MetadataLabel label){
+	FIL file;
+	FRESULT fin = f_open(&file, filename, FA_READ);
+	if(fin != FR_OK) printf("Couln\'t open: %s", filename);
 
-	return buf1;
+	char line[64];
+
+	while(f_gets((TCHAR*)line, 64, &file) != 0 && strstr(line, (char*)label) == NULL);
+
+	char * token = strtok(line, ",");
+	token = strtok(NULL, ",");
+	token = strtok(NULL, ",");
+
+	char * buf = strdup(token);
+
+	f_close(&file);
+	return buf;
 }

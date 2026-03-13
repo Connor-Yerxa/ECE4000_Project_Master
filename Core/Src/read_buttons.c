@@ -24,21 +24,27 @@ int read_buttons(void) {
     // Reset buttons to 0 after reading
     switch(pressed) { //convert pressed to 1-6
         case 1:
+        	HAL_Delay(100);
             pressed = 1;
             break;
         case 2:
+        	HAL_Delay(100);
             pressed = 2;
             break;
         case 4:
+        	HAL_Delay(100);
             pressed = 3;
             break;
         case 8:
+        	HAL_Delay(100);
             pressed = 4;
             break;
         case 16:
+        	HAL_Delay(100);
             pressed = 5;
             break;
         case 32:
+        	HAL_Delay(100);
             pressed = 6;
             break;
         default:
