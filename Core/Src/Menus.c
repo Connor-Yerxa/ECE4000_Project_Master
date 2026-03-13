@@ -30,7 +30,7 @@ int brightness = 10;
 int both = 0;
 int heater = 0;
 int heaterDefault = 0;
-
+float calCoef = 1; // calibration coefficent
 
 void menus() {
 	sprintf(filename, "TESTTESTTEST.csv");

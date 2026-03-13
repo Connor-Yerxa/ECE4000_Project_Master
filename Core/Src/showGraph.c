@@ -21,7 +21,7 @@ float showGraph(){
 	bufs = getMetaData(filename, META_REGION_END);
 	float stopTime = atof(bufs);
 	float power;
-	switch(heater){ 	//Turn on heater
+	switch(heater){
 		case 1: //0.1
 			power = 0.1;
 			break;

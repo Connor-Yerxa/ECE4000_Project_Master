@@ -21,6 +21,7 @@ extern double deltaTimeDefault;  // Default duration
 extern int brightness;       // Display brightness
 extern int both;             // Flag for "both" option in test
 extern int heater;
+extern float calCoef;
 
 // ---------- Functions ----------
 void menus();                // Main menu loop

@@ -1,5 +1,7 @@
 #include "SD_Commands.h"
 #include "main.h"
+#include "runCalibration.h"
+#include "Menus.h"
 
 #define USE_LINEAR_REGRESSION 0
 
@@ -19,6 +21,7 @@ const char * const MetadataLabelStrings[META_LABEL_COUNT] = {
     [META_CONDUCTIVITY]        = "#,Conductivity:,",
     [META_CALIBRATION_APPLIED] = "#,Calibration Applied:,"
 };
+
 
 // Don't forget to free temps after use!
 void readMeasurementData(int * tempsLen, int maxprintout) //broken, needs adjusting for time added.
@@ -254,6 +257,7 @@ uint8_t appendTemp(char * filename, float delta_temp, uint32_t delta_time)
 	return (uint8_t)res;
 }
 
+
 float calculateK(float startTime, float stopTime, char* filename, float power){ //pick start & stoptimes
 	FIL file;
 	FRESULT fin = f_open(&file, filename, FA_READ);
@@ -295,7 +299,7 @@ float calculateK(float startTime, float stopTime, char* filename, float power){ 
 		k = 0;
 	}else
 	{
-		k = power / (4 * M_PI * slope);
+		k = power / (4 * M_PI * slope *0.15) * calCoef;
 	}
 
 	f_close(&file);

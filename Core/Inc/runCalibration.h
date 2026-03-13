@@ -8,6 +8,8 @@
 #ifndef INC_RUNCALIBRATION_H_
 #define INC_RUNCALIBRATION_H_
 
-int runCalibration(int type);
+
+void runCalibration(int type);
+
 
 #endif /* INC_RUNCALIBRATION_H_ */
