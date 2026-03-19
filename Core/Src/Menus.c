@@ -17,6 +17,7 @@
 #include "runCalibration.h"
 #include "showGraph.h"
 #include "SD_COmmands.h"
+#include "fileselecting.h"
 
 // variable setup
 int screen = 99; // main menu
@@ -46,6 +47,7 @@ void menus() {
                     case 2: screen = 200; break; // Calibration
                     case 3: screen = 300; break; // Settings
                     case 4: screen = 400; break; // Data
+                    case 5: screen = 500; break;
                     default: screen = 99; break;
                 }
                 break;
@@ -205,6 +207,14 @@ void menus() {
                     case 6: screen = 99; break;
                 }
                 break;
+
+			case 500:
+				displayText(screen, 0);
+				selectFile();
+				Displ_CLS(BLACK);
+				drawGraph(0, 0, 400, 300);
+				screen = 99;
+				break;
 
 
             default:
