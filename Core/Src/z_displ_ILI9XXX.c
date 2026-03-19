@@ -63,7 +63,14 @@ void Displ_Select(void) {
 	}
 }
 
-
+void Displ_Deselect(void)
+{
+	if (!HAL_GPIO_ReadPin(DISPL_CS_GPIO_Port, DISPL_CS_Pin)) {					// if display not yet selected
+//		HAL_GPIO_WritePin(TOUCH_CS_GPIO_Port, TOUCH_CS_Pin, GPIO_PIN_SET); 		// unselect touch
+		SET_DISPL_SPI_BAUDRATE;				   									//change SPI port speed as per display needs
+		HAL_GPIO_WritePin(DISPL_CS_GPIO_Port, DISPL_CS_Pin, GPIO_PIN_SET);	// select display
+	}
+}
 
 
 /**************************
@@ -130,6 +137,7 @@ void Displ_Transmit(GPIO_PinState DC_Status, uint8_t* data, uint16_t dataSize, u
 		}
 #endif //DISPLAY_SPI_DMA_MODE
 #endif //DISPLAY_SPI_INTERRUPT_MODE
+		Displ_Deselect();
 	}
 
 

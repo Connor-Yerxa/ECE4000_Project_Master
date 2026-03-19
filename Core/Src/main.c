@@ -32,6 +32,7 @@
 #include <string.h>
 #include "MAX_Commands.h"
 #include "Menus.h"
+#include "fileselecting.h"
 
 /* USER CODE END Includes */
 
@@ -279,12 +280,14 @@ int main(void)
   // Faaiz screen
 
 
-	int connected;
-	do
-	{
-		connected = SDMOUNT(&hspi1);
-		HAL_Delay(1000);
-	}while(connected != FR_OK);
+  int connected;
+  	do
+  	{
+  		connected = SDMOUNT(&hspi1);
+  		HAL_Delay(500);
+  		if(connected != FR_OK) sd_unmount();
+  		HAL_Delay(100);
+  	}while(connected != FR_OK);
 
   /* USER CODE END 2 */
 
