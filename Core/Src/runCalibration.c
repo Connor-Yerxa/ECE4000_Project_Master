@@ -21,7 +21,7 @@ void runCalibration(int type){
 	/*should grab the same data as showgraph..?*/
 	char * bufs;
 
-	SDMOUNT(&hspi1);
+//	SDMOUNT(&hspi1);
 
 	bufs = getMetaData(filename, META_REGION_START);
 	float startTime = atof(bufs);

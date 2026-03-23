@@ -43,8 +43,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define SD_CS_LOW()     HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_RESET)
-#define SD_CS_HIGH()    HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_SET)
 
 /* USER CODE END PD */
 
@@ -112,35 +110,52 @@ int _write(int file, char *ptr, int len) {
     return len;
 }
 
-int SDMOUNT(SPI_HandleTypeDef *hspi)
-{
-	uint32_t original = hspi->Init.BaudRatePrescaler;
-	HAL_SPI_DeInit(hspi);
-	hspi->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
-	HAL_Delay(10);
-	HAL_SPI_Init(hspi);
-
-	SD_CS_HIGH();  // Ensure card is deselected
-	HAL_Delay(10);
-
-	int connected = sd_mount();
-
-	HAL_SPI_DeInit(hspi);
-	hspi->Init.BaudRatePrescaler = original;
-	HAL_Delay(10);
-	HAL_SPI_Init(hspi);
-
-	return connected;
-}
-
 // Faaiz screen
 //static void UI_DrawLine(uint8_t line, const char *text, uint8_t val)
 void UI_DrawLine(uint8_t line, const char *text, uint8_t val)
 {
   char buf[64];
-  snprintf(buf, sizeof(buf), "%s: %d", text, val);
-  Displ_WString(UI_X, (uint16_t)(UI_Y0 + line * UI_DY),
-                buf, Font16, 1, WHITE, BLACK);
+  int x, y;
+  sFONT font = Font16;
+  uint32_t colour=WHITE;
+
+//  snprintf(buf, sizeof(buf), "%s: %d", text, val);
+  snprintf(buf, sizeof(buf), "%s", text);
+
+  switch(line)
+  {
+  	  case 0:
+  		  font = Font24;
+  		  colour = CYAN;
+  		  x=480/2 - (17*strlen(buf)/2);
+  		  y=5+16;
+  		  break;
+  	  case 1:
+  		  x=5;
+  		  y=5;
+  		  break;
+  	  case 2:
+  		  x=5;
+  		  y=320/2 - 16/2;
+  		  break;
+  	  case 3:
+  		  x=5;
+  		  y=320-5-16;
+  		  break;
+  	  case 4:
+  		  x=480 - 11*strlen(buf) - 5;
+  		  y=5;
+  		  break;
+  	  case 5:
+  		  x=480 - 11*strlen(buf) - 5;
+  		  y=320/2 - 16/2;
+  		  break;
+  	  case 6:
+  		  x=480 - 11*strlen(buf) - 5;
+  		  y=320-5-16;
+  		  break;
+  }
+  Displ_WString(x, y, buf, font, 1, colour, BLACK);
 }
 
 void UI_DrawAll(void)
@@ -175,8 +190,6 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-//  MAX31865_HandleTypeDef MAX_RTD;
-//  MAX31865_HandleTypeDef MAX_RTD;
 
   /* USER CODE END Init */
 
@@ -198,96 +211,29 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 
-//  SD_CS_HIGH();  // Ensure card is deselected
-  HAL_Delay(30);
-//  int connected = sd_mount();
-//  sd_test_read_raw();
-//  sd_write_file("test1.txt", "hello from STM32\r\n");
+	SD_CS_HIGH();  // Ensure card is deselected
+	HAL_Delay(1000);
 
-//////  char buf[64];
-//////  UINT br;
-//////  FRESULT r = sd_read_file("test1.txt", buf, sizeof(buf), &br);
-//////  printf("read_file = %d, br = %u, data = '%s'\r\n", r, br, buf);
-////
-//////  sd_list_files();
-////
-////  //TLS-CRC-2025-10-30-11-29-14A.csv
-////  readMeasurementData("readMeasurementData.csv", 6485);
-////  sd_unmount();
-    GPS_Init(&huart1);
-//
-//  int connected = SDMOUNT(&hspi1);
-//  printf("Connected: %d\n", connected);
-////  sd_test_read_raw();
-////  sd_write_file("test1.txt", "hello from STM32\r\n");
-//
-////  char buf[64];
-////  UINT br;
-////  FRESULT r = sd_read_file("test1.txt", buf, sizeof(buf), &br);
-////  printf("read_file = %d, br = %u, data = '%s'\r\n", r, br, buf);
-//
-//  sd_list_files();
-//
-//  //TLS-CRC-2025-10-30-11-29-14A.csv - 6485
-////  readMeasurementData("TLS-CRC-2025-10-30-11-29-14A.csv", &tempsLen, 15);
-//
-//  METADATA md;
-//  char * filename = "TLS-SIN";
-//  createMeasurementFile(&filename, &md);
-//
-////  float mins = 4;
-//  float mins = 0.02;
-//  float t=0;
-//  float sampleTime = 1.0/15.0;
-//  char text[10];
-//  while(t < mins * 60)
-//  {
-//	  sprintf(text, "%.3f\n", sin(t));
-//	  sd_append_file(filename, text);
-//	  t += sampleTime;
-//  }
-//
-//  sd_unmount();
-
-//  GPS_Data_t gps = {0};
-//  GPS_oneshot();
-//  printGPSData(&gps);
-
-//  printf("Running RTD Test...\n");
-//  MAX31865_Init(&MAX_RTD, &hspi2, RTD_CS_GPIO_Port, RTD_CS_Pin, MAX31865_WIRES_3, 0);
-//
-//  uint16_t raw15;
-//  MAX31865_ReadRTDRaw(&MAX_RTD, &raw15);
-//  uint8_t buf[8];
-//  MAX31865_ReadN(&MAX_RTD, 0, buf, 8);
-//
-//
-//
-//  for(int i=0;i<8;i++)
-//  {
-//	  printf("%02X  ", buf[i]);
-//  }
-//  printf("\n");
-
-  // Faaiz screen
-  // Display init
-  Displ_Init(Displ_Orientat_90);
-  Displ_CLS(BLACK);
-  Displ_BackLight('I');
-  HAL_GPIO_WritePin(DISPL_LED_GPIO_Port, DISPL_LED_Pin, 1);
-  // Draw the page once
- // UI_DrawAll();
-  // Faaiz screen
+	GPS_Init(&huart1);
 
 
-  int connected;
-  	do
-  	{
-  		connected = SDMOUNT(&hspi1);
-  		HAL_Delay(500);
-  		if(connected != FR_OK) sd_unmount();
-  		HAL_Delay(100);
-  	}while(connected != FR_OK);
+	Displ_Init(Displ_Orientat_90);
+	Displ_CLS(BLACK);
+	Displ_BackLight('I');
+	HAL_GPIO_WritePin(DISPL_LED_GPIO_Port, DISPL_LED_Pin, 1);
+
+	Displ_WString(480/2 - 6*17*2, 320/2 - 24, "C-Therm TLS", Font24, 2, CYAN, BLACK);
+	Displ_WString(480/2 - 4*17*2, 320/2, "Handheld", Font24, 2, CYAN, BLACK);
+
+	FRESULT res = sd_reset_and_mount();
+	if (res != FR_OK)
+	{
+		Displ_WString(10, 10, "Insert SD Card & Reboot", Font8, 1, RED, BLACK);
+		while(1);
+	}
+	Displ_WString(10, 10, "SD Mounted!", Font8, 1, GREEN, BLACK);
+
+	HAL_Delay(1000);
 
   /* USER CODE END 2 */
 

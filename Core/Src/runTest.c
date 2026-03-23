@@ -43,15 +43,15 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 	heater = 2;
 
 	switch(heater){ 	//Turn on heater
-	case 1: //0.1
+	case 1: //0.1 W
 		HAL_GPIO_WritePin(EXCIT1_GPIO_Port, EXCIT1_Pin, 1);
 		HAL_GPIO_WritePin(EXCIT2_GPIO_Port, EXCIT2_Pin, 0);
 		break;
-	case 2: //0.27
+	case 2: //0.25 W
 		HAL_GPIO_WritePin(EXCIT1_GPIO_Port, EXCIT1_Pin, 0);
 		HAL_GPIO_WritePin(EXCIT2_GPIO_Port, EXCIT2_Pin, 1);
 		break;
-	case 3: //0.5
+	case 3: //0.5 W
 		HAL_GPIO_WritePin(EXCIT1_GPIO_Port, EXCIT1_Pin, 1);
 		HAL_GPIO_WritePin(EXCIT2_GPIO_Port, EXCIT2_Pin, 1);
 		break;

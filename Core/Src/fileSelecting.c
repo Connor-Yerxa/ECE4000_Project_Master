@@ -147,7 +147,7 @@ void draw_page(void)
 // Button 4 = prev. page
 // Button 5 = back
 int debounceDelay = 150;
-void selectFile(void)
+int selectFile(void)
 {
 	totalFiles = count_csv_files();
 	pageStart = 0;
@@ -213,19 +213,18 @@ void selectFile(void)
 		// SELECT
 		if(buttons & 0x02)
 		{
-			buttons = 0;
 			HAL_Delay(debounceDelay);
+			buttons = 0;
 			sprintf(filename, "%s", pageFiles[selected]);
-			break;
+			return 1;
 		}
 
 		// BACK
-		if(buttons & 0x10)
+		if(buttons & 0x20)
 		{
-			buttons = 0;
 			HAL_Delay(debounceDelay);
-			break;
-
+			buttons = 0;
+			return 0;
 		}
 	}
 }

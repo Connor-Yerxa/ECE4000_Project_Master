@@ -65,6 +65,12 @@ typedef struct {
 	uint8_t calibrationApplied; //0
 }METADATA;
 
+extern FATFS FatFs;
+
+#define SD_CS_LOW()     HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_RESET)
+#define SD_CS_HIGH()    HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_SET)
+
+FRESULT sd_reset_and_mount(void);
 void readMeasurementData(int * tempsLen, int maxprintout);
 uint8_t updateMetaData(char * filename, MetadataLabel fieldLabel, char * newValue);
 uint8_t WriteMetaData(char * filename, METADATA md);

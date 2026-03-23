@@ -2,9 +2,9 @@
 #include "main.h"
 #include "runCalibration.h"
 #include "Menus.h"
+#include "fatfs.h"
 
 #define USE_LINEAR_REGRESSION 0
-
 
 const char * const MetadataLabelStrings[META_LABEL_COUNT] = {
     [META_SENSOR_SERIAL]       = "#,Sensor Serial:,",
@@ -22,6 +22,34 @@ const char * const MetadataLabelStrings[META_LABEL_COUNT] = {
     [META_CALIBRATION_APPLIED] = "#,Calibration Applied:,"
 };
 
+
+FRESULT sd_reset_and_mount(void)
+{
+    uint32_t original = hspi1.Init.BaudRatePrescaler;
+
+    HAL_SPI_DeInit(&hspi1);
+    hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
+    HAL_Delay(10);
+    HAL_SPI_Init(&hspi1);
+
+    SD_CS_HIGH();
+    HAL_Delay(10);
+
+    uint8_t dummy[10];
+    memset(dummy, 0xFF, sizeof(dummy));
+    HAL_SPI_Transmit(&hspi1, dummy, sizeof(dummy), HAL_MAX_DELAY);
+
+    HAL_Delay(10);
+
+    FRESULT res = sd_mount();
+
+    HAL_SPI_DeInit(&hspi1);
+    hspi1.Init.BaudRatePrescaler = original;
+    HAL_Delay(10);
+    HAL_SPI_Init(&hspi1);
+
+    return res;
+}
 
 // Don't forget to free temps after use!
 void readMeasurementData(int * tempsLen, int maxprintout) //broken, needs adjusting for time added.

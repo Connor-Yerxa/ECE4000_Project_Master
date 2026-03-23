@@ -14,7 +14,7 @@
 float showGraph(){
 	char * bufs;
 
-	SDMOUNT(&hspi1);
+//	SDMOUNT(&hspi1);
 
 	bufs = getMetaData(filename, META_REGION_START);
 	float startTime = atof(bufs);

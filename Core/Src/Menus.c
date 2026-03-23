@@ -209,12 +209,15 @@ void menus() {
                 break;
 
 			case 500: // Load old results.
-				selectFile();
-				Displ_CLS(BLACK);
-				drawGraph(40, 80, 400, 230);
-				while(!(buttons & 0x20));
-				HAL_Delay(500);
-				buttons = 0;
+				int s = selectFile();
+				if(s)
+				{
+					Displ_CLS(BLACK);
+					drawGraph(40, 80, 400, 230);
+					while(!(buttons & 0x20));
+					HAL_Delay(500);
+					buttons = 0;
+				}
 				screen = 99;
 				break;
 

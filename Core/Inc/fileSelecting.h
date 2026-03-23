@@ -12,6 +12,6 @@
 //void load_page(uint16_t startIndex);
 //void draw_page(void);
 
-void selectFile(void);
+int selectFile(void);
 
 #endif /* INC_FILESELECTING_H_ */
