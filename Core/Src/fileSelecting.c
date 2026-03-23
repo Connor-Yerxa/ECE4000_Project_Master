@@ -102,24 +102,41 @@ void load_page(uint16_t startIndex)
     f_closedir(&dir);
 }
 
+void draw_row(uint8_t rowIndex, uint8_t isSelected)
+{
+    uint16_t color = isSelected ? YELLOW : WHITE;
+    uint16_t y = 20 + rowIndex * 22;
+
+    // Clear the row area first (optional but clean)
+    Displ_FillArea(100, y, 200, 20, BLACK);
+
+    Displ_WString(100, y, pageFiles[rowIndex], Font16, 1, color, BLACK);
+}
+
 uint8_t selected = 0;  // 0..pageCount-1
 
 void draw_page(void)
 {
-	Displ_CLS(BLACK);
+    char buf[32];
+    Displ_CLS(BLACK);
+
+    snprintf(buf, 32, "UP");
+    Displ_WString(5, 5, buf, Font16, 1, WHITE, BLACK);
+    snprintf(buf, 32, "SEL");
+    Displ_WString(5, 320/2 - 8, buf, Font16, 1, WHITE, BLACK);
+    snprintf(buf, 32, "DOWN");
+    Displ_WString(5, 320 - 5 - 16, buf, Font16, 1, WHITE, BLACK);
+    snprintf(buf, 32, "BACK");
+    Displ_WString(480 - 5 - 4*11, 320 - 5 - 16, buf, Font16, 1, WHITE, BLACK);
 
     for (int i = 0; i < pageCount; i++)
-    {
-        uint16_t color = (i == selected) ? YELLOW : WHITE;
-        Displ_WString(10, 20 + i * 22, pageFiles[i], Font16, 1, color, BLACK);
-    }
+        draw_row(i, i == selected);
 
-    char buf[32];
     int page = pageStart / PAGE_SIZE + 1;
     int totalPages = (totalFiles + PAGE_SIZE - 1) / PAGE_SIZE;
 
     snprintf(buf, sizeof(buf), "Page %d/%d", page, totalPages);
-    Displ_WString(10, 260, buf, Font16, 1, CYAN, BLACK);
+    Displ_WString(100, 260, buf, Font16, 1, CYAN, BLACK);
 }
 
 
@@ -143,42 +160,54 @@ void selectFile(void)
 	while(1)
 	{
 		// UP
-		if(buttons & 0x01)
+		if (buttons & 0x01)
 		{
-			HAL_Delay(debounceDelay);
-			buttons = 0;
-			if(selected > 0)
-			{
-				selected--;
-			}
-			else if(pageStart > 0)
-			{
-				pageStart -= PAGE_SIZE;
-				load_page(pageStart);
-				selected = PAGE_SIZE - 1;
-				if(selected >= pageCount) selected = pageCount - 1;
-			}
+		    HAL_Delay(debounceDelay);
+		    buttons = 0;
 
-			draw_page();
+		    uint8_t oldSelected = selected;
+
+		    if (selected > 0)
+		    {
+		        selected--;
+		        // same page → only redraw two rows
+		        draw_row(oldSelected, 0);
+		        draw_row(selected, 1);
+		    }
+		    else if (pageStart > 0)
+		    {
+		        // page change → full redraw
+		        pageStart -= PAGE_SIZE;
+		        load_page(pageStart);
+		        selected = PAGE_SIZE - 1;
+		        if (selected >= pageCount) selected = pageCount - 1;
+		        draw_page();
+		    }
 		}
 
 		// DOWN
-		if(buttons & 0x04)
+		if (buttons & 0x04)
 		{
-			HAL_Delay(debounceDelay);
-			buttons = 0;
-			if(selected < pageCount - 1)
-			{
-				selected++;
-			}
-			else if(pageStart + PAGE_SIZE < totalFiles)
-			{
-				pageStart += PAGE_SIZE;
-				load_page(pageStart);
-				selected = 0;
-			}
+		    HAL_Delay(debounceDelay);
+		    buttons = 0;
 
-			draw_page();
+		    uint8_t oldSelected = selected;
+
+		    if (selected < pageCount - 1)
+		    {
+		        selected++;
+		        // same page → only redraw two rows
+		        draw_row(oldSelected, 0);
+		        draw_row(selected, 1);
+		    }
+		    else if (pageStart + PAGE_SIZE < totalFiles)
+		    {
+		        // page change → full redraw
+		        pageStart += PAGE_SIZE;
+		        load_page(pageStart);
+		        selected = 0;
+		        draw_page();
+		    }
 		}
 
 		// SELECT

@@ -10,6 +10,8 @@
 #include "main.h"
 #include <stdio.h>
 
+#define USE_MAX_RTD 1
+
 const SPI_HandleTypeDef * hspi_blank;
 
 MAX31865_HandleTypeDef RTD_MAX;
@@ -50,26 +52,32 @@ void MAX_INITs(SPI_HandleTypeDef * hspi)
 
 float readTemp()
 {
+	float temp;
 	if(USE_MAX_RTD)
 	{
 		uint16_t raw15;
 		MAX31865_ReadRTDRaw(&RTD_MAX, &raw15);
 		float cjTemp = MAX31865_Temperature_C(raw15, RTD_NOMINAL_OHMS, RREF_OHMS);
 
-		cjTemp *= 256.0;\
-		int16_t raw16 = cjTemp;
-		uint8_t raw[2];
-		raw[0] = (raw16 & 0xFF00) >> 8;
-		raw[1] = raw16;
+		float tcTemp = max31856_read_TC_temp(&THERM_MAX);
 
-		max31856_write_nregisters(&THERM_MAX, MAX31856_CJTH, raw, 2);
+		temp = cjTemp - tcTemp;
+
+//		cjTemp *= 256.0;
+//		int16_t raw16 = cjTemp;
+//		uint8_t raw[2];
+//		raw[0] = (raw16 & 0xFF00) >> 8;
+//		raw[1] = raw16;
+
+//		max31856_write_nregisters(&THERM_MAX, MAX31856_CJTH, raw, 2);
+	} else
+	{
+		float cjTemp = max31856_read_CJ_temp(&THERM_MAX);
+		temp = max31856_read_TC_temp(&THERM_MAX);
+
+		temp = cjTemp - temp;
+		temp += cjTemp;
 	}
-
-	float cjTemp = max31856_read_CJ_temp(&THERM_MAX);
-	float temp = max31856_read_TC_temp(&THERM_MAX);
-
-	temp = cjTemp - temp;
-	temp += cjTemp;
 //	printf("cj temp: %.2f\n", max31856_read_CJ_temp(&THERM_MAX));
 	return temp;
 }

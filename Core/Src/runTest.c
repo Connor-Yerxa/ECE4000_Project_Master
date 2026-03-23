@@ -29,6 +29,8 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 	MAX_INITs(&hspi2);
 	HAL_TIM_Base_Start_IT(&htim2);
 
+	tempStart = readTemp();
+
 	samplesLeft = deltaTime * hz; //samples per second * seconds = samples
 	samplesLeft = 5 * hz; //samples per second * seconds = samples
 
@@ -37,6 +39,8 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 	printf("Creating File.\n");
 	createMeasurementFile(&md);	// note starting location on SD
 	printf("FileCreated\n");
+
+	heater = 2;
 
 	switch(heater){ 	//Turn on heater
 	case 1: //0.1
@@ -60,7 +64,6 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 
 
 	startTime = HAL_GetTick();
-	tempStart = readTemp();
 //	while ((((float)currentTime) / 1000 < deltaTime) && (deltaTemp > runDeltaTemp)){
 	while ((((float)currentTime) / 1000 < 300) && (deltaTemp > runDeltaTemp)){
 //	while ((((float)currentTime) / 1000 < 5) && (deltaTemp > runDeltaTemp)){
@@ -72,11 +75,18 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 			appendTemp(filename, runDeltaTemp, currentTime);
 
 			char tempbuf[10];
-			sprintf(tempbuf, "%.3f C", currentTemp);
+			sprintf(tempbuf, "%.3f C", runDeltaTemp);
 			Displ_WString(70, 60, tempbuf, Font24, 1, WHITE, BLACK);
 			sprintf(tempbuf, "%.3f s", ((float)currentTime) / 1000.0);
 			Displ_WString(70, 60+24, tempbuf, Font24, 1, WHITE, BLACK);
 			samplesLeft--;
+
+			if(buttons & 0x20)
+			{
+				HAL_Delay(150);
+				buttons = 0;
+				break;
+			}
 		}
 	}
 	HAL_TIM_Base_Stop_IT(&htim2);

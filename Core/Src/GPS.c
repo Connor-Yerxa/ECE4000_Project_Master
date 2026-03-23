@@ -14,7 +14,8 @@
 uint8_t gps_dma_buf[GPS_DMA_BUF_SIZE];
 
 GPS_Data_t gps_data = {0};
-uint8_t TIME_ZONE = -4;
+//uint8_t TIME_ZONE = -4;
+uint8_t TIME_ZONE = 0;
 uint16_t GPS_WAIT = 120;
 
 static UART_HandleTypeDef *gps_huart;

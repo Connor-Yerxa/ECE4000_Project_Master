@@ -11,8 +11,6 @@
 #include "max31856_stm32.h"
 #include "max31865_stm32.h"
 
-#define USE_MAX_RTD 0
-
 extern MAX31865_HandleTypeDef RTD_MAX;
 extern max31856_t THERM_MAX;
 

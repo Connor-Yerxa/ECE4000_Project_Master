@@ -212,6 +212,18 @@ uint8_t WriteMetaData(char * filename, METADATA md)
 
 uint8_t createMeasurementFile(METADATA * md)
 {
+	GPS_oneshot();
+	uint8_t day   =  gps_data.utc_date / 10000;          	// DD
+	uint8_t month = (gps_data.utc_date / 100) % 100;     	// MM
+	uint8_t year  =  gps_data.utc_date % 100;            	// YY
+
+
+	uint8_t hr   =  gps_data.utc_time / 10000;    			// hr
+	uint8_t min = (gps_data.utc_time / 100) % 100;			// mm
+	uint8_t sec  =  gps_data.utc_time % 100;            	// ss
+
+	sprintf(filename, "20%02u%02u%02u-%02u%02u%02u_00.csv", year, month, day, hr, min, sec);
+
 	char filenameSnipped[28];
 	strcpy(filenameSnipped, filename);
 
@@ -235,11 +247,9 @@ uint8_t createMeasurementFile(METADATA * md)
 	f_close(&file);
 	strcpy(filename, newfilename);
 
-	GPS_oneshot();
+	sd_write_file(filename, "");
 
-	sd_write_file(newfilename, "");
-
-	if(WriteMetaData(newfilename, *md))
+	if(WriteMetaData(filename, *md))
 	{
 		return 1;
 	}
