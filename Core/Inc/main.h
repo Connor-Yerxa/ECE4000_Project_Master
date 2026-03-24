@@ -122,8 +122,8 @@ void Error_Handler(void);
 #define B1_EXTI_IRQn EXTI2_IRQn
 
 /* USER CODE BEGIN Private defines */
-int SDMOUNT(SPI_HandleTypeDef *hspi);
 void UI_DrawLine(uint8_t line, const char *text, uint8_t val);
+#define debounceDelay 150
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

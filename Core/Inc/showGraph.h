@@ -8,7 +8,7 @@
 #ifndef INC_SHOWGRAPH_H_
 #define INC_SHOWGRAPH_H_
 
-float showGraph();
+//float showGraph();
 
 void drawGraph(uint16_t x0, uint16_t y0, uint16_t width, uint16_t height);
 

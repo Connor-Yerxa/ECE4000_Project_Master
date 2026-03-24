@@ -128,11 +128,11 @@ void UI_DrawLine(uint8_t line, const char *text, uint8_t val)
   		  font = Font24;
   		  colour = CYAN;
   		  x=480/2 - (17*strlen(buf)/2);
-  		  y=5+16;
+  		  y=5;
   		  break;
   	  case 1:
   		  x=5;
-  		  y=5;
+  		  y=5+24;
   		  break;
   	  case 2:
   		  x=5;
@@ -144,7 +144,7 @@ void UI_DrawLine(uint8_t line, const char *text, uint8_t val)
   		  break;
   	  case 4:
   		  x=480 - 11*strlen(buf) - 5;
-  		  y=5;
+  		  y=5+24;
   		  break;
   	  case 5:
   		  x=480 - 11*strlen(buf) - 5;
@@ -232,6 +232,8 @@ int main(void)
 		while(1);
 	}
 	Displ_WString(10, 10, "SD Mounted!", Font8, 1, GREEN, BLACK);
+
+	MAX_INITs(&hspi2);
 
 	HAL_Delay(1000);
 

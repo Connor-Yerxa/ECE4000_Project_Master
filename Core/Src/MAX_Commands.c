@@ -26,7 +26,7 @@ void MAX_INITs(SPI_HandleTypeDef * hspi)
 	max31856_set_conversion_mode(&THERM_MAX, CR0_CONV_CONTINUOUS);
 	max31856_set_noise_filter(&THERM_MAX, CR0_FILTER_OUT_60Hz);
 
-	if(USE_MAX_RTD)
+	if(USE_MAX_RTD == 1)
 	{
 		MAX31865_Init(&RTD_MAX, hspi, RTD_CS_GPIO_Port, RTD_CS_Pin, MAX31865_WIRES_3, 0);
 		max31856_set_cold_junction_enable(&THERM_MAX, CR0_CJ_DISABLED);
@@ -53,7 +53,7 @@ void MAX_INITs(SPI_HandleTypeDef * hspi)
 float readTemp()
 {
 	float temp;
-	if(USE_MAX_RTD)
+	if(USE_MAX_RTD == 1)
 	{
 		uint16_t raw15;
 		MAX31865_ReadRTDRaw(&RTD_MAX, &raw15);

@@ -12,6 +12,7 @@
 #include "main.h"
 #include "z_displ_ILI9XXX.h"
 #include "sd_functions.h"
+#include "displayText.h"
 
 uint16_t totalFiles = 0;
 
@@ -105,12 +106,12 @@ void load_page(uint16_t startIndex)
 void draw_row(uint8_t rowIndex, uint8_t isSelected)
 {
     uint16_t color = isSelected ? YELLOW : WHITE;
-    uint16_t y = 20 + rowIndex * 22;
+    uint16_t y = 20 + rowIndex * 22 + 24, x = 480/2 - 11*strlen(pageFiles[rowIndex])/2;
 
     // Clear the row area first (optional but clean)
-    Displ_FillArea(100, y, 200, 20, BLACK);
+    Displ_FillArea(x, y, 200, 20, BLACK);
 
-    Displ_WString(100, y, pageFiles[rowIndex], Font16, 1, color, BLACK);
+    Displ_WString(x, y, pageFiles[rowIndex], Font16, 1, color, BLACK);
 }
 
 uint8_t selected = 0;  // 0..pageCount-1
@@ -118,16 +119,16 @@ uint8_t selected = 0;  // 0..pageCount-1
 void draw_page(void)
 {
     char buf[32];
-    Displ_CLS(BLACK);
+    displayText(500, 0);
 
-    snprintf(buf, 32, "UP");
-    Displ_WString(5, 5, buf, Font16, 1, WHITE, BLACK);
-    snprintf(buf, 32, "SEL");
-    Displ_WString(5, 320/2 - 8, buf, Font16, 1, WHITE, BLACK);
-    snprintf(buf, 32, "DOWN");
-    Displ_WString(5, 320 - 5 - 16, buf, Font16, 1, WHITE, BLACK);
-    snprintf(buf, 32, "BACK");
-    Displ_WString(480 - 5 - 4*11, 320 - 5 - 16, buf, Font16, 1, WHITE, BLACK);
+//    snprintf(buf, 32, "UP");
+//    Displ_WString(5, 5, buf, Font16, 1, WHITE, BLACK);
+//    snprintf(buf, 32, "SEL");
+//    Displ_WString(5, 320/2 - 8, buf, Font16, 1, WHITE, BLACK);
+//    snprintf(buf, 32, "DOWN");
+//    Displ_WString(5, 320 - 5 - 16, buf, Font16, 1, WHITE, BLACK);
+//    snprintf(buf, 32, "BACK");
+//    Displ_WString(480 - 5 - 4*11, 320 - 5 - 16, buf, Font16, 1, WHITE, BLACK);
 
     for (int i = 0; i < pageCount; i++)
         draw_row(i, i == selected);
@@ -146,14 +147,13 @@ void draw_page(void)
 // Button 3 = next page
 // Button 4 = prev. page
 // Button 5 = back
-int debounceDelay = 150;
 int selectFile(void)
 {
 	totalFiles = count_csv_files();
 	pageStart = 0;
 	load_page(pageStart);
 
-	selected = 0;
+	if(pageCount < selected) selected = 0;
 
 	draw_page();
 
@@ -208,6 +208,15 @@ int selectFile(void)
 		        selected = 0;
 		        draw_page();
 		    }
+		}
+
+		// DELETE
+		if(buttons & 0x10)
+		{
+			HAL_Delay(debounceDelay);
+			buttons = 0;
+			sprintf(filename, "%s", pageFiles[selected]);
+			return 2;
 		}
 
 		// SELECT

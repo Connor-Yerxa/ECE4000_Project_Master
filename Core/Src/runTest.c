@@ -26,7 +26,6 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 	uint32_t currentTime=0;
 	float currentTemp;
 
-	MAX_INITs(&hspi2);
 	HAL_TIM_Base_Start_IT(&htim2);
 
 	tempStart = readTemp();
@@ -62,6 +61,12 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 
 	}
 
+	char tempbuf[16];
+	snprintf(tempbuf, 16, "Delta T:");
+	Displ_WString(10, 320-10-24*2, tempbuf, Font24, 1, CYAN, BLACK);
+	snprintf(tempbuf, 16, "Time:");
+	Displ_WString(10, 320-10-24, tempbuf, Font24, 1, CYAN, BLACK);
+
 
 	startTime = HAL_GetTick();
 //	while ((((float)currentTime) / 1000 < deltaTime) && (deltaTemp > runDeltaTemp)){
@@ -74,11 +79,10 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 			currentTime = HAL_GetTick() - startTime;
 			appendTemp(filename, runDeltaTemp, currentTime);
 
-			char tempbuf[10];
-			sprintf(tempbuf, "%.3f C", runDeltaTemp);
-			Displ_WString(70, 60, tempbuf, Font24, 1, WHITE, BLACK);
-			sprintf(tempbuf, "%.3f s", ((float)currentTime) / 1000.0);
-			Displ_WString(70, 60+24, tempbuf, Font24, 1, WHITE, BLACK);
+			sprintf(tempbuf, "%4.3f C", runDeltaTemp);
+			Displ_WString(10+17*9, 320-10-24*2, tempbuf, Font24, 1, WHITE, BLACK);
+			sprintf(tempbuf, "%4.3f s", ((float)currentTime) / 1000.0);
+			Displ_WString(10+17*6, 320-10-24, tempbuf, Font24, 1, WHITE, BLACK);
 			samplesLeft--;
 
 			if(buttons & 0x20)

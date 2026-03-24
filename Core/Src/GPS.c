@@ -139,6 +139,43 @@ void GPS_Process()
     calc_timestamp();
 }
 
+//int GPS_CheckFix(void)
+//{
+//    while (1)
+//    {
+//        uint8_t c = gps_dma_buf[dma_idx];
+//
+//        dma_idx++;
+//        if (dma_idx >= GPS_DMA_BUF_SIZE)
+//            dma_idx = 0;
+//
+//        if (c == '\n')
+//        {
+//            line_buf[line_pos] = '\0';
+//
+//            if (strncmp(line_buf, "$GNRMC", 6) == 0)
+//            {
+//                // Parse into gps_data (same as GPS_Process)
+//                gps_parse_rmc(line_buf);
+//
+//                int result = gps_data.valid ? 1 : 0;
+//                line_pos = 0;
+//                return result;
+//            }
+////            else
+////            {
+////                line_pos = 0;
+////                return -1;   // got a line, but not RMC
+////            }
+//        }
+//        else
+//        {
+//            if (line_pos < GPS_LINE_BUF_SIZE - 1)
+//                line_buf[line_pos++] = c;
+//        }
+//    }
+//}
+
 void printGPSData()
 {
 	printf("Valid: %c\n", gps_data.valid ? 'A' : 'V');

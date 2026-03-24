@@ -39,6 +39,7 @@ void calc_timestamp();
 void GPS_default();
 void GPS_Init(UART_HandleTypeDef *huart);
 void GPS_Process();
+int GPS_CheckFix();
 void printGPSData();
 void GPS_oneshot();
 
