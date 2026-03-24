@@ -26,6 +26,8 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 	uint32_t currentTime=0;
 	float currentTemp;
 
+	float power;
+
 	HAL_TIM_Base_Start_IT(&htim2);
 
 	tempStart = readTemp();
@@ -45,18 +47,22 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 	case 1: //0.1 W
 		HAL_GPIO_WritePin(EXCIT1_GPIO_Port, EXCIT1_Pin, 1);
 		HAL_GPIO_WritePin(EXCIT2_GPIO_Port, EXCIT2_Pin, 0);
+		power = 0.0970;
 		break;
 	case 2: //0.25 W
 		HAL_GPIO_WritePin(EXCIT1_GPIO_Port, EXCIT1_Pin, 0);
 		HAL_GPIO_WritePin(EXCIT2_GPIO_Port, EXCIT2_Pin, 1);
+		power = 0.2309;
 		break;
 	case 3: //0.5 W
 		HAL_GPIO_WritePin(EXCIT1_GPIO_Port, EXCIT1_Pin, 1);
 		HAL_GPIO_WritePin(EXCIT2_GPIO_Port, EXCIT2_Pin, 1);
+		power = 0.4518;
 		break;
 	default:
 		HAL_GPIO_WritePin(EXCIT1_GPIO_Port, EXCIT1_Pin, 0);
 		HAL_GPIO_WritePin(EXCIT2_GPIO_Port, EXCIT2_Pin, 0);
+		power = 0;
 		break;
 
 	}
@@ -106,6 +112,9 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 	updateMetaData(filename, META_LATITUDE, buf);
 	sprintf(buf, "%.5f", gps_data.longitude);
 	updateMetaData(filename, META_LONGITUDE, buf);
+
+	sprintf(buf, "%.4f", power);
+	updateMetaData(filename, META_POWER, buf);
 
 	printf("Writing metadata done\n");
 

@@ -7,18 +7,15 @@
 #define USE_LINEAR_REGRESSION 0
 
 const char * const MetadataLabelStrings[META_LABEL_COUNT] = {
-    [META_SENSOR_SERIAL]       = "#,Sensor Serial:,",
     [META_TEST_ID]             = "#,Test ID:,",
-    [META_INSTRUMENT]          = "#,Instrument:,",
-    [META_PROJECT]             = "#,Project:,",
-    [META_MATERIAL]            = "#,Material:,",
-    [META_SAMPLE_ID]           = "#,Sample ID:,",
+    [META_INSTRUMENT]          = "#,Instrument:,TLS",
     [META_LATITUDE]            = "#,Latitude:,",
     [META_LONGITUDE]           = "#,Longitude:,",
     [META_POWER]               = "#,Power:,",
     [META_REGION_START]        = "#,Region Start:,",
     [META_REGION_END]          = "#,Region End:,",
     [META_CONDUCTIVITY]        = "#,Conductivity:,",
+//	[META_R_SQUARED]		   = "#,R2:,",
     [META_CALIBRATION_APPLIED] = "#,Calibration Applied:,"
 };
 
@@ -202,18 +199,9 @@ uint8_t WriteMetaData(char * filename, METADATA md)
 	#,Calibration Applied:,
 	 */
 
-	sprintf(field, "%s%s\n", MetadataLabelStrings[META_SENSOR_SERIAL], META_SPACE);
-	sd_append_file(filename, field);
 	sprintf(field, "%s%s\n", MetadataLabelStrings[META_TEST_ID], META_SPACE);
 	sd_append_file(filename, field);
 	sprintf(field, "%s%s\n", MetadataLabelStrings[META_INSTRUMENT], META_SPACE);
-	sd_append_file(filename, field);
-	sprintf(field, "%s%s\n", MetadataLabelStrings[META_PROJECT], META_SPACE);
-	sd_append_file(filename, field);
-	sprintf(field, "%s%s\n", MetadataLabelStrings[META_MATERIAL], META_SPACE);
-	sd_append_file(filename, field);
-	sprintf(field, "%s%s\n", MetadataLabelStrings[META_SAMPLE_ID], META_SPACE);
-	sd_append_file(filename, field);
 
 	sprintf(field, "%s%s\n", MetadataLabelStrings[META_LATITUDE], META_SPACE);
 	sd_append_file(filename, field);
@@ -229,6 +217,8 @@ uint8_t WriteMetaData(char * filename, METADATA md)
 	sd_append_file(filename, field);
 	sprintf(field, "%s%s\n", MetadataLabelStrings[META_CONDUCTIVITY], META_SPACE);
 	sd_append_file(filename, field);
+//	sprintf(field, "%s%s\n", MetadataLabelStrings[META_R_SQUARED], META_SPACE);
+//	sd_append_file(filename, field);
 	sprintf(field, "%s%s\n\n\n", MetadataLabelStrings[META_CALIBRATION_APPLIED], META_SPACE);
 	sd_append_file(filename, field);
 
@@ -252,7 +242,7 @@ uint8_t createMeasurementFile(METADATA * md)
 
 	sprintf(filename, "20%02u%02u%02u-%02u%02u%02u_00.csv", year, month, day, hr, min, sec);
 
-	char filenameSnipped[28];
+	char filenameSnipped[24];
 	strcpy(filenameSnipped, filename);
 
 	char *dot = strtok(filenameSnipped, ".");
@@ -295,8 +285,30 @@ uint8_t appendTemp(char * filename, float delta_temp, uint32_t delta_time)
 	return (uint8_t)res;
 }
 
+char * getMetaData(char * filename, MetadataLabel label){
+	FIL file;
+	FRESULT fin = f_open(&file, filename, FA_READ);
+	if(fin != FR_OK) printf("Couln\'t open: %s", filename);
 
-float calculateK(float startTime, float stopTime, char* filename, float power){ //pick start & stoptimes
+	char line[64];
+
+	while(f_gets((TCHAR*)line, 64, &file) != 0 && strstr(line, (char*)label) == NULL);
+
+	char * token = strtok(line, ",");
+	token = strtok(NULL, ",");
+	token = strtok(NULL, ",");
+
+	char * buf = strdup(token);
+
+	f_close(&file);
+	return buf;
+}
+
+
+
+
+float calculateK(float startTime, float stopTime){ //pick start & stoptimes
+	float power = atof(getMetaData(filename, META_POWER));
 	FIL file;
 	FRESULT fin = f_open(&file, filename, FA_READ);
 	if(fin != FR_OK) printf("Couln\'t open: %s", filename);
@@ -342,23 +354,4 @@ float calculateK(float startTime, float stopTime, char* filename, float power){ 
 
 	f_close(&file);
 	return k;
-}
-
-char * getMetaData(char * filename, MetadataLabel label){
-	FIL file;
-	FRESULT fin = f_open(&file, filename, FA_READ);
-	if(fin != FR_OK) printf("Couln\'t open: %s", filename);
-
-	char line[64];
-
-	while(f_gets((TCHAR*)line, 64, &file) != 0 && strstr(line, (char*)label) == NULL);
-
-	char * token = strtok(line, ",");
-	token = strtok(NULL, ",");
-	token = strtok(NULL, ",");
-
-	char * buf = strdup(token);
-
-	f_close(&file);
-	return buf;
 }

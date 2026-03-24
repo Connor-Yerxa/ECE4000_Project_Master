@@ -12,18 +12,15 @@
 
 // Metadata field defines
 typedef enum {
-	META_SENSOR_SERIAL,
 	META_TEST_ID,
 	META_INSTRUMENT,
-	META_PROJECT,
-	META_MATERIAL,
-	META_SAMPLE_ID,
 	META_LATITUDE,
 	META_LONGITUDE,
 	META_POWER,
 	META_REGION_START,
 	META_REGION_END,
 	META_CONDUCTIVITY,
+//	META_R_SQUARED,
 	META_CALIBRATION_APPLIED,
 	META_LABEL_COUNT   // keep last
 } MetadataLabel;
@@ -61,7 +58,7 @@ typedef struct {
 	float regionStart; //0
 	float regionEnd; //0
 	float conductivity; //0
-	float R_Squared; //0
+//	float R_Squared; //0
 	uint8_t calibrationApplied; //0
 }METADATA;
 
@@ -79,8 +76,8 @@ uint8_t createMeasurementFile(METADATA * md);
 uint8_t appendTemp(char * filename, float delta_temp, uint32_t delta_time);
 
 
-float calculateK(float startTime, float stopTime, char* filename, float power);
 char * getMetaData(char * filename, MetadataLabel label);
+float calculateK(float startTime, float stopTime);
 
 #ifdef __cplusplus
 	}

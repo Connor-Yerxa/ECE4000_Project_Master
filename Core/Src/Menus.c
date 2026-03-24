@@ -65,7 +65,7 @@ void menus() {
 						char buf[32];
 						float temp = readTemp();
 
-						if(temp < -100 | temp > 200)
+						if(temp < -100 || temp > 200)
 						{
 							snprintf(buf, 32, "Current Temp: %.1f", temp);
 							Displ_WString(480/2 - 11*strlen(buf)/2, 320-3*16-10, "                  ", Font16, 1, BLACK, BLACK);

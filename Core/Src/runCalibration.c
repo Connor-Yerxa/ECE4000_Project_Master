@@ -28,11 +28,11 @@ void runCalibration(int type){
 	bufs = getMetaData(filename, META_REGION_END);
 	float stopTime = atof(bufs);
 
-	float power = 0.1;
+//	float power = 0.1;
 
 	calCoef = 1;
 	k2 = runTest(180, 100, 1); //run a test MIGHT NEED TO CHANGE k2 later, as currently runTest returns 0
-	k2 = calculateK(startTime, stopTime, filename, power); //recalculating k2 as technically runTest doesn't calculate yet.
+	k2 = calculateK(startTime, stopTime); //recalculating k2 as technically runTest doesn't calculate yet.
 
 	//	deleteTest(); //delete the test
 
