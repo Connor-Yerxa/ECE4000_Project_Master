@@ -65,7 +65,7 @@ void menus() {
 						char buf[32];
 						float temp = readTemp();
 
-						if(temp < -4000)
+						if(temp < -100 | temp > 200)
 						{
 							snprintf(buf, 32, "Current Temp: %.1f", temp);
 							Displ_WString(480/2 - 11*strlen(buf)/2, 320-3*16-10, "                  ", Font16, 1, BLACK, BLACK);
@@ -362,10 +362,7 @@ void menus() {
 
 			case 501:
 				displayText(screen, 0);
-				drawGraph(40, 80, 360, 230);
-				while(!(buttons & 0x20));
-				HAL_Delay(500);
-				buttons = 0;
+				showGraphWithMarkers(40, 80, 360, 230);
 				if(last_screen == 500)
 				{
 					last_screen = screen;

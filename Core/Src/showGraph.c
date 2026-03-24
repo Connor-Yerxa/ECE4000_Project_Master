@@ -11,6 +11,16 @@
 #include "showGraph.h"
 #include "Menus.h"
 
+typedef struct {
+    int16_t x1;          // pixel position of line 1
+    int16_t x2;          // pixel position of line 2
+    uint8_t active;      // 0 = line1, 1 = line2
+} GraphMarkers;
+
+int graph_yPoints[480];
+
+int GRAPH_Y_MIN=0, GRAPH_Y_MAX=0;
+
 //float showGraph(){
 //	char * bufs;
 //
@@ -149,6 +159,47 @@ void drawAxis(uint16_t x0, uint16_t y0, uint16_t width, uint16_t height, float m
 //	}
 //}
 
+void perform_slope_calculation()
+{
+	printf("nothing implemented yet");
+}
+
+int graph_handle_marker_buttons(GraphMarkers *m, int16_t graph_x_min, int16_t graph_x_max)
+{
+
+}
+
+void graph_draw_markers(GraphMarkers *m, uint16_t color1, uint16_t color2, uint8_t line)
+{
+    // Line 1
+	if(line == 0 || line == 1) Displ_Line(m->x1, GRAPH_Y_MIN, m->x1, GRAPH_Y_MAX, color1);
+
+    // Line 2
+	if(line == 0 || line == 2) Displ_Line(m->x2, GRAPH_Y_MIN, m->x2, GRAPH_Y_MAX, color2);
+
+    // Optional: highlight active line
+    int16_t ax = (m->active == 0) ? m->x1 : m->x2;
+    Displ_Line(ax, GRAPH_Y_MIN, ax, GRAPH_Y_MIN + 10, RED);
+}
+
+void graph_clear_markers(GraphMarkers *m, uint16_t x0, uint8_t line)
+{
+    // Overdraw with background color
+	if(line == 0 || line == 1)
+	{
+	    Displ_Line(m->x1, GRAPH_Y_MIN, m->x1, GRAPH_Y_MAX, BLACK);
+
+	    Displ_Pixel(m->x1, graph_yPoints[m->x1 - x0], CYAN);
+	}
+	if(line == 0|| line == 2)
+	{
+	    Displ_Line(m->x2, GRAPH_Y_MIN, m->x2, GRAPH_Y_MAX, BLACK);
+
+	    Displ_Pixel(m->x2, graph_yPoints[m->x2 - x0], CYAN);
+	}
+}
+
+
 void drawGraph(uint16_t x0, uint16_t y0, uint16_t width, uint16_t height)
 {
     float minLn, maxLn, minTemp, maxTemp;
@@ -200,7 +251,9 @@ void drawGraph(uint16_t x0, uint16_t y0, uint16_t width, uint16_t height)
                         (int)(((avgTemp - minTemp) / tempRange) * height);
 
                 Displ_Pixel(x0 + px, y, CYAN);
+                graph_yPoints[px] = y;
             }
+            else graph_yPoints[px] = -1;
 
             // Move to next pixel column
             px++;
@@ -229,5 +282,90 @@ void drawGraph(uint16_t x0, uint16_t y0, uint16_t width, uint16_t height)
     }
 
     f_close(&file);
+}
+
+void showGraphWithMarkers(uint16_t x0, uint16_t y0, uint16_t width, uint16_t height)
+{
+    // 1. Draw the graph once
+    drawGraph(x0, y0, width, height);
+
+    // 2. Initialize marker boundaries
+    GRAPH_Y_MIN = y0;
+    GRAPH_Y_MAX = y0 + height -1;
+
+    // 3. Initialize markers (you can adjust defaults later)
+    GraphMarkers markers = {
+        .x1 = x0 + width / 2,
+        .x2 = x0 + (9 * width) / 10,
+        .active = 0
+    };
+	graph_draw_markers(&markers, YELLOW, CYAN, 0);
+
+    // 4. Main loop
+    while (1)
+    {
+    	// Move left
+    	if (buttons & (1 << 0)) { // B1
+    	    HAL_Delay(debounceDelay);
+    	    buttons = 0;
+
+    	    do {
+    	        graph_clear_markers(&markers, x0, markers.active ? 2 : 1);
+
+    	        if (markers.active == 0 && markers.x1 > x0+1) markers.x1--;
+    	        else if (markers.active == 1 && markers.x2 > markers.x1 + 1) markers.x2--;
+
+    	        graph_draw_markers(&markers, YELLOW, CYAN, markers.active ? 2 : 1);
+    	        HAL_Delay(10);
+
+    	    } while (!HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin));
+    	}
+
+
+    	// Move right
+    	if (buttons & (1 << 3)) { // B4
+    	    HAL_Delay(debounceDelay);
+    	    buttons = 0;
+
+    	    do {
+    	        graph_clear_markers(&markers, x0, markers.active ? 2 : 1);
+
+    	        if (markers.active == 0 && markers.x1 < markers.x2 - 1) markers.x1++;
+    	        else if (markers.active == 1 && markers.x2 < (x0 + width - 1)) markers.x2++;
+
+    	        graph_draw_markers(&markers, YELLOW, CYAN, markers.active ? 2 : 1);
+    	        HAL_Delay(10);
+
+    	    } while (!HAL_GPIO_ReadPin(B4_GPIO_Port, B4_Pin));
+    	}
+
+
+		// Switch active line
+		if (buttons & (1 << 2)) { // B3
+			HAL_Delay(debounceDelay);
+			buttons = 0;
+			markers.active ^= 1;       // toggle 0 ↔ 1
+			graph_draw_markers(&markers, YELLOW, CYAN, 0);
+		}
+
+		// Calculate slope
+		if (buttons & (1 << 4)) { // B5
+			HAL_Delay(debounceDelay);
+			buttons = 0;
+			perform_slope_calculation(markers.x1, markers.x2);
+		}
+
+		// Back
+		if (buttons & (1 << 5)) { // B6
+			HAL_Delay(debounceDelay);
+			buttons = 0;
+			break;
+		}
+
+        HAL_Delay(10); // small refresh delay
+    }
+
+    // Optional: clear markers when leaving
+    Displ_FillArea(x0, y0, width, height, BLACK);
 }
 
