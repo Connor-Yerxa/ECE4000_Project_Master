@@ -333,7 +333,7 @@ float calculateK(float startTime, float stopTime){ //pick start & stoptimes
 	{
 		token = strtok(line, ",");
 		float currentTime = atof(token);
-		if(currentTime >= startTime) break;
+		if(currentTime >= stopTime) break;
 	}
 	token = strtok(NULL, ",");
 	float lnstoptime = atof(token);
