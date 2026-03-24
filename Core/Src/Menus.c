@@ -30,8 +30,8 @@ double deltaTempDefault = 100;
 double deltaTimeDefault = 180;
 int brightness = 10;
 int both = 0;
-int heater = 1;
-int heaterDefault = 0;
+int heater = 0;
+int heaterDefault = 1;
 float calCoef = 1; // calibration coefficent
 
 int last_screen = 99;

@@ -39,7 +39,7 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 	createMeasurementFile(&md);	// note starting location on SD
 	printf("FileCreated\n");
 
-	heater = 2;
+//	heater = 2;
 
 	switch(heater){ 	//Turn on heater
 	case 1: //0.1 W
