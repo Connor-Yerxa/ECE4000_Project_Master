@@ -4,8 +4,6 @@
 #include "Menus.h"
 #include "fatfs.h"
 
-#define USE_LINEAR_REGRESSION 0
-
 const char * const MetadataLabelStrings[META_LABEL_COUNT] = {
     [META_TEST_ID]             = "#,Test ID:,",
     [META_INSTRUMENT]          = "#,Instrument:,TLS",
@@ -292,7 +290,7 @@ char * getMetaData(char * filename, MetadataLabel label){
 
 	char line[64];
 
-	while(f_gets((TCHAR*)line, 64, &file) != 0 && strstr(line, (char*)label) == NULL);
+	while(f_gets((TCHAR*)line, 64, &file) != 0 && strstr(line, (char*)MetadataLabelStrings[label]) == NULL);
 
 	char * token = strtok(line, ",");
 	token = strtok(NULL, ",");
@@ -302,56 +300,4 @@ char * getMetaData(char * filename, MetadataLabel label){
 
 	f_close(&file);
 	return buf;
-}
-
-
-
-
-float calculateK(float startTime, float stopTime){ //pick start & stoptimes
-	float power = atof(getMetaData(filename, META_POWER));
-	FIL file;
-	FRESULT fin = f_open(&file, filename, FA_READ);
-	if(fin != FR_OK) printf("Couln\'t open: %s", filename);
-
-	char line[64];
-	char * token;
-
-	while(f_gets((TCHAR*)line, 64, &file) && !strstr(line, "Delta Temperature (degC)"));
-	while(f_gets((TCHAR*)line, 64, &file) != 0)
-	{
-		token = strtok(line, ",");
-		float currentTime = atof(token);
-		if(currentTime >= startTime) break;
-	}
-	token = strtok(NULL, ",");
-	float lnstarttime = atof(token);
-	token = strtok(NULL, ",");
-	float starttemp = atof(token);
-
-
-	while(f_gets((TCHAR*)line, 64, &file) != 0)
-	{
-		token = strtok(line, ",");
-		float currentTime = atof(token);
-		if(currentTime >= stopTime) break;
-	}
-	token = strtok(NULL, ",");
-	float lnstoptime = atof(token);
-	token = strtok(NULL, ",");
-	float stoptemp = atof(token);
-
-	float slope = (stoptemp - starttemp) / (lnstoptime - lnstarttime);
-
-	float k;
-	if(USE_LINEAR_REGRESSION)
-	{
-		// Linear regression code
-		k = 0;
-	}else
-	{
-		k = power / (4 * M_PI * slope *0.15) * calCoef;
-	}
-
-	f_close(&file);
-	return k;
 }

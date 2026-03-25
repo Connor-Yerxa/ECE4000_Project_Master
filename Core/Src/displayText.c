@@ -71,6 +71,7 @@ void displayText(int ID,  int extra)
 				strcpy(display, "Test Complete");
 				strcpy(text[0], "Show Graph");
 				strcpy(text[1], "Delete Test");
+				strcpy(text[5], "BACK");
 				break;
 
 		case 200:
@@ -156,7 +157,7 @@ void displayText(int ID,  int extra)
 				break;
 		}
 
-	    Displ_CLS(BLACK);
+	    Displ_CLS(BACKGROUNDCOLOUR);
 
 	    snprintf(buffer, sizeof(buffer), "%s", display); //UPDATE THIS TO BE TITLE?
 	    UI_DrawLine(0, buffer, ID);
@@ -174,7 +175,7 @@ void displayText(int ID,  int extra)
 	    UI_DrawLine(6, buffer, 6);
 	}
 	if (extra == 1){
-	    Displ_CLS(BLACK);
+	    Displ_CLS(BACKGROUNDCOLOUR);
 	    strcpy(buffer, "Digit selection");
 	    UI_DrawLine(5, buffer, ID);
 	}

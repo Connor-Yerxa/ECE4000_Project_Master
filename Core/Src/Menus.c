@@ -24,14 +24,14 @@
 int screen = 99; // main menu
 int button = 0;
 int number = 0;
-double deltaTemp = 100;
-double deltaTime = 180;
-double deltaTempDefault = 100;
-double deltaTimeDefault = 180;
+double deltaTemp;
+int deltaTime;
+double deltaTempDefault = 10;
+int deltaTimeDefault = 180;
 int brightness = 10;
 int both = 0;
-int heater = 0;
-int heaterDefault = 1;
+int heater;
+int heaterDefault = 3;
 float calCoef = 1; // calibration coefficent
 
 int last_screen = 99;
@@ -40,6 +40,9 @@ int verification = 0;
 
 void menus() {
 	sprintf(filename, "TESTTESTTEST.csv");
+	deltaTime = deltaTimeDefault;
+	deltaTemp = deltaTempDefault;
+	heater = heaterDefault;
     while(1) {
         switch(screen) {
 
@@ -68,15 +71,15 @@ void menus() {
 						if(temp < -100 || temp > 200)
 						{
 							snprintf(buf, 32, "Current Temp: %.1f", temp);
-							Displ_WString(480/2 - 11*strlen(buf)/2, 320-3*16-10, "                  ", Font16, 1, BLACK, BLACK);
+							Displ_WString(480/2 - 11*strlen(buf)/2, 320-3*16-10, "                  ", Font16, 1, BACKGROUNDCOLOUR, BACKGROUNDCOLOUR);
 							snprintf(buf, 32, "No TLS Connected");
-							Displ_WString(480/2 - 11*strlen(buf)/2, 320-3*16-10, buf, Font16, 1, CYAN, BLACK);
+							Displ_WString(480/2 - 11*strlen(buf)/2, 320-3*16-10, buf, Font16, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
 						} else
 						{
 							snprintf(buf, 32, "No TLS Connected");
-							Displ_WString(480/2 - 11*strlen(buf)/2, 320-3*16-10, "                     ", Font16, 1, BLACK, BLACK);
+							Displ_WString(480/2 - 11*strlen(buf)/2, 320-3*16-10, "                     ", Font16, 1, BACKGROUNDCOLOUR, BACKGROUNDCOLOUR);
 							snprintf(buf, 32, "Current Temp: %3.1f", temp);
-							Displ_WString(480/2 - 11*strlen(buf)/2, 320-3*16-10, buf, Font16, 1, CYAN, BLACK);
+							Displ_WString(480/2 - 11*strlen(buf)/2, 320-3*16-10, buf, Font16, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
 						}
 
 						GPS_Process();
@@ -84,17 +87,17 @@ void menus() {
 						if(gps_data.valid == 1)
 						{
 							snprintf(buf, 32, "GPS Connecting...");
-							Displ_WString(480/2 - 11*strlen(buf)/2, 320-2*16-10, buf, Font16, 1, BLACK, BLACK);
+							Displ_WString(480/2 - 11*strlen(buf)/2, 320-2*16-10, buf, Font16, 1, BACKGROUNDCOLOUR, BACKGROUNDCOLOUR);
 							snprintf(buf, 32, "Long: %.5f", gps_data.longitude);
-							Displ_WString(480/2 - 11*strlen(buf)/2, 320-2*16-10, buf, Font16, 1, CYAN, BLACK);
+							Displ_WString(480/2 - 11*strlen(buf)/2, 320-2*16-10, buf, Font16, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
 							snprintf(buf, 32, "Lat: %.5f", gps_data.latitude);
-							Displ_WString(480/2 - 11*strlen(buf)/2, 320-16-10, buf, Font16, 1, CYAN, BLACK);
+							Displ_WString(480/2 - 11*strlen(buf)/2, 320-16-10, buf, Font16, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
 						} else
 						{
 							snprintf(buf, 32, "GPS Connecting...");
-							Displ_WString(480/2 - 11*strlen(buf)/2, 320-2*16-10, buf, Font16, 1, CYAN, BLACK);
+							Displ_WString(480/2 - 11*strlen(buf)/2, 320-2*16-10, buf, Font16, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
 							snprintf(buf, 32, "GPS Connecting...");
-							Displ_WString(480/2 - 11*strlen(buf)/2, 320-16-10, buf, Font16, 1, BLACK, BLACK);
+							Displ_WString(480/2 - 11*strlen(buf)/2, 320-16-10, buf, Font16, 1, BACKGROUNDCOLOUR, BACKGROUNDCOLOUR);
 						}
 
 						t = HAL_GetTick();
@@ -146,6 +149,15 @@ void menus() {
             case 100:
                 both = 0;
                 displayText(screen, 0);
+
+                char buf[32];
+                snprintf(buf, 32, "Heater Lvl: %d", heater);
+                Displ_WString(480/2 - 11*strlen(buf)/2 + 10, 24, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+                snprintf(buf, 32, "Time: %d s", deltaTime);
+                Displ_WString(480/2 - 11*strlen(buf)/2 + 10, 24+16, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+                snprintf(buf, 32, "Delta Temp: %.0f C", deltaTemp);
+                Displ_WString(480/2 - 11*strlen(buf)/2 + 10, 24+16*2, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+
                 button = read_buttons();
                 switch(button) {
                     case 1: // Default
@@ -206,9 +218,7 @@ void menus() {
 
             case 130: // Test finished
                 displayText(screen, 0);
-                char buf[32];
-                snprintf(buf, 32, "%s", filename);
-                Displ_WString(480/2 - 11*strlen(buf)/2, 320-10-16, buf, Font16, 1, CYAN, BLACK);
+                Displ_WString(480/2 - 11*strlen(filename)/2, 320-10-16, filename, Font16, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
 
                 button = read_buttons();
                 if (button == 1){
@@ -362,7 +372,7 @@ void menus() {
 
 			case 501:
 				displayText(screen, 0);
-				showGraphWithMarkers(40, 80, 360, 230);
+				showGraphWithMarkers(40, 80, 360, 215);
 				if(last_screen == 500)
 				{
 					last_screen = screen;
@@ -373,8 +383,6 @@ void menus() {
 					last_screen = screen;
 					screen = 130;
 				}
-
-				screen = 500;
 				break;
 
 

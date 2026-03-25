@@ -124,6 +124,11 @@ void Error_Handler(void);
 /* USER CODE BEGIN Private defines */
 void UI_DrawLine(uint8_t line, const char *text, uint8_t val);
 #define debounceDelay 150
+
+
+extern uint16_t MAINTEXTCOLOUR;
+extern uint16_t SECONDARYTEXTCOLOUR;
+extern uint16_t BACKGROUNDCOLOUR;
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

@@ -69,9 +69,9 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 
 	char tempbuf[16];
 	snprintf(tempbuf, 16, "Delta T:");
-	Displ_WString(10, 320-10-24*2, tempbuf, Font24, 1, CYAN, BLACK);
+	Displ_WString(10, 320-10-24*2, tempbuf, Font24, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
 	snprintf(tempbuf, 16, "Time:");
-	Displ_WString(10, 320-10-24, tempbuf, Font24, 1, CYAN, BLACK);
+	Displ_WString(10, 320-10-24, tempbuf, Font24, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
 
 
 	startTime = HAL_GetTick();
@@ -85,10 +85,10 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 			currentTime = HAL_GetTick() - startTime;
 			appendTemp(filename, runDeltaTemp, currentTime);
 
-			sprintf(tempbuf, "%4.3f C", runDeltaTemp);
-			Displ_WString(10+17*9, 320-10-24*2, tempbuf, Font24, 1, WHITE, BLACK);
-			sprintf(tempbuf, "%4.3f s", ((float)currentTime) / 1000.0);
-			Displ_WString(10+17*6, 320-10-24, tempbuf, Font24, 1, WHITE, BLACK);
+			sprintf(tempbuf, "%4.3f C  ", runDeltaTemp);
+			Displ_WString(10+17*9, 320-10-24*2, tempbuf, Font24, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+			sprintf(tempbuf, "%4.3f s ", ((float)currentTime) / 1000.0);
+			Displ_WString(10+17*6, 320-10-24, tempbuf, Font24, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
 			samplesLeft--;
 
 			if(buttons & 0x20)
@@ -103,9 +103,9 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 
 	printf("Test done.\nWriting metadata...\n");
 	char buf[64];
-	sprintf(buf, "%.4f", (float)currentTime / 1000);
+	sprintf(buf, "%.4f", 3*log((float)currentTime / 1000)/4);
 	updateMetaData(filename, META_REGION_END, buf);
-	sprintf(buf, "%.4f", (float)currentTime / 1000 /10);
+	sprintf(buf, "%.4f", 19*log((float)currentTime / 1000)/20);
 	updateMetaData(filename, META_REGION_START, buf);
 
 	sprintf(buf, "%.5f", gps_data.latitude);

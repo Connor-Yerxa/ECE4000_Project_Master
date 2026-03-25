@@ -105,13 +105,13 @@ void load_page(uint16_t startIndex)
 
 void draw_row(uint8_t rowIndex, uint8_t isSelected)
 {
-    uint16_t color = isSelected ? YELLOW : WHITE;
+    uint16_t color = isSelected ? YELLOW : MAINTEXTCOLOUR;
     uint16_t y = 20 + rowIndex * 22 + 24, x = 480/2 - 11*strlen(pageFiles[rowIndex])/2;
 
     // Clear the row area first (optional but clean)
-    Displ_FillArea(x, y, 200, 20, BLACK);
+    Displ_FillArea(x, y, 200, 20, BACKGROUNDCOLOUR);
 
-    Displ_WString(x, y, pageFiles[rowIndex], Font16, 1, color, BLACK);
+    Displ_WString(x, y, pageFiles[rowIndex], Font16, 1, color, BACKGROUNDCOLOUR);
 }
 
 uint8_t selected = 0;  // 0..pageCount-1
@@ -137,7 +137,7 @@ void draw_page(void)
     int totalPages = (totalFiles + PAGE_SIZE - 1) / PAGE_SIZE;
 
     snprintf(buf, sizeof(buf), "Page %d/%d", page, totalPages);
-    Displ_WString(100, 260, buf, Font16, 1, CYAN, BLACK);
+    Displ_WString(100, 260, buf, Font16, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
 }
 
 

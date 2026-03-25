@@ -21,46 +21,132 @@ int graph_yPoints[480];
 
 int GRAPH_Y_MIN=0, GRAPH_Y_MAX=0;
 
-//float showGraph(){
-//	char * bufs;
-//
-////	SDMOUNT(&hspi1);
-//
-//	bufs = getMetaData(filename, META_REGION_START);
-//	float startTime = atof(bufs);
-//	bufs = getMetaData(filename, META_REGION_END);
-//	float stopTime = atof(bufs);
-//	float power;
-//	switch(heater){
-//		case 1: //0.1
-//			power = 0.1;
-//			break;
-//		case 2: //0.27
-//			power = 0.27;
-//			break;
-//		case 3: //0.5
-//			power = 0.5;
-//			break;
-//		default:
-//			power = 0;
-//			break;
-//
-//		}
-//	float k = calculateK(startTime, stopTime, filename, power); //needs 3 arguments
-//
-//	sd_unmount();
-//	displayText(startTime,1);
-//	displayText(stopTime,1);
-//	displayText(k,1);
-//	// Plot the graph
-//	// Log the graph
-//	// Find the 2 points
-//	// use those 2 points & values for the calculation of k
-//	return k;
-//}
+float minLn, maxLn, minTemp, maxTemp;
 
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
+float calculateK(float lnStart, float lnEnd, float calCoef, uint8_t useLinReg)
+{
+	float slope;
+    // Ensure lnStart < lnEnd
+    if (lnEnd < lnStart) {
+        float tmp = lnStart;
+        lnStart = lnEnd;
+        lnEnd = tmp;
+    }
+
+    if(useLinReg)
+    {
+    	// Regression accumulators
+		float sumX  = 0.0f;
+		float sumY  = 0.0f;
+		float sumXY = 0.0f;
+		float sumX2 = 0.0f;
+		int count   = 0;
+
+		FIL file;
+		char line[64];
+		float t, ln, temp;
+
+		if (f_open(&file, filename, FA_READ) != FR_OK) {
+			printf("Failed to open file\n");
+			return 0;
+		}
+
+		// Skip header
+		while (f_gets(line, sizeof(line), &file) && !strstr(line, "Delta Temperature"));
+
+		// Stream through file
+		while (f_gets(line, sizeof(line), &file))
+		{
+			if (sscanf(line, "%f, %f, %f", &t, &ln, &temp) != 3)
+				continue;
+
+			printf("%f\n", ln);
+			// Only include points inside the Ln range
+			if (ln >= lnStart && ln <= lnEnd)
+			{
+				printf("Found\n");
+				sumX  += ln;
+				sumY  += temp;
+				sumXY += ln * temp;
+				sumX2 += ln * ln;
+				count++;
+			}
+
+			if(ln >= lnEnd) break;
+		}
+
+		f_close(&file);
+
+		if (count < 2) {
+			printf("Not enough points for regression\n");
+			return 0;
+		}
+
+		// Compute slope (m)
+		float numerator   = (count * sumXY) - (sumX * sumY);
+		float denominator = (count * sumX2) - (sumX * sumX);
+
+		if (denominator == 0) {
+			printf("Degenerate regression (vertical line)\n");
+			return 0;
+		}
+
+		slope = numerator / denominator;
+    }
+    else
+    {
+    	FIL file;
+		char line[64];
+		float t, ln, temp, startln, endln, starttemp, endtemp;
+
+		if (f_open(&file, filename, FA_READ) != FR_OK) {
+			printf("Failed to open file\n");
+			return 0;
+		}
+
+		// Skip header
+		while (f_gets(line, sizeof(line), &file) && !strstr(line, "Delta Temperature"));
+
+		// get start
+		while (f_gets(line, sizeof(line), &file))
+		{
+			if (sscanf(line, "%f, %f, %f", &t, &ln, &temp) != 3)
+				continue;
+
+
+			if(ln >= lnStart)
+			{
+				startln = ln;
+				starttemp = temp;
+				break;
+			}
+		}
+
+		// get end
+		while (f_gets(line, sizeof(line), &file))
+		{
+			if (sscanf(line, "%f, %f, %f", &t, &ln, &temp) != 3)
+				continue;
+
+
+			if(ln >= lnEnd)
+			{
+				endln = ln;
+				endtemp = temp;
+				break;
+			}
+		}
+
+		slope = (endtemp - starttemp) / (endln - startln);
+    }
+
+
+    printf("Slope = %f\n", slope);
+
+    float power = atof(getMetaData(filename, META_POWER));
+    float k = power / (4 * M_PI * slope *0.15) * calCoef;
+    return k;
+}
 
 void get_boundries(float *minLn, float *maxLn, float *minTemp, float *maxTemp)
 {
@@ -98,8 +184,8 @@ void get_boundries(float *minLn, float *maxLn, float *minTemp, float *maxTemp)
 
 void drawAxis(uint16_t x0, uint16_t y0, uint16_t width, uint16_t height, float maxtemp, float minLnTime, float MaxLnTime)
 {
-	Displ_Line(x0, y0, x0, height, WHITE);
-	Displ_Line(x0, height, width, height, WHITE);
+	Displ_Line(x0, y0, x0, height, MAINTEXTCOLOUR);
+	Displ_Line(x0, height, width, height, MAINTEXTCOLOUR);
 }
 
 void graph_draw_markers(GraphMarkers *m, uint16_t color1, uint16_t color2, uint8_t line)
@@ -120,33 +206,32 @@ void graph_clear_markers(GraphMarkers *m, uint16_t x0, uint8_t line)
     // Overdraw with background color
 	if(line == 0 || line == 1)
 	{
-	    Displ_Line(m->x1, GRAPH_Y_MIN, m->x1, GRAPH_Y_MAX, BLACK);
+	    Displ_Line(m->x1, GRAPH_Y_MIN, m->x1, GRAPH_Y_MAX, BACKGROUNDCOLOUR);
 
-	    Displ_Pixel(m->x1, graph_yPoints[m->x1 - x0], CYAN);
+	    Displ_Pixel(m->x1, graph_yPoints[m->x1 - x0], SECONDARYTEXTCOLOUR);
 	}
 	if(line == 0|| line == 2)
 	{
-	    Displ_Line(m->x2, GRAPH_Y_MIN, m->x2, GRAPH_Y_MAX, BLACK);
+	    Displ_Line(m->x2, GRAPH_Y_MIN, m->x2, GRAPH_Y_MAX, BACKGROUNDCOLOUR);
 
-	    Displ_Pixel(m->x2, graph_yPoints[m->x2 - x0], CYAN);
+	    Displ_Pixel(m->x2, graph_yPoints[m->x2 - x0], SECONDARYTEXTCOLOUR);
 	}
 }
 
 
 float drawGraph(uint16_t x0, uint16_t y0, uint16_t width, uint16_t height)
 {
-    float minLn, maxLn, minTemp, maxTemp;
     get_boundries(&minLn, &maxLn, &minTemp, &maxTemp);
 
     float lnRange   = maxLn - minLn;
     float tempRange = maxTemp - minTemp;
 
     // Clear graph area
-    Displ_FillArea(x0, y0, width, height, BLACK);
+    Displ_FillArea(x0, y0, width, height, BACKGROUNDCOLOUR);
 
     // Draw axes
-    Displ_Line(x0, y0 + height, x0 + width, y0 + height, WHITE);
-    Displ_Line(x0, y0, x0, y0 + height, WHITE);
+    Displ_Line(x0, y0 + height, x0 + width, y0 + height, MAINTEXTCOLOUR);
+    Displ_Line(x0, y0, x0, y0 + height, MAINTEXTCOLOUR);
 
     // Open CSV again for streaming
     FIL file;
@@ -183,7 +268,7 @@ float drawGraph(uint16_t x0, uint16_t y0, uint16_t width, uint16_t height)
                 int y = y0 + height -
                         (int)(((avgTemp - minTemp) / tempRange) * height);
 
-                Displ_Pixel(x0 + px, y, CYAN);
+                Displ_Pixel(x0 + px, y, SECONDARYTEXTCOLOUR);
                 graph_yPoints[px] = y;
             }
             else graph_yPoints[px] = -1;
@@ -211,19 +296,33 @@ float drawGraph(uint16_t x0, uint16_t y0, uint16_t width, uint16_t height)
         float avgTemp = sumTemp / (float)countTemp;
         int y = y0 + height -
                 (int)(((avgTemp - minTemp) / tempRange) * height);
-        Displ_Pixel(x0 + px, y, CYAN);
+        Displ_Pixel(x0 + px, y, SECONDARYTEXTCOLOUR);
     }
 
     f_close(&file);
+
+
+    char buf[16];
+	snprintf(buf, 16, "%.2f", minLn);
+	Displ_WString(x0, y0+height+2, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+	snprintf(buf, 16, "%.2f", maxLn);
+	Displ_WString(x0 + width - strlen(buf)*11, y0+height+2, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+	Displ_WString(x0 + width/2 - 6*11/2, y0+height+2, "LnTime", Font16, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
+
+	// Print maxTemp at top of Y-axis
+	snprintf(buf, sizeof(buf), "%.2f c", maxTemp);
+	Displ_WString(x0 - (strlen(buf) * 11)/2, y0 - 17, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+
+
     return lnRange / width;
 }
 
 void showGraphWithMarkers(uint16_t x0, uint16_t y0, uint16_t width, uint16_t height)
 {
-	Displ_WString(x0, 5+24+5, "k:", Font16, 1, WHITE, BLACK);
-	float k=0;
     // 1. Draw the graph once
     float lnTPerPixel = drawGraph(x0, y0, width, height);
+	float k=0;
+
 
     // 2. Initialize marker boundaries
     GRAPH_Y_MIN = y0;
@@ -235,7 +334,7 @@ void showGraphWithMarkers(uint16_t x0, uint16_t y0, uint16_t width, uint16_t hei
         .x2 = x0 + (19 * width) / 20,
         .active = 0
     };
-	graph_draw_markers(&markers, YELLOW, CYAN, 0);
+	graph_draw_markers(&markers, YELLOW, ORANGE, 0);
 
     // 4. Main loop
     while (1)
@@ -251,7 +350,7 @@ void showGraphWithMarkers(uint16_t x0, uint16_t y0, uint16_t width, uint16_t hei
     	        if (markers.active == 0 && markers.x1 > x0+1) markers.x1--;
     	        else if (markers.active == 1 && markers.x2 > markers.x1 + 1) markers.x2--;
 
-    	        graph_draw_markers(&markers, YELLOW, CYAN, markers.active ? 2 : 1);
+    	        graph_draw_markers(&markers, YELLOW, ORANGE, markers.active ? 2 : 1);
     	        HAL_Delay(10);
 
     	    } while (!HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin));
@@ -269,7 +368,7 @@ void showGraphWithMarkers(uint16_t x0, uint16_t y0, uint16_t width, uint16_t hei
     	        if (markers.active == 0 && markers.x1 < markers.x2 - 1) markers.x1++;
     	        else if (markers.active == 1 && markers.x2 < (x0 + width - 1)) markers.x2++;
 
-    	        graph_draw_markers(&markers, YELLOW, CYAN, markers.active ? 2 : 1);
+    	        graph_draw_markers(&markers, YELLOW, ORANGE, markers.active ? 2 : 1);
     	        HAL_Delay(10);
 
     	    } while (!HAL_GPIO_ReadPin(B4_GPIO_Port, B4_Pin));
@@ -281,7 +380,7 @@ void showGraphWithMarkers(uint16_t x0, uint16_t y0, uint16_t width, uint16_t hei
 			HAL_Delay(debounceDelay);
 			buttons = 0;
 			markers.active ^= 1;       // toggle 0 ↔ 1
-			graph_draw_markers(&markers, YELLOW, CYAN, 0);
+			graph_draw_markers(&markers, YELLOW, ORANGE, 0);
 		}
 
 		// Calculate thermal conductivity
@@ -290,17 +389,24 @@ void showGraphWithMarkers(uint16_t x0, uint16_t y0, uint16_t width, uint16_t hei
 			buttons = 0;
 //			perform_slope_calculation(markers.x1, markers.x2);
 
-			char buf[10];
-			float start=pow(2.71828, (markers.x1 - x0)*lnTPerPixel), end=pow(2.71828, (markers.x2 - x0)*lnTPerPixel);
-			snprintf(buf, 10, "%.2f", start);
+			char buf[16];
+			float start= (markers.x1 - x0)*lnTPerPixel + minLn, end=(markers.x2 - x0)*lnTPerPixel + minLn;
+			snprintf(buf, 10, "%.4f", start);
 			updateMetaData(filename, META_REGION_START, buf);
-			snprintf(buf, 10, "%.2f", end);
+			snprintf(buf, 10, "%.4f", end);
 			updateMetaData(filename, META_REGION_END, buf);
 
-			calculateK(start, end);
+			snprintf(buf, 16, "k: %.4f W/mK", k);
+			Displ_WString(x0 + 11*2, y0, buf, Font16, 1, BACKGROUNDCOLOUR, BACKGROUNDCOLOUR);
 
-			snprintf(buf, 10, "%.4f", k);
-			Displ_WString(x0 + 11*2, 5+24+5, buf, Font16, 1, WHITE, BLACK);
+			k = calculateK(start, end, 1, 1);
+
+			snprintf(buf, 16, "k: %.4f W/mK", k);
+			Displ_WString(x0 + 11*2, y0, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+
+			char kbuf[10];
+			snprintf(kbuf, 10, "%.6f", k);
+			updateMetaData(filename, META_CONDUCTIVITY, kbuf);
 		}
 
 		// Back
@@ -314,6 +420,6 @@ void showGraphWithMarkers(uint16_t x0, uint16_t y0, uint16_t width, uint16_t hei
     }
 
     // Optional: clear markers when leaving
-    Displ_FillArea(x0, y0, width, height, BLACK);
+    Displ_FillArea(x0, y0, width, height, BACKGROUNDCOLOUR);
 }
 

@@ -65,6 +65,9 @@ UART_HandleTypeDef huart2;
 DMA_HandleTypeDef hdma_usart1_rx;
 
 /* USER CODE BEGIN PV */
+uint16_t MAINTEXTCOLOUR = WHITE;
+uint16_t SECONDARYTEXTCOLOUR = CYAN;
+uint16_t BACKGROUNDCOLOUR = BLACK;
 
 // Faaiz UI 0/1 states
 static uint8_t ui_sd_mounted   = 0;
@@ -117,7 +120,7 @@ void UI_DrawLine(uint8_t line, const char *text, uint8_t val)
   char buf[64];
   int x, y;
   sFONT font = Font16;
-  uint32_t colour=WHITE;
+  uint32_t colour=MAINTEXTCOLOUR;
 
 //  snprintf(buf, sizeof(buf), "%s: %d", text, val);
   snprintf(buf, sizeof(buf), "%s", text);
@@ -126,7 +129,7 @@ void UI_DrawLine(uint8_t line, const char *text, uint8_t val)
   {
   	  case 0:
   		  font = Font24;
-  		  colour = CYAN;
+  		  colour = SECONDARYTEXTCOLOUR;
   		  x=480/2 - (17*strlen(buf)/2);
   		  y=5;
   		  break;
@@ -155,14 +158,14 @@ void UI_DrawLine(uint8_t line, const char *text, uint8_t val)
   		  y=320-5-16;
   		  break;
   }
-  Displ_WString(x, y, buf, font, 1, colour, BLACK);
+  Displ_WString(x, y, buf, font, 1, colour, BACKGROUNDCOLOUR);
 }
 
 void UI_DrawAll(void)
 {
-  Displ_CLS(BLACK);
+  Displ_CLS(BACKGROUNDCOLOUR);
 
-  Displ_WString(UI_X, 10, "Button / Screen Test", Font16, 1, WHITE, BLACK);
+  Displ_WString(UI_X, 10, "Button / Screen Test", Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
 
   UI_DrawLine(0, "B1 - Mount SD Card",   ui_sd_mounted);
   UI_DrawLine(1, "B2 - Create file",     ui_create_file);
@@ -212,26 +215,26 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
 	SD_CS_HIGH();  // Ensure card is deselected
-	HAL_Delay(1000);
 
 	GPS_Init(&huart1);
 
 
 	Displ_Init(Displ_Orientat_90);
-	Displ_CLS(BLACK);
+	Displ_CLS(BACKGROUNDCOLOUR);
 	Displ_BackLight('I');
 	HAL_GPIO_WritePin(DISPL_LED_GPIO_Port, DISPL_LED_Pin, 1);
 
-	Displ_WString(480/2 - 6*17*2, 320/2 - 24, "C-Therm TLS", Font24, 2, CYAN, BLACK);
-	Displ_WString(480/2 - 4*17*2, 320/2, "Handheld", Font24, 2, CYAN, BLACK);
+	Displ_WString(480/2 - 6*17*2, 320/2 - 24, "C-Therm TLS", Font24, 2, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
+	Displ_WString(480/2 - 4*17*2, 320/2, "Handheld", Font24, 2, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
+	HAL_Delay(1000);
 
 	FRESULT res = sd_reset_and_mount();
 	if (res != FR_OK)
 	{
-		Displ_WString(10, 10, "Insert SD Card & Reboot", Font8, 1, RED, BLACK);
+		Displ_WString(10, 10, "Insert SD Card & Reboot", Font8, 1, RED, BACKGROUNDCOLOUR);
 		while(1);
 	}
-	Displ_WString(10, 10, "SD Mounted!", Font8, 1, GREEN, BLACK);
+	Displ_WString(10, 10, "SD Mounted!", Font8, 1, GREEN, BACKGROUNDCOLOUR);
 
 	MAX_INITs(&hspi2);
 

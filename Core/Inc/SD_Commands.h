@@ -77,7 +77,6 @@ uint8_t appendTemp(char * filename, float delta_temp, uint32_t delta_time);
 
 
 char * getMetaData(char * filename, MetadataLabel label);
-float calculateK(float startTime, float stopTime);
 
 #ifdef __cplusplus
 	}
