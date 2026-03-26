@@ -23,6 +23,8 @@ int GRAPH_Y_MIN=0, GRAPH_Y_MAX=0;
 
 float minLn, maxLn, minTemp, maxTemp;
 
+float r2;
+
 float calculateK(float lnStart, float lnEnd, float calCoef, uint8_t useLinReg)
 {
 	float slope;
@@ -40,6 +42,7 @@ float calculateK(float lnStart, float lnEnd, float calCoef, uint8_t useLinReg)
 		float sumY  = 0.0f;
 		float sumXY = 0.0f;
 		float sumX2 = 0.0f;
+		float sumY2 = 0.0f;
 		int count   = 0;
 
 		FIL file;
@@ -69,6 +72,7 @@ float calculateK(float lnStart, float lnEnd, float calCoef, uint8_t useLinReg)
 				sumY  += temp;
 				sumXY += ln * temp;
 				sumX2 += ln * ln;
+				sumY2 += temp * temp;
 				count++;
 			}
 
@@ -84,14 +88,23 @@ float calculateK(float lnStart, float lnEnd, float calCoef, uint8_t useLinReg)
 
 		// Compute slope (m)
 		float numerator   = (count * sumXY) - (sumX * sumY);
-		float denominator = (count * sumX2) - (sumX * sumX);
+		float denomX      = (count * sumX2 - sumX * sumX);
+		float denomY      = (count * sumY2 - sumY * sumY);
 
-		if (denominator == 0) {
-			printf("Degenerate regression (vertical line)\n");
+		if (denomX == 0) {
+			printf("vertical line regression\n");
 			return 0;
 		}
 
-		slope = numerator / denominator;
+		slope = numerator / denomX;
+
+		r2 = 0;
+
+		if (denomX > 0 && denomY > 0)
+		    r2 = (numerator * numerator) / (denomX * denomY);
+
+		printf("R^2 = %f\n", r2);
+
     }
     else
     {
@@ -402,12 +415,12 @@ void showGraphWithMarkers(uint16_t x0, uint16_t y0, uint16_t width, uint16_t hei
 			snprintf(buf, 10, "%.4f", end);
 			updateMetaData(filename, META_REGION_END, buf);
 
-			snprintf(buf, 16, "k: %.4f W/mK", k);
+			snprintf(buf, 32, "k: %.4f W/mK R2: %.5f", k, r2);
 			Displ_WString(480/2 - 11*strlen(buf)/2, 24+5, buf, Font16, 1, BACKGROUNDCOLOUR, BACKGROUNDCOLOUR);
 
 			k = calculateK(start, end, 1, 1);
 
-			snprintf(buf, 16, "k: %.4f W/mK", k);
+			snprintf(buf, 32, "k: %.4f W/mK R2: %.5f", k, r2);
 			Displ_WString(480/2 - 11*strlen(buf)/2, 24+5, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
 
 			snprintf(buf, 32, "  Start: %.3f Ln(s)  ", start);
