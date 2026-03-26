@@ -145,6 +145,7 @@ void displayText(int ID,  int extra)
 				strcpy(text[5], "BACK");
 				break;
 		case 501:
+			strcpy(display, filename);
 			strcpy(text[0], "LEFT");
 			strcpy(text[2], "SW");
 			strcpy(text[3], "RIGHT");

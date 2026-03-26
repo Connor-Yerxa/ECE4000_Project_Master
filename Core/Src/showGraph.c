@@ -319,6 +319,7 @@ float drawGraph(uint16_t x0, uint16_t y0, uint16_t width, uint16_t height)
 
 void showGraphWithMarkers(uint16_t x0, uint16_t y0, uint16_t width, uint16_t height)
 {
+	char buf[32];
     // 1. Draw the graph once
     float lnTPerPixel = drawGraph(x0, y0, width, height);
 	float k=0;
@@ -328,10 +329,16 @@ void showGraphWithMarkers(uint16_t x0, uint16_t y0, uint16_t width, uint16_t hei
     GRAPH_Y_MIN = y0;
     GRAPH_Y_MAX = y0 + height -1;
 
+    float lnStart = atof(getMetaData(filename, META_REGION_START));
+    float lnEnd   = atof(getMetaData(filename, META_REGION_END));
+
+    float startPx = (lnStart - minLn) / lnTPerPixel;
+    float endPx   = (lnEnd   - minLn) / lnTPerPixel;
+
     // 3. Initialize markers (you can adjust defaults later)
     GraphMarkers markers = {
-        .x1 = x0 + (3*width) / 4,
-        .x2 = x0 + (19 * width) / 20,
+        .x1 = x0 + (int16_t)startPx,
+        .x2 = x0 + (int16_t)endPx,
         .active = 0
     };
 	graph_draw_markers(&markers, YELLOW, ORANGE, 0);
@@ -389,7 +396,6 @@ void showGraphWithMarkers(uint16_t x0, uint16_t y0, uint16_t width, uint16_t hei
 			buttons = 0;
 //			perform_slope_calculation(markers.x1, markers.x2);
 
-			char buf[16];
 			float start= (markers.x1 - x0)*lnTPerPixel + minLn, end=(markers.x2 - x0)*lnTPerPixel + minLn;
 			snprintf(buf, 10, "%.4f", start);
 			updateMetaData(filename, META_REGION_START, buf);
@@ -397,16 +403,25 @@ void showGraphWithMarkers(uint16_t x0, uint16_t y0, uint16_t width, uint16_t hei
 			updateMetaData(filename, META_REGION_END, buf);
 
 			snprintf(buf, 16, "k: %.4f W/mK", k);
-			Displ_WString(x0 + 11*2, y0, buf, Font16, 1, BACKGROUNDCOLOUR, BACKGROUNDCOLOUR);
+			Displ_WString(480/2 - 11*strlen(buf)/2, 24+5, buf, Font16, 1, BACKGROUNDCOLOUR, BACKGROUNDCOLOUR);
 
 			k = calculateK(start, end, 1, 1);
 
 			snprintf(buf, 16, "k: %.4f W/mK", k);
-			Displ_WString(x0 + 11*2, y0, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+			Displ_WString(480/2 - 11*strlen(buf)/2, 24+5, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+
+			snprintf(buf, 32, "  Start: %.3f Ln(s)  ", start);
+			Displ_WString(480/2 - 11*strlen(buf)/2, 24+5+16, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+			snprintf(buf, 32, "  End: %.3f Ln(s)  ", end);
+			Displ_WString(480/2 - 11*strlen(buf)/2, 24+5+16*2, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
 
 			char kbuf[10];
 			snprintf(kbuf, 10, "%.6f", k);
 			updateMetaData(filename, META_CONDUCTIVITY, kbuf);
+			snprintf(kbuf, 10, "%.6f", start);
+			updateMetaData(filename, META_REGION_START, kbuf);
+			snprintf(kbuf, 10, "%.6f", end);
+			updateMetaData(filename, META_REGION_END, kbuf);
 		}
 
 		// Back
