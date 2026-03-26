@@ -27,7 +27,7 @@ int number = 0;
 double deltaTemp;
 int deltaTime;
 double deltaTempDefault = 10;
-int deltaTimeDefault = 180;
+int deltaTimeDefault = 300;
 int brightness = 10;
 int both = 0;
 int heater;
@@ -211,7 +211,7 @@ void menus() {
 
             case 120: // Test running
                 displayText(screen, 0);
-                runTest(deltaTemp, deltaTime, heater);
+                runTest(deltaTime, deltaTemp, heater);
                 last_screen = screen;
                 screen = 130;
                 break;

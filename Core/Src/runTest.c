@@ -16,7 +16,7 @@
 double runTest(int deltaTime, int deltaTemp, int heater){
 
 	int samplesLeft;
-	const int hz = 10;
+//	const int hz = 10;
 	float tempStart; //temperature at start
 //	double tempNow; //difference between A & B
 //	double tempA = 0; //Sensor A
@@ -32,8 +32,8 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 
 	tempStart = readTemp();
 
-	samplesLeft = deltaTime * hz; //samples per second * seconds = samples
-	samplesLeft = 5 * hz; //samples per second * seconds = samples
+//	samplesLeft = deltaTime * hz; //samples per second * seconds = samples
+//	samplesLeft = 5 * hz; //samples per second * seconds = samples
 
 	METADATA md;
 
@@ -72,11 +72,13 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 	Displ_WString(10, 320-10-24*2, tempbuf, Font24, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
 	snprintf(tempbuf, 16, "Time:");
 	Displ_WString(10, 320-10-24, tempbuf, Font24, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
+	snprintf(tempbuf, 16, "/%d s", deltaTime);
+	Displ_WString(10 + 17*(6+5), 320-10-24, tempbuf, Font24, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
 
 
 	startTime = HAL_GetTick();
-//	while ((((float)currentTime) / 1000 < deltaTime) && (deltaTemp > runDeltaTemp)){
-	while ((((float)currentTime) / 1000 < 300) && (deltaTemp > runDeltaTemp)){
+	while ((((float)currentTime) / 1000 < deltaTime) && (deltaTemp > runDeltaTemp)){
+//	while ((((float)currentTime) / 1000 < 300) && (deltaTemp > runDeltaTemp)){
 //	while ((((float)currentTime) / 1000 < 5) && (deltaTemp > runDeltaTemp)){
 		if(TEMP_TIMER){
 			TEMP_TIMER = 0;
@@ -87,7 +89,7 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 
 			sprintf(tempbuf, "%4.3f C  ", runDeltaTemp);
 			Displ_WString(10+17*9, 320-10-24*2, tempbuf, Font24, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
-			sprintf(tempbuf, "%4.3f s ", ((float)currentTime) / 1000.0);
+			sprintf(tempbuf, "%4.0f", ((float)currentTime) / 1000.0);
 			Displ_WString(10+17*6, 320-10-24, tempbuf, Font24, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
 			samplesLeft--;
 
