@@ -215,29 +215,34 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
 	SD_CS_HIGH();  // Ensure card is deselected
-	HAL_Delay(50);
 
-	FRESULT res = sd_reset_and_mount();
-	if (res != FR_OK)
-	{
-		NVIC_SystemReset();
-	}
+//	HAL_Delay(1000);
+
 
 	GPS_Init(&huart1);
 
 
 	Displ_Init(Displ_Orientat_90);
 	Displ_CLS(BACKGROUNDCOLOUR);
-	Displ_BackLight('I');
-	HAL_GPIO_WritePin(DISPL_LED_GPIO_Port, DISPL_LED_Pin, 1);
-
-	Displ_WString(480/2 - 6*17*2, 320/2 - 24, "C-Therm TLS", Font24, 2, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
-	Displ_WString(480/2 - 4*17*2, 320/2, "Handheld", Font24, 2, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
-	HAL_Delay(1000);
+//	Displ_BackLight('1');
+	HAL_GPIO_WritePin(DISPL_LED_GPIO_Port, DISPL_LED_Pin, 0);
 
 	MAX_INITs(&hspi2);
 
-	HAL_Delay(1000);
+	Displ_WString(480/2 - 6*17*2, 320/2 - 24, "C-Therm TLS", Font24, 2, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
+	Displ_WString(480/2 - 4*17*2, 320/2, "Handheld", Font24, 2, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
+//	HAL_Delay(1000);
+
+	FRESULT res = sd_reset_and_mount();
+	if (res != FR_OK)
+	{
+//		Displ_WString(10, 10, "SD Card not detecting. Rebooting...", Font8, 1, RED, BACKGROUNDCOLOUR);
+		NVIC_SystemReset();
+		while(1);
+	}
+	HAL_GPIO_WritePin(DISPL_LED_GPIO_Port, DISPL_LED_Pin, 1);
+	HAL_Delay(1500);
+//	Displ_WString(10, 10, "SD Mounted!", Font8, 1, GREEN, BACKGROUNDCOLOUR);
 
   /* USER CODE END 2 */
 
