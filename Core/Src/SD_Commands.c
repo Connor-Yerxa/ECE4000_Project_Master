@@ -17,6 +17,35 @@ const char * const MetadataLabelStrings[META_LABEL_COUNT] = {
     [META_CALIBRATION_APPLIED] = "#,Calibration Applied:,"
 };
 
+#define FILE_ID_ADDR  0x0803F800  // Last 2KB page
+
+uint32_t fileID;
+
+uint32_t Flash_ReadFileID(void)
+{
+    uint32_t id = *(uint32_t*)FILE_ID_ADDR;
+    if (id == 0xFFFFFFFF)  // erased flash
+        id = 0;
+    return id;
+}
+
+void Flash_WriteFileID(uint32_t id)
+{
+    HAL_FLASH_Unlock();
+
+    FLASH_EraseInitTypeDef erase;
+    uint32_t pageError = 0;
+
+    erase.TypeErase   = FLASH_TYPEERASE_PAGES;
+    erase.PageAddress = FILE_ID_ADDR;
+    erase.NbPages     = 1;
+
+    HAL_FLASHEx_Erase(&erase, &pageError);
+
+    HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, FILE_ID_ADDR, id);
+
+    HAL_FLASH_Lock();
+}
 
 FRESULT sd_reset_and_mount(void)
 {
@@ -197,7 +226,7 @@ uint8_t WriteMetaData(char * filename, METADATA md)
 	#,Calibration Applied:,
 	 */
 
-	sprintf(field, "%s%s\n", MetadataLabelStrings[META_TEST_ID], META_SPACE);
+	sprintf(field, "%s%03lu\n", MetadataLabelStrings[META_TEST_ID], fileID);
 	sd_append_file(filename, field);
 	sprintf(field, "%s%s\n", MetadataLabelStrings[META_INSTRUMENT], META_SPACE);
 
@@ -238,30 +267,32 @@ uint8_t createMeasurementFile(METADATA * md)
 	uint8_t min = (gps_data.utc_time / 100) % 100;			// mm
 	uint8_t sec  =  gps_data.utc_time % 100;            	// ss
 
-	sprintf(filename, "20%02u%02u%02u-%02u%02u%02u_00.csv", year, month, day, hr, min, sec);
 
-	char filenameSnipped[24];
-	strcpy(filenameSnipped, filename);
+	fileID = Flash_ReadFileID();
+	sprintf(filename, "20%02u%02u%02u-%02u%02u%02u_%03lu", year, month, day, hr, min, sec, fileID);
 
-	char *dot = strtok(filenameSnipped, ".");
-	strcpy(filenameSnipped, dot);
+//	char filenameSnipped[24];
+//	strcpy(filenameSnipped, filename);
+//
+//	char *dot = strtok(filenameSnipped, ".");
+//	strcpy(filenameSnipped, dot);
+//
+//	printf("snipped: %s\n", filenameSnipped);
 
-	printf("snipped: %s\n", filenameSnipped);
-
-	uint8_t i=1;
-
-	FIL file;
-	char newfilename[32];
-	snprintf(newfilename, 32, "%s.csv", filenameSnipped);
-	FRESULT res = f_open(&file, newfilename, FA_READ);
-	while(res == FR_OK)
-	{
-		f_close(&file);
-		sprintf(newfilename, "%s%d.csv", filenameSnipped, i++);
-		res = f_open(&file, newfilename, FA_READ);
-	}
-	f_close(&file);
-	strcpy(filename, newfilename);
+//	uint8_t i=1;
+//
+//	FIL file;
+//	char newfilename[32];
+//	snprintf(newfilename, 32, "%s.csv", filenameSnipped);
+//	FRESULT res = f_open(&file, newfilename, FA_READ);
+//	while(res == FR_OK)
+//	{
+//		f_close(&file);
+//		sprintf(newfilename, "%s%d.csv", filenameSnipped, i++);
+//		res = f_open(&file, newfilename, FA_READ);
+//	}
+//	f_close(&file);
+//	strcpy(filename, newfilename);
 
 	sd_write_file(filename, "");
 
@@ -269,6 +300,8 @@ uint8_t createMeasurementFile(METADATA * md)
 	{
 		return 1;
 	}
+
+	Flash_WriteFileID(fileID + 1);
 
 	return 0;
 }
