@@ -11,6 +11,8 @@
 #include <math.h>
 #include "sd_functions.h"
 
+#define USE_GPS 0
+
 uint8_t gps_dma_buf[GPS_DMA_BUF_SIZE];
 
 GPS_Data_t gps_data = {0};
@@ -88,7 +90,8 @@ void calc_timestamp()
 
 void GPS_default()
 {
-	gps_data.valid = 0;
+	//	gps_data.valid = 0;
+		gps_data.valid = 1;
 	gps_data.utc_date = 050326;
 	gps_data.utc_time = 224030;
 
@@ -100,17 +103,20 @@ void GPS_default()
 
 void GPS_Init(UART_HandleTypeDef *huart)
 {
-    gps_huart = huart;
-    HAL_UART_Receive_DMA(gps_huart, gps_dma_buf, GPS_DMA_BUF_SIZE);
-
-    if(PRINT) printf("Initializing GPS...\n");
+	if(USE_GPS)
+	{
+		gps_huart = huart;
+		HAL_UART_Receive_DMA(gps_huart, gps_dma_buf, GPS_DMA_BUF_SIZE);
+	}
+//    if(PRINT) printf("Initializing GPS...\n");
     GPS_default();
+
 //    GPS_Off_On(0);
 }
 
 void GPS_Process()
 {
-	while (1) {
+	while (USE_GPS) {
 //		printf("%s", gps_dma_buf);
 		uint8_t c = gps_dma_buf[dma_idx];
 
@@ -190,23 +196,26 @@ void printGPSData()
 
 void GPS_oneshot()
 {
-	GPS_Off_On(1);
-	gps_data.valid = 0;
-	int i=0;
-	while(!gps_data.valid && i < GPS_WAIT)
+	if(USE_GPS)
 	{
-		GPS_Process();
-//		printGPSData(gps_data);
-		HAL_Delay(500);
-		i++;
-	}
+	//	GPS_Off_On(1);
+		gps_data.valid = 0;
+		int i=0;
+		while(!gps_data.valid && i < GPS_WAIT)
+		{
+			GPS_Process();
+	//		printGPSData(gps_data);
+			HAL_Delay(500);
+			i++;
+		}
 
-	if(i > GPS_WAIT)
-	{
-		printf("Default GPS\n");
-		GPS_default();
-	}
-	else printf("GPS Connected\n");
+		if(i > GPS_WAIT)
+		{
+			printf("Default GPS\n");
+			GPS_default();
+		}
+		else printf("GPS Connected\n");
 
-	GPS_Off_On(0);
+	//	GPS_Off_On(0);
+	}
 }

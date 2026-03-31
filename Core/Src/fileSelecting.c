@@ -13,6 +13,7 @@
 #include "z_displ_ILI9XXX.h"
 #include "sd_functions.h"
 #include "displayText.h"
+#include "menus.h"
 
 uint16_t totalFiles = 0;
 
@@ -215,8 +216,14 @@ int selectFile(void)
 		{
 			HAL_Delay(debounceDelay);
 			buttons = 0;
-			sprintf(filename, "%s", pageFiles[selected]);
-			return 2;
+			if(getVerification())
+			{
+				sprintf(filename, "%s", pageFiles[selected]);
+				sd_delete_file(filename);
+
+				load_page(pageStart);
+			}
+			draw_page();
 		}
 
 		// SELECT

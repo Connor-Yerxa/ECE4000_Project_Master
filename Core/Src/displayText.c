@@ -41,11 +41,11 @@ void displayText(int ID,  int extra)
 
 		case 100:
 				strcpy(display, "Select testing limit");
-				strcpy(text[0], "Default");
+				strcpy(text[0], "Run Test");
 				strcpy(text[1], "Temperature");
 				strcpy(text[2], "Both");
 				strcpy(text[3], "Time");
-				strcpy(text[4], "Change Heater Selection");
+				strcpy(text[4], "Heater");
 				strcpy(text[5], "Return");
 				break;
 
@@ -100,23 +100,41 @@ void displayText(int ID,  int extra)
 
 		case 300:
 				strcpy(display, "Settings");
-				strcpy(text[0], "Brightness");
-				strcpy(text[1], "Set default sample time");
-				strcpy(text[2], "Set default temp delta");
-				strcpy(text[3], "Set default heater selection");
+//				strcpy(text[0], "Brightness");
+				strcpy(text[1], "Delta Time");
+				strcpy(text[2], "Delta Temp");
+				strcpy(text[3], "Heater Power");
 				strcpy(text[5], "Return");
 				break;
 
-		case 310:
-				strcpy(display, "Brightness 0-9"); //Number select
-				break;
+//		case 310:
+//				strcpy(display, "Brightness 0-9"); //Number select
+//				strcpy(text[0], "UP");
+//				strcpy(text[1], "PREV");
+//				strcpy(text[2], "DOWN");
+//				strcpy(text[3], "SAVE");
+//				strcpy(text[4], "NEXT");
+//				strcpy(text[5], "BACK");
+//				break;
 
 		case 320:
 				strcpy(display, "Temperature change"); //Number select
+				strcpy(text[0], "UP");
+				strcpy(text[1], "PREV");
+				strcpy(text[2], "DOWN");
+				strcpy(text[3], "SAVE");
+				strcpy(text[4], "NEXT");
+				strcpy(text[5], "BACK");
 				break;
 
 		case 330:
 				strcpy(display, "Sample duration"); //Number select
+				strcpy(text[0], "UP");
+				strcpy(text[1], "PREV");
+				strcpy(text[2], "DOWN");
+				strcpy(text[3], "SAVE");
+				strcpy(text[4], "NEXT");
+				strcpy(text[5], "BACK");
 				break;
 		case 340:
 				strcpy(display, "Default Heater Selection"); //Number select
@@ -129,12 +147,6 @@ void displayText(int ID,  int extra)
 				strcpy(display, "Data");
 				strcpy(text[5], "Return");
 				break;
-
-		case 401:
-			strcpy(display, "Are You Sure?");
-			strcpy(text[1], "YES");
-			strcpy(text[4], "NO");
-			break;
 
 		case 500:
 				strcpy(display, "Select File");

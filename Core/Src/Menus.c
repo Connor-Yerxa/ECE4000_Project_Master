@@ -16,7 +16,7 @@
 #include "runTest.h"
 #include "runCalibration.h"
 #include "showGraph.h"
-#include "SD_COmmands.h"
+#include "SD_Commands.h"
 #include "fileselecting.h"
 #include "MAX_Commands.h"
 
@@ -28,7 +28,7 @@ double deltaTemp;
 int deltaTime;
 double deltaTempDefault = 10;
 int deltaTimeDefault = 300;
-int brightness = 10;
+//int brightness = 10;
 int both = 0;
 int heater;
 int heaterDefault = 3;
@@ -36,9 +36,34 @@ float calCoef = 1; // calibration coefficent
 
 int last_screen = 99;
 
-int verification = 0;
+uint8_t getVerification()
+{
+	Displ_CLS(BACKGROUNDCOLOUR);
+	UI_DrawLine(0, "Are You Sure?", 0);
+	UI_DrawLine(2, "YES", 0);
+	UI_DrawLine(5, "NO", 0);
+
+	HAL_Delay(1000);
+	buttons = 0;
+
+	while(1)
+	{
+		if(buttons & 0x02)
+		{
+			HAL_Delay(debounceDelay);
+			buttons = 0;
+			return 1;
+		}
+		if(buttons & 0x10)
+		{
+			buttons = 0;
+			return 0;
+		}
+	}
+}
 
 void menus() {
+	int ii=0;
 	sprintf(filename, "TESTTESTTEST.csv");
 	deltaTime = deltaTimeDefault;
 	deltaTemp = deltaTempDefault;
@@ -67,6 +92,7 @@ void menus() {
 
 						char buf[32];
 						float temp = readTemp();
+//						printf("%.2f\n", temp);
 
 						if(temp < -100 || temp > 200)
 						{
@@ -82,7 +108,7 @@ void menus() {
 							Displ_WString(480/2 - 11*strlen(buf)/2, 320-3*16-10, buf, Font16, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
 						}
 
-						GPS_Process();
+//						GPS_Process();
 //						printf("Valid: %d\n", gps_data.valid);
 						if(gps_data.valid == 1)
 						{
@@ -151,7 +177,7 @@ void menus() {
                 displayText(screen, 0);
 
                 char buf[32];
-                snprintf(buf, 32, "Heater Lvl: %d", heater);
+                snprintf(buf, 32, "Heater Lvl: %.1f W", heater==1?0.1:heater==2?0.3:heater==3?0.5:0);
                 Displ_WString(480/2 - 11*strlen(buf)/2 + 10, 24, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
                 snprintf(buf, 32, "Time: %d s", deltaTime);
                 Displ_WString(480/2 - 11*strlen(buf)/2 + 10, 24+16, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
@@ -161,9 +187,9 @@ void menus() {
                 button = read_buttons();
                 switch(button) {
                     case 1: // Default
-                        deltaTemp = deltaTempDefault;
-                        deltaTime = deltaTimeDefault;
-                        heater = heaterDefault;
+//                        deltaTemp = deltaTempDefault;
+//                        deltaTime = deltaTimeDefault;
+//                        heater = heaterDefault;
                         last_screen = screen;
                         screen = 120;
                         break;
@@ -176,24 +202,33 @@ void menus() {
                 }
                 break;
 
+
             case 110: // Temp
                 displayText(screen, 0);
-                number = selectNumber('E', 0);
-                deltaTime = number;
+
+                snprintf(buf, 32, "Max Temp: ");
+                Displ_WString(20, 320/4, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+                ii = (int)deltaTemp;
+                selectNumber(&ii, 3, 20+11*10, 320/4);
+                deltaTemp = (double)ii;
+
                 if (both == 1){
                 	 last_screen = screen;
                 	screen = 111; break;
                 }
                 last_screen = screen;
-                screen = 120;
+                screen = 100;
                 break;
 
             case 111: // Time
                 displayText(screen, 0);
-                number = selectNumber('I', 0);
-                deltaTemp = number;
+                snprintf(buf, 32, "Max Time: ");
+                Displ_WString(20, 320/4, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+                ii = (int)deltaTime;
+                selectNumber(&ii, 4, 20+11*10, 320/4);
+                deltaTime = ii;
                 last_screen = screen;
-                screen = 120;
+                screen = 100;
                 break;
 
             case 115: //heater selection
@@ -281,27 +316,44 @@ void menus() {
                     case 2: screen = 320; break;
                     case 3: screen = 330; break;
                     case 4: screen = 340; break;
+                    case 5: if(getVerification())
+                    {
+                    	Flash_WriteFileID(0);
+                    }
+                    break;
                     case 6: screen = 99; break;
                 }
                 break;
 
-            case 310: // Brightness
-                displayText(screen, 0);
-                brightness = selectNumber('B', 0);
-                last_screen = screen;
-                screen = 300;
-                break;
+//            case 310: // Brightness
+//                displayText(screen, 0);
+//                brightness = selectNumber('B', 0);
+//                last_screen = screen;
+//                screen = 300;
+//                break;
 
             case 320: // Default temperature
                 displayText(screen, 0);
-                deltaTempDefault = selectNumber('E', 0);
+//                deltaTempDefault = selectNumber('E', 0);
+                snprintf(buf, 32, "Max Temp: ");
+                Displ_WString(20, 320/4, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+                ii = (int)deltaTemp;
+                selectNumber(&ii, 4, 20+11*10, 320/4);
+                deltaTemp = (double)ii;
+
                 last_screen = screen;
                 screen = 300;
                 break;
 
             case 330: // Default duration
                 displayText(screen, 0);
-                deltaTimeDefault = selectNumber('I', 0);
+//                deltaTimeDefault = selectNumber('I', 0);
+                snprintf(buf, 32, "Max Time: ");
+                Displ_WString(20, 320/4, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+                ii = (int)deltaTime;
+                selectNumber(&ii, 4, 20+11*10, 320/4);
+                deltaTime = (double)ii;
+
                 last_screen = screen;
                 screen = 300;
                 break;
@@ -329,29 +381,8 @@ void menus() {
                 }
                 break;
 
-            // Verification
-            case 401:
-            	displayText(screen, 0);
-            	button = read_buttons();
-            	switch(button)
-            	{
-            	case 2:
-            		verification=1;
-            		break;
-            	case 5:
-            		verification=0;
-            		break;
-            	}
-            	screen = last_screen;
-            	break;
-
             // --------- Load old results. ------
 			case 500:
-				if(verification)
-				{
-					sd_delete_file(filename);
-					verification = 0;
-				}
 				int s = selectFile();
 				switch(s)
 				{

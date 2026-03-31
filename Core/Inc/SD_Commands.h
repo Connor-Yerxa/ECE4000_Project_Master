@@ -13,6 +13,7 @@
 // Metadata field defines
 typedef enum {
 	META_TEST_ID,
+	META_INITIAL_TEMP,
 	META_INSTRUMENT,
 	META_LATITUDE,
 	META_LONGITUDE,
@@ -66,6 +67,8 @@ extern FATFS FatFs;
 
 #define SD_CS_LOW()     HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_RESET)
 #define SD_CS_HIGH()    HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_SET)
+
+void Flash_WriteFileID(uint32_t id);
 
 FRESULT sd_reset_and_mount(void);
 void readMeasurementData(int * tempsLen, int maxprintout);

@@ -28,6 +28,8 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 
 	float power;
 
+	char tempbuf[16];
+
 	HAL_TIM_Base_Start_IT(&htim2);
 
 	tempStart = readTemp();
@@ -36,10 +38,19 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 //	samplesLeft = 5 * hz; //samples per second * seconds = samples
 
 	METADATA md;
+	Displ_WString(5, 50, "Connecting to GPS...", Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+	printf("Connecting to GPS");
+	GPS_oneshot();
+	Displ_WString(5, 50+16, "GPS Connected", Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
 
 	printf("Creating File.\n");
+	Displ_WString(5, 50+2*16, "Creating file", Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
 	createMeasurementFile(&md);	// note starting location on SD
 	printf("FileCreated\n");
+
+	snprintf(tempbuf, 16, "%.3f", tempStart);
+	updateMetaData(filename, META_INITIAL_TEMP, tempbuf);
+	Displ_WString(5, 50+3*16, "FileCreated", Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
 
 //	heater = 2;
 
@@ -67,7 +78,6 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 
 	}
 
-	char tempbuf[16];
 	snprintf(tempbuf, 16, "Delta T:");
 	Displ_WString(10, 320-10-24*2, tempbuf, Font24, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
 	snprintf(tempbuf, 16, "Time:");
@@ -77,6 +87,7 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 
 
 	startTime = HAL_GetTick();
+	HAL_Delay(1);
 	while ((((float)currentTime) / 1000 < deltaTime) && (deltaTemp > runDeltaTemp)){
 //	while ((((float)currentTime) / 1000 < 300) && (deltaTemp > runDeltaTemp)){
 //	while ((((float)currentTime) / 1000 < 5) && (deltaTemp > runDeltaTemp)){

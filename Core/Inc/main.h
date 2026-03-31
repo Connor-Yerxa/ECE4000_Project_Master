@@ -123,7 +123,7 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN Private defines */
 void UI_DrawLine(uint8_t line, const char *text, uint8_t val);
-#define debounceDelay 150
+#define debounceDelay 200
 
 
 extern uint16_t MAINTEXTCOLOUR;

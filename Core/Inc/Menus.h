@@ -24,7 +24,7 @@ extern int heater;
 extern float calCoef;
 
 // ---------- Functions ----------
-extern
+uint8_t getVerification();
 void menus();                // Main menu loop
 
 

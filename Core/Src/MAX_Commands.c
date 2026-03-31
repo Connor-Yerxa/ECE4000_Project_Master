@@ -58,6 +58,7 @@ float readTemp()
 		uint16_t raw15;
 		MAX31865_ReadRTDRaw(&RTD_MAX, &raw15);
 		float cjTemp = MAX31865_Temperature_C(raw15, RTD_NOMINAL_OHMS, RREF_OHMS);
+		printf("%.3f\n", cjTemp);
 
 		float tcTemp = max31856_read_TC_temp(&THERM_MAX);
 
@@ -72,11 +73,11 @@ float readTemp()
 //		max31856_write_nregisters(&THERM_MAX, MAX31856_CJTH, raw, 2);
 	} else
 	{
-		float cjTemp = max31856_read_CJ_temp(&THERM_MAX);
-		temp = max31856_read_TC_temp(&THERM_MAX);
+//		float cjTemp = max31856_read_CJ_temp(&THERM_MAX);
+		temp = max31856_read_TC_temp(&THERM_MAX) * -1;
 
-		temp = cjTemp - temp;
-		temp += cjTemp;
+//		temp = cjTemp - temp;
+//		temp += cjTemp;
 	}
 //	printf("cj temp: %.2f\n", max31856_read_CJ_temp(&THERM_MAX));
 	return temp;

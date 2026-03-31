@@ -6,6 +6,7 @@
 
 const char * const MetadataLabelStrings[META_LABEL_COUNT] = {
     [META_TEST_ID]             = "#,Test ID:,",
+	[META_INITIAL_TEMP]		   = "#,Initial Temp;,",
     [META_INSTRUMENT]          = "#,Instrument:,TLS",
     [META_LATITUDE]            = "#,Latitude:,",
     [META_LONGITUDE]           = "#,Longitude:,",
@@ -17,7 +18,7 @@ const char * const MetadataLabelStrings[META_LABEL_COUNT] = {
     [META_CALIBRATION_APPLIED] = "#,Calibration Applied:,"
 };
 
-#define FILE_ID_ADDR  0x0803F800  // Last 2KB page
+#define FILE_ID_ADDR  0x0801F800  // Last 2KB page
 
 uint32_t fileID;
 
@@ -228,7 +229,10 @@ uint8_t WriteMetaData(char * filename, METADATA md)
 
 	sprintf(field, "%s%03lu\n", MetadataLabelStrings[META_TEST_ID], fileID);
 	sd_append_file(filename, field);
+	sprintf(field, "%s%s\n", MetadataLabelStrings[META_INITIAL_TEMP], META_SPACE);
+	sd_append_file(filename, field);
 	sprintf(field, "%s%s\n", MetadataLabelStrings[META_INSTRUMENT], META_SPACE);
+	sd_append_file(filename, field);
 
 	sprintf(field, "%s%s\n", MetadataLabelStrings[META_LATITUDE], META_SPACE);
 	sd_append_file(filename, field);
@@ -257,7 +261,6 @@ uint8_t WriteMetaData(char * filename, METADATA md)
 
 uint8_t createMeasurementFile(METADATA * md)
 {
-	GPS_oneshot();
 	uint8_t day   =  gps_data.utc_date / 10000;          	// DD
 	uint8_t month = (gps_data.utc_date / 100) % 100;     	// MM
 	uint8_t year  =  gps_data.utc_date % 100;            	// YY
@@ -269,7 +272,7 @@ uint8_t createMeasurementFile(METADATA * md)
 
 
 	fileID = Flash_ReadFileID();
-	sprintf(filename, "20%02u%02u%02u-%02u%02u%02u_%03lu", year, month, day, hr, min, sec, fileID);
+	sprintf(filename, "20%02u%02u%02u-%02u%02u%02u_%03lu.csv", year, month, day, hr, min, sec, fileID);
 
 //	char filenameSnipped[24];
 //	strcpy(filenameSnipped, filename);
