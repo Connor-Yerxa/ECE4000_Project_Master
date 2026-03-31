@@ -9,7 +9,7 @@
 #define INC_SHOWGRAPH_H_
 
 //float showGraph();
-
+float calculateK(float calCoef, uint8_t useLinReg);
 void showGraphWithMarkers(uint16_t x0, uint16_t y0, uint16_t width, uint16_t height);
 
 #endif /* INC_SHOWGRAPH_H_ */

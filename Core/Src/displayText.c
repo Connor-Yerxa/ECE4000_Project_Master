@@ -32,80 +32,92 @@ void displayText(int ID,  int extra)
 		switch(ID)
 		{
 		case 99:
-				strcpy(display, "Menu");
-				strcpy(text[0], "Run Test");
-				strcpy(text[1], "Calibration");
-				strcpy(text[2], "Settings");
-				strcpy(text[4], "Graph");
-				break;
+			strcpy(display, "Menu");
+			strcpy(text[0], "Run Test");
+			strcpy(text[1], "Calibration");
+			strcpy(text[2], "Settings");
+			strcpy(text[4], "Graph");
+			break;
 
 		case 100:
-				strcpy(display, "Select testing limit");
-				strcpy(text[0], "Run Test");
-				strcpy(text[1], "Temperature");
-				strcpy(text[2], "Both");
-				strcpy(text[3], "Time");
-				strcpy(text[4], "Heater");
-				strcpy(text[5], "Return");
-				break;
+			strcpy(display, "Select testing limit");
+			strcpy(text[0], "Run Test");
+			strcpy(text[1], "Temperature");
+			strcpy(text[2], "Both");
+			strcpy(text[3], "Time");
+			strcpy(text[4], "Heater");
+			strcpy(text[5], "Return");
+			break;
 
 		case 110:
-				strcpy(display, "Select time limit in sec, max: 180"); //NUMBER SELECT
-				break;
+			strcpy(display, "Temperature change"); //Number select
+			strcpy(text[0], "UP");
+			strcpy(text[1], "PREV");
+			strcpy(text[2], "DOWN");
+			strcpy(text[3], "SAVE");
+			strcpy(text[4], "NEXT");
+			strcpy(text[5], "BACK");
+			break;
 
 		case 111:
-				strcpy(display, "Select maximum temp change (xx.x), max: 10.0"); //NUMBER SELECT
-				break;
+			strcpy(display, "Time change"); //Number select
+			strcpy(text[0], "UP");
+			strcpy(text[1], "PREV");
+			strcpy(text[2], "DOWN");
+			strcpy(text[3], "SAVE");
+			strcpy(text[4], "NEXT");
+			strcpy(text[5], "BACK");
+			break;
 		case 115:
-				strcpy(display, "Heater Selection"); //Number select
-				strcpy(text[0], "Heater 1 - 0.1 W");
-				strcpy(text[1], "Heater 2 - 0.3 W");
-				strcpy(text[2], "Heater 3 - 0.5 W");
-				break;
+			strcpy(display, "Heater Selection"); //Number select
+			strcpy(text[0], "Heater 1 - 0.1 W");
+			strcpy(text[1], "Heater 2 - 0.3 W");
+			strcpy(text[2], "Heater 3 - 0.5 W");
+			break;
 
 		case 120:
-				strcpy(display, "Test Underway");
-				strcpy(text[5], "STOP");
-				break;
+			strcpy(display, "Test Underway");
+			strcpy(text[5], "STOP");
+			break;
 		case 130:
-				strcpy(display, "Test Complete");
-				strcpy(text[0], "Show Graph");
-				strcpy(text[1], "Delete Test");
-				strcpy(text[5], "BACK");
-				break;
+			strcpy(display, "Test Complete");
+			strcpy(text[0], "Show Graph");
+			strcpy(text[1], "Delete Test");
+			strcpy(text[5], "BACK");
+			break;
 
 		case 200:
-				strcpy(display, "Calibration");
-				strcpy(text[0], "Physical Material");
-				strcpy(text[1], "Default");
-				strcpy(text[5], "Return");
-				break;
+			strcpy(display, "Calibration");
+			strcpy(text[0], "Physical Material");
+			strcpy(text[1], "Default");
+			strcpy(text[5], "Return");
+			break;
 
 		case 210:
-				strcpy(display, "Select material");
-				strcpy(text[0], "Material A - Water");
-				strcpy(text[1], "Material B - Glycerin");
-				strcpy(text[5], "Return");
-				break;
+			strcpy(display, "Select material");
+			strcpy(text[0], "Material A - Water");
+			strcpy(text[1], "Material B - Glycerin");
+			strcpy(text[5], "Return");
+			break;
 
 		case 220:
-				strcpy(display, "Running calibration");
-				strcpy(text[5], "Cancel");
-				break;
+			strcpy(display, "Running calibration");
+			strcpy(text[5], "Cancel");
+			break;
 
 		case 230:
-				strcpy(display, "Calibration complete");
-				strcpy(text[0], "Press any button to continue");
-				break;
+			strcpy(display, "Calibration complete");
+			strcpy(text[0], "Press any button to continue");
+			break;
 
 		case 300:
-				strcpy(display, "Settings");
+			strcpy(display, "Settings");
 //				strcpy(text[0], "Brightness");
-				strcpy(text[1], "Delta Time");
-				strcpy(text[2], "Delta Temp");
-				strcpy(text[3], "Heater Power");
-				strcpy(text[5], "Return");
-				break;
+			strcpy(text[1], "Delta Time");
+			strcpy(text[2], "Delta Temp");
+			strcpy(text[3], "Heater Power");
+			strcpy(text[5], "Return");
+			break;
 
 //		case 310:
 //				strcpy(display, "Brightness 0-9"); //Number select
@@ -118,44 +130,44 @@ void displayText(int ID,  int extra)
 //				break;
 
 		case 320:
-				strcpy(display, "Temperature change"); //Number select
-				strcpy(text[0], "UP");
-				strcpy(text[1], "PREV");
-				strcpy(text[2], "DOWN");
-				strcpy(text[3], "SAVE");
-				strcpy(text[4], "NEXT");
-				strcpy(text[5], "BACK");
-				break;
+			strcpy(display, "Temperature change"); //Number select
+			strcpy(text[0], "UP");
+			strcpy(text[1], "PREV");
+			strcpy(text[2], "DOWN");
+			strcpy(text[3], "SAVE");
+			strcpy(text[4], "NEXT");
+			strcpy(text[5], "BACK");
+			break;
 
 		case 330:
-				strcpy(display, "Sample duration"); //Number select
-				strcpy(text[0], "UP");
-				strcpy(text[1], "PREV");
-				strcpy(text[2], "DOWN");
-				strcpy(text[3], "SAVE");
-				strcpy(text[4], "NEXT");
-				strcpy(text[5], "BACK");
-				break;
+			strcpy(display, "Sample duration"); //Number select
+			strcpy(text[0], "UP");
+			strcpy(text[1], "PREV");
+			strcpy(text[2], "DOWN");
+			strcpy(text[3], "SAVE");
+			strcpy(text[4], "NEXT");
+			strcpy(text[5], "BACK");
+			break;
 		case 340:
-				strcpy(display, "Default Heater Selection"); //Number select
-				strcpy(text[0], "Heater 1 - 0.1 W");
-				strcpy(text[1], "Heater 2 - 0.3 W");
-				strcpy(text[2], "Heater 3 - 0.5 W");
-				break;
+			strcpy(display, "Default Heater Selection"); //Number select
+			strcpy(text[0], "Heater 1 - 0.1 W");
+			strcpy(text[1], "Heater 2 - 0.3 W");
+			strcpy(text[2], "Heater 3 - 0.5 W");
+			break;
 
 		case 400:
-				strcpy(display, "Data");
-				strcpy(text[5], "Return");
-				break;
+			strcpy(display, "Data");
+			strcpy(text[5], "Return");
+			break;
 
 		case 500:
-				strcpy(display, "Select File");
-				strcpy(text[0], "UP");
-				strcpy(text[1], "SEL");
-				strcpy(text[2], "DOWN");
-				strcpy(text[4], "DEL");
-				strcpy(text[5], "BACK");
-				break;
+			strcpy(display, "Select File");
+			strcpy(text[0], "UP");
+			strcpy(text[1], "SEL");
+			strcpy(text[2], "DOWN");
+			strcpy(text[4], "DEL");
+			strcpy(text[5], "BACK");
+			break;
 		case 501:
 			strcpy(display, filename);
 			strcpy(text[0], "LEFT");
@@ -166,8 +178,8 @@ void displayText(int ID,  int extra)
 			break;
 
 		case 999:
-				strcpy(display, "ERROR: out of range, returning to safe parameters");
-				break;
+			strcpy(display, "ERROR: out of range, returning to safe parameters");
+			break;
 		}
 
 	    Displ_CLS(BACKGROUNDCOLOUR);

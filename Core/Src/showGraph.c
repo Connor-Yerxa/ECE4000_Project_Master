@@ -25,14 +25,16 @@ float minLn, maxLn, minTemp, maxTemp;
 
 float r2;
 
-float calculateK(float lnStart, float lnEnd, float calCoef, uint8_t useLinReg)
+float start,end;
+
+float calculateK(float calCoef, uint8_t useLinReg)
 {
 	float slope;
     // Ensure lnStart < lnEnd
-    if (lnEnd < lnStart) {
-        float tmp = lnStart;
-        lnStart = lnEnd;
-        lnEnd = tmp;
+    if (end < start) {
+        float tmp = start;
+        start = end;
+        end = tmp;
     }
 
     if(useLinReg)
@@ -65,7 +67,7 @@ float calculateK(float lnStart, float lnEnd, float calCoef, uint8_t useLinReg)
 
 			printf("%f\n", ln);
 			// Only include points inside the Ln range
-			if (ln >= lnStart && ln <= lnEnd)
+			if (ln >= start && ln <= end)
 			{
 				printf("Found\n");
 				sumX  += ln;
@@ -76,7 +78,7 @@ float calculateK(float lnStart, float lnEnd, float calCoef, uint8_t useLinReg)
 				count++;
 			}
 
-			if(ln >= lnEnd) break;
+			if(ln >= end) break;
 		}
 
 		f_close(&file);
@@ -127,7 +129,7 @@ float calculateK(float lnStart, float lnEnd, float calCoef, uint8_t useLinReg)
 				continue;
 
 
-			if(ln >= lnStart)
+			if(ln >= start)
 			{
 				startln = ln;
 				starttemp = temp;
@@ -142,7 +144,7 @@ float calculateK(float lnStart, float lnEnd, float calCoef, uint8_t useLinReg)
 				continue;
 
 
-			if(ln >= lnEnd)
+			if(ln >= end)
 			{
 				endln = ln;
 				endtemp = temp;
@@ -409,7 +411,7 @@ void showGraphWithMarkers(uint16_t x0, uint16_t y0, uint16_t width, uint16_t hei
 			buttons = 0;
 //			perform_slope_calculation(markers.x1, markers.x2);
 
-			float start= (markers.x1 - x0)*lnTPerPixel + minLn, end=(markers.x2 - x0)*lnTPerPixel + minLn;
+			float start = (markers.x1 - x0)*lnTPerPixel + minLn, end = (markers.x2 - x0)*lnTPerPixel + minLn;
 			snprintf(buf, 10, "%.4f", start);
 			updateMetaData(filename, META_REGION_START, buf);
 			snprintf(buf, 10, "%.4f", end);
@@ -418,7 +420,7 @@ void showGraphWithMarkers(uint16_t x0, uint16_t y0, uint16_t width, uint16_t hei
 			snprintf(buf, 32, "k: %.4f W/mK R2: %.5f", k, r2);
 			Displ_WString(480/2 - 11*strlen(buf)/2, 24+5, buf, Font16, 1, BACKGROUNDCOLOUR, BACKGROUNDCOLOUR);
 
-			k = calculateK(start, end, 1, 1);
+			k = calculateK(calCoef, 1);
 
 			snprintf(buf, 32, "k: %.4f W/mK R2: %.5f", k, r2);
 			Displ_WString(480/2 - 11*strlen(buf)/2, 24+5, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);

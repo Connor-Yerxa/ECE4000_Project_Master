@@ -10,7 +10,7 @@
 #include "main.h"
 #include <stdio.h>
 
-#define USE_MAX_RTD 1
+#define USE_MAX_RTD 0
 
 const SPI_HandleTypeDef * hspi_blank;
 
