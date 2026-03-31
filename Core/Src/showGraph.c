@@ -411,7 +411,8 @@ void showGraphWithMarkers(uint16_t x0, uint16_t y0, uint16_t width, uint16_t hei
 			buttons = 0;
 //			perform_slope_calculation(markers.x1, markers.x2);
 
-			float start = (markers.x1 - x0)*lnTPerPixel + minLn, end = (markers.x2 - x0)*lnTPerPixel + minLn;
+			start = (markers.x1 - x0)*lnTPerPixel + minLn;
+			end = (markers.x2 - x0)*lnTPerPixel + minLn;
 			snprintf(buf, 10, "%.4f", start);
 			updateMetaData(filename, META_REGION_START, buf);
 			snprintf(buf, 10, "%.4f", end);

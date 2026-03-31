@@ -27,7 +27,7 @@ int number = 0;
 double deltaTemp;
 int deltaTime;
 double deltaTempDefault = 10;
-int deltaTimeDefault = 300;
+int deltaTimeDefault = 180;
 //int brightness = 10;
 int both = 0;
 int heater;
@@ -108,8 +108,8 @@ void menus() {
 							Displ_WString(480/2 - 11*strlen(buf)/2, 320-3*16-10, buf, Font16, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
 						}
 
-//						GPS_Process();
-//						printf("Valid: %d\n", gps_data.valid);
+						GPS_Process();
+						printf("Valid: %d\n", gps_data.valid);
 						if(gps_data.valid == 1)
 						{
 							snprintf(buf, 32, "GPS Connecting...");
