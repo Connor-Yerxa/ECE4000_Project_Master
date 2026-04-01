@@ -26,12 +26,12 @@ int button = 0;
 int number = 0;
 double deltaTemp;
 int deltaTime;
-double deltaTempDefault = 10;
-int deltaTimeDefault = 180;
+//double deltaTempDefault = 10;
+//int deltaTimeDefault = 180;
 //int brightness = 10;
 int both = 0;
 int heater;
-int heaterDefault = 3;
+//int heaterDefault = 3;
 float calCoef = 1; // calibration coefficent
 
 int last_screen = 99;
@@ -43,7 +43,7 @@ uint8_t getVerification()
 	UI_DrawLine(2, "YES", 0);
 	UI_DrawLine(5, "NO", 0);
 
-	HAL_Delay(1000);
+	HAL_Delay(500);
 	buttons = 0;
 
 	while(1)
@@ -65,9 +65,12 @@ uint8_t getVerification()
 void menus() {
 	int ii=0;
 	sprintf(filename, "TESTTESTTEST.csv");
-	deltaTime = deltaTimeDefault;
-	deltaTemp = deltaTempDefault;
-	heater = heaterDefault;
+	Flash_ReadMeta(&meta);
+	char buf[32];
+
+	deltaTime = meta.deltaTime;
+	deltaTemp = meta.deltaTemp;
+	heater = meta.heater;
     while(1) {
         switch(screen) {
 
@@ -176,13 +179,12 @@ void menus() {
                 both = 0;
                 displayText(screen, 0);
 
-                char buf[32];
                 snprintf(buf, 32, "Heater Lvl: %.1f W", heater==1?0.1:heater==2?0.3:heater==3?0.5:0);
-                Displ_WString(480/2 - 11*strlen(buf)/2 + 10, 24, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+                Displ_WString(480/2 - 11*strlen(buf)/2 + 10, 24+16+5, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
                 snprintf(buf, 32, "Time: %d s", deltaTime);
-                Displ_WString(480/2 - 11*strlen(buf)/2 + 10, 24+16, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+                Displ_WString(480/2 - 11*strlen(buf)/2 + 10, 24+16*2+5, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
                 snprintf(buf, 32, "Delta Temp: %.0f C", deltaTemp);
-                Displ_WString(480/2 - 11*strlen(buf)/2 + 10, 24+16*2, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+                Displ_WString(480/2 - 11*strlen(buf)/2 + 10, 24+16*3+5, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
 
                 button = read_buttons();
                 switch(button) {
@@ -310,6 +312,12 @@ void menus() {
             // ---------- SETTINGS ----------
             case 300:
                 displayText(screen, 0);
+                snprintf(buf, 32, "Default Heater Lvl: %.1f W", meta.heater==1?0.1:meta.heater==2?0.3:meta.heater==3?0.5:0);
+                Displ_WString(480/2 - 11*strlen(buf)/2 + 10, 24+5+16, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+                snprintf(buf, 32, "Default Time: %d", meta.deltaTime);
+                Displ_WString(480/2-11*strlen(buf)/2, 24+2*16+5, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+                snprintf(buf, 32, "Default Temp: %.0f", meta.deltaTemp);
+                Displ_WString(480/2-11*strlen(buf)/2, 24+3*16+5, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
                 button = read_buttons();
                 switch(button) {
                     case 1: screen = 310; break;
@@ -325,12 +333,19 @@ void menus() {
                 }
                 break;
 
-//            case 310: // Brightness
+            case 310: // Save current
 //                displayText(screen, 0);
-//                brightness = selectNumber('B', 0);
-//                last_screen = screen;
-//                screen = 300;
-//                break;
+                if(getVerification())
+                {
+//                	Flash_ReadMeta(&meta);
+                	meta.deltaTemp = deltaTemp;
+                	meta.deltaTime = deltaTime;
+                	meta.heater = heater;
+                	Flash_WriteMeta(&meta);
+                }
+                last_screen = screen;
+                screen = 300;
+                break;
 
             case 320: // Default temperature
                 displayText(screen, 0);
@@ -340,6 +355,8 @@ void menus() {
                 ii = (int)deltaTemp;
                 selectNumber(&ii, 4, 20+11*10, 320/4);
                 deltaTemp = (double)ii;
+                meta.deltaTemp = (double)ii;
+                Flash_WriteMeta(&meta);
 
                 last_screen = screen;
                 screen = 300;
@@ -353,6 +370,8 @@ void menus() {
                 ii = (int)deltaTime;
                 selectNumber(&ii, 4, 20+11*10, 320/4);
                 deltaTime = (double)ii;
+                meta.deltaTime = (double)ii;
+                Flash_WriteMeta(&meta);
 
                 last_screen = screen;
                 screen = 300;
@@ -362,11 +381,14 @@ void menus() {
             	displayText(screen, 0);
             	button = read_buttons();
             	switch(button){
-            		case 1: heaterDefault = 1; break;
-            		case 2: heaterDefault = 2; break;
-            		case 3: heaterDefault = 3; break;
-            		default: heaterDefault = 1; break;
+            		case 1: meta.heater = 1; break;
+            		case 2: meta.heater = 2; break;
+            		case 3: meta.heater = 3; break;
+            		default: meta.heater = 1; break;
             	}
+            	Flash_WriteMeta(&meta);
+            	heater = meta.heater;
+
             	last_screen = screen;
             	screen = 300;
             	break;

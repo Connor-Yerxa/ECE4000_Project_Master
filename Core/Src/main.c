@@ -81,7 +81,6 @@ static uint8_t ui_excit2       = 0;
 #define UI_Y0     40
 #define UI_DY     40
 
-
 volatile uint8_t TEMP_TIMER = 0;
 
 char filename[32] = "TESTTESTTEST";
@@ -111,6 +110,48 @@ int _write(int file, char *ptr, int len) {
         ITM_SendChar((*ptr++));
     }
     return len;
+}
+
+FlashMeta_t meta;
+void Flash_WriteMeta(FlashMeta_t *m)
+{
+	m->crc = m->deltaTemp + m->deltaTime + m->fileID + m->heater;
+    HAL_FLASH_Unlock();
+
+    FLASH_EraseInitTypeDef erase;
+    uint32_t pageError = 0;
+
+    erase.TypeErase   = FLASH_TYPEERASE_PAGES;
+    erase.PageAddress = FLASH_META_ADDR;
+    erase.NbPages     = 1;
+
+    HAL_FLASHEx_Erase(&erase, &pageError);
+
+    // Write struct word-by-word
+    const uint32_t *src = (const uint32_t*)m;
+    uint32_t addr = FLASH_META_ADDR;
+
+    for (size_t i = 0; i < sizeof(FlashMeta_t) / 4; i++)
+    {
+        HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, addr, src[i]);
+        addr += 4;
+    }
+
+    HAL_FLASH_Lock();
+}
+void Flash_ReadMeta(FlashMeta_t *m)
+{
+    memcpy(m, (void*)FLASH_META_ADDR, sizeof(FlashMeta_t));
+
+    // If flash is erased, fields will be 0xFFFFFFFF
+    if (m->crc != m->deltaTemp + m->deltaTime + m->fileID + m->heater)
+    {
+        m->fileID    = 0;
+        m->deltaTemp = 10.0;
+        m->deltaTime = 180;
+        m->heater = 3;
+        Flash_WriteMeta(m);
+    }
 }
 
 // Faaiz screen

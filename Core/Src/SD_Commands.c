@@ -18,34 +18,19 @@ const char * const MetadataLabelStrings[META_LABEL_COUNT] = {
     [META_CALIBRATION_APPLIED] = "#,Calibration Applied:,"
 };
 
-#define FILE_ID_ADDR  0x0801F800  // Last 2KB page
 
 uint32_t fileID;
 
 uint32_t Flash_ReadFileID(void)
 {
-    uint32_t id = *(uint32_t*)FILE_ID_ADDR;
-    if (id == 0xFFFFFFFF)  // erased flash
-        id = 0;
-    return id;
+	Flash_ReadMeta(&meta);
+	return meta.fileID;
 }
 
 void Flash_WriteFileID(uint32_t id)
 {
-    HAL_FLASH_Unlock();
-
-    FLASH_EraseInitTypeDef erase;
-    uint32_t pageError = 0;
-
-    erase.TypeErase   = FLASH_TYPEERASE_PAGES;
-    erase.PageAddress = FILE_ID_ADDR;
-    erase.NbPages     = 1;
-
-    HAL_FLASHEx_Erase(&erase, &pageError);
-
-    HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, FILE_ID_ADDR, id);
-
-    HAL_FLASH_Lock();
+    meta.fileID = id;
+    Flash_WriteMeta(&meta);
 }
 
 FRESULT sd_reset_and_mount(void)

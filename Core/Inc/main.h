@@ -125,6 +125,18 @@ void Error_Handler(void);
 void UI_DrawLine(uint8_t line, const char *text, uint8_t val);
 #define debounceDelay 200
 
+#define FLASH_META_ADDR  0x0801F800  // Last 2KB page
+typedef struct {
+    uint32_t fileID;
+    double   deltaTemp;
+    int deltaTime;
+    uint8_t heater;
+    uint32_t crc;
+} FlashMeta_t;
+
+extern FlashMeta_t meta;
+void Flash_WriteMeta(FlashMeta_t *m);
+void Flash_ReadMeta(FlashMeta_t *m);
 
 extern uint16_t MAINTEXTCOLOUR;
 extern uint16_t SECONDARYTEXTCOLOUR;

@@ -32,7 +32,7 @@ void displayText(int ID,  int extra)
 		switch(ID)
 		{
 		case 99:
-			strcpy(display, "Menu");
+			strcpy(display, "Main Menu");
 			strcpy(text[0], "Run Test");
 			strcpy(text[1], "Calibration");
 			strcpy(text[2], "Settings");
@@ -40,7 +40,7 @@ void displayText(int ID,  int extra)
 			break;
 
 		case 100:
-			strcpy(display, "Select testing limit");
+			strcpy(display, "Testing Menu");
 			strcpy(text[0], "Run Test");
 			strcpy(text[1], "Temperature");
 			strcpy(text[2], "Both");
@@ -50,7 +50,7 @@ void displayText(int ID,  int extra)
 			break;
 
 		case 110:
-			strcpy(display, "Temperature change"); //Number select
+			strcpy(display, "Temperature Change"); //Number select
 			strcpy(text[0], "UP");
 			strcpy(text[1], "PREV");
 			strcpy(text[2], "DOWN");
@@ -60,7 +60,7 @@ void displayText(int ID,  int extra)
 			break;
 
 		case 111:
-			strcpy(display, "Time change"); //Number select
+			strcpy(display, "Time Change"); //Number select
 			strcpy(text[0], "UP");
 			strcpy(text[1], "PREV");
 			strcpy(text[2], "DOWN");
@@ -94,28 +94,29 @@ void displayText(int ID,  int extra)
 			break;
 
 		case 210:
-			strcpy(display, "Select material");
+			strcpy(display, "Select Material");
 			strcpy(text[0], "Material A - Water");
 			strcpy(text[1], "Material B - Glycerin");
 			strcpy(text[5], "Return");
 			break;
 
 		case 220:
-			strcpy(display, "Running calibration");
+			strcpy(display, "Running Calibration");
 			strcpy(text[5], "Cancel");
 			break;
 
 		case 230:
-			strcpy(display, "Calibration complete");
+			strcpy(display, "Calibration Complete");
 			strcpy(text[0], "Press any button to continue");
 			break;
 
 		case 300:
-			strcpy(display, "Settings");
-//				strcpy(text[0], "Brightness");
-			strcpy(text[1], "Delta Time");
-			strcpy(text[2], "Delta Temp");
+			strcpy(display, "Default Settings");
+			strcpy(text[0], "Save Current");
+			strcpy(text[1], "Delta Temp");
+			strcpy(text[2], "Delta Time");
 			strcpy(text[3], "Heater Power");
+			strcpy(text[4], "Reset IDs");
 			strcpy(text[5], "Return");
 			break;
 
@@ -130,7 +131,7 @@ void displayText(int ID,  int extra)
 //				break;
 
 		case 320:
-			strcpy(display, "Temperature change"); //Number select
+			strcpy(display, "Temperature Change"); //Number select
 			strcpy(text[0], "UP");
 			strcpy(text[1], "PREV");
 			strcpy(text[2], "DOWN");
@@ -140,7 +141,7 @@ void displayText(int ID,  int extra)
 			break;
 
 		case 330:
-			strcpy(display, "Sample duration"); //Number select
+			strcpy(display, "Time Change"); //Number select
 			strcpy(text[0], "UP");
 			strcpy(text[1], "PREV");
 			strcpy(text[2], "DOWN");
