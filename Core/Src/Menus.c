@@ -71,6 +71,7 @@ void menus() {
 	deltaTime = meta.deltaTime;
 	deltaTemp = meta.deltaTemp;
 	heater = meta.heater;
+	calCoef = meta.calCoef;
     while(1) {
         switch(screen) {
 
@@ -159,8 +160,11 @@ void menus() {
 					{
                 		HAL_Delay(debounceDelay);
                 		buttons = 0;
-                		last_screen = screen;
-                		screen = 400; // Data
+                		if(getVerification())
+                		{
+                			meta.calCoef = 1;
+                			Flash_WriteMeta(&meta);
+                		}
                 		break;
 					} else if(buttons & 0x10)
 					{
@@ -185,6 +189,8 @@ void menus() {
                 Displ_WString(480/2 - 11*strlen(buf)/2 + 10, 24+16*2+5, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
                 snprintf(buf, 32, "Delta Temp: %.0f C", deltaTemp);
                 Displ_WString(480/2 - 11*strlen(buf)/2 + 10, 24+16*3+5, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+                snprintf(buf, 32, "calCoef: %.3f C", calCoef);
+                Displ_WString(480/2 - 11*strlen(buf)/2 + 10, 24+16*4+5, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
 
                 button = read_buttons();
                 switch(button) {
@@ -318,6 +324,8 @@ void menus() {
                 Displ_WString(480/2-11*strlen(buf)/2, 24+2*16+5, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
                 snprintf(buf, 32, "Default Temp: %.0f", meta.deltaTemp);
                 Displ_WString(480/2-11*strlen(buf)/2, 24+3*16+5, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+                snprintf(buf, 32, "Default calCoef: %.0f", meta.calCoef);
+                Displ_WString(480/2-11*strlen(buf)/2, 24+4*16+5, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
                 button = read_buttons();
                 switch(button) {
                     case 1: screen = 310; break;
@@ -341,6 +349,7 @@ void menus() {
                 	meta.deltaTemp = deltaTemp;
                 	meta.deltaTime = deltaTime;
                 	meta.heater = heater;
+                	meta.calCoef = calCoef;
                 	Flash_WriteMeta(&meta);
                 }
                 last_screen = screen;

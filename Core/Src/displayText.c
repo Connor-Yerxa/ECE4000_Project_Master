@@ -36,6 +36,7 @@ void displayText(int ID,  int extra)
 			strcpy(text[0], "Run Test");
 			strcpy(text[1], "Calibration");
 			strcpy(text[2], "Settings");
+			strcpy(text[3], "Reset calCoef");
 			strcpy(text[4], "Graph");
 			break;
 

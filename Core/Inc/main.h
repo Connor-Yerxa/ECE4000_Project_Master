@@ -131,6 +131,7 @@ typedef struct {
     double   deltaTemp;
     int deltaTime;
     uint8_t heater;
+    float calCoef;
     uint32_t crc;
 } FlashMeta_t;
 

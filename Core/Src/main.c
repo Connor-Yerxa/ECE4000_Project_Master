@@ -150,6 +150,7 @@ void Flash_ReadMeta(FlashMeta_t *m)
         m->deltaTemp = 10.0;
         m->deltaTime = 180;
         m->heater = 3;
+        m->calCoef = 1;
         Flash_WriteMeta(m);
     }
 }
