@@ -92,7 +92,7 @@ void GPS_default()
 {
 	//	gps_data.valid = 0;
 	gps_data.valid = 1;
-	gps_data.utc_date = 050326;
+	gps_data.utc_date = 50326;
 	gps_data.utc_time = 224030;
 
 	gps_data.latitude = 46.0460;
