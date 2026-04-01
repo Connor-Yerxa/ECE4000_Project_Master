@@ -87,7 +87,7 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 
 
 	startTime = HAL_GetTick();
-	HAL_Delay(1);
+	HAL_Delay(10);
 	while ((((float)currentTime) / 1000 < deltaTime) && (deltaTemp > runDeltaTemp)){
 //	while ((((float)currentTime) / 1000 < 300) && (deltaTemp > runDeltaTemp)){
 //	while ((((float)currentTime) / 1000 < 5) && (deltaTemp > runDeltaTemp)){
