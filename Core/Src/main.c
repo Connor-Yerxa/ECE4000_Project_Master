@@ -271,18 +271,19 @@ int main(void)
 
 	Displ_WString(480/2 - 6*17*2, 320/2 - 24, "C-Therm TLS", Font24, 2, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
 	Displ_WString(480/2 - 4*17*2, 320/2, "Handheld", Font24, 2, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
+	HAL_GPIO_WritePin(DISPL_LED_GPIO_Port, DISPL_LED_Pin, 1);
 //	HAL_Delay(1000);
+	Displ_WString(10, 10, "SD Card not detecting. Rebooting...", Font8, 1, RED, BACKGROUNDCOLOUR);
 
 	FRESULT res = sd_reset_and_mount();
 	if (res != FR_OK)
 	{
-//		Displ_WString(10, 10, "SD Card not detecting. Rebooting...", Font8, 1, RED, BACKGROUNDCOLOUR);
 		NVIC_SystemReset();
 		while(1);
 	}
-	HAL_GPIO_WritePin(DISPL_LED_GPIO_Port, DISPL_LED_Pin, 1);
+	Displ_WString(10, 10, "SD Card not detecting. Rebooting...", Font8, 1, BACKGROUNDCOLOUR, BACKGROUNDCOLOUR);
+	Displ_WString(10, 10, "SD Mounted!", Font8, 1, GREEN, BACKGROUNDCOLOUR);
 	HAL_Delay(1500);
-//	Displ_WString(10, 10, "SD Mounted!", Font8, 1, GREEN, BACKGROUNDCOLOUR);
 
   /* USER CODE END 2 */
 

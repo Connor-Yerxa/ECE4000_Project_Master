@@ -77,15 +77,15 @@ float readTemp()
 //		max31856_write_nregisters(&THERM_MAX, MAX31856_CJTH, raw, 2);
 	} else
 	{
-//		float cjTemp = max31856_read_CJ_temp(&THERM_MAX);
+		float cjTemp = max31856_read_CJ_temp(&THERM_MAX);
 		temp = max31856_read_TC_temp(&THERM_MAX) * -1;
 
-//		temp = cjTemp - temp;
-//		temp += cjTemp;
+		temp = cjTemp - temp;
+		temp += cjTemp;
 	}
-//	max31856_read_fault(&THERM_MAX);
-//	printf("Faults: 0x%2X\n", THERM_MAX.sr.val);
-//	printf("cj temp: %.2f\n", max31856_read_CJ_temp(&THERM_MAX));
-//	printf("%.2f\n", temp);
+	max31856_read_fault(&THERM_MAX);
+	printf("Faults: 0x%2X\n", THERM_MAX.sr.val);
+	printf("cj temp: %.2f\n", max31856_read_CJ_temp(&THERM_MAX));
+	printf("%.2f\n", temp);
 	return temp;
 }

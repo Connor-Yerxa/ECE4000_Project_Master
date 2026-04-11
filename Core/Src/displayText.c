@@ -117,7 +117,8 @@ void displayText(int ID,  int extra)
 			strcpy(text[1], "Delta Temp");
 			strcpy(text[2], "Delta Time");
 			strcpy(text[3], "Heater Power");
-			strcpy(text[4], "Reset IDs");
+//			strcpy(text[4], "Reset IDs");
+			sprintf(text[4], "%d Reset ID", Flash_ReadFileID());
 			strcpy(text[5], "Return");
 			break;
 
