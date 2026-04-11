@@ -65,11 +65,11 @@ float calculateK(float calCoef, uint8_t useLinReg)
 			if (sscanf(line, "%f, %f, %f", &t, &ln, &temp) != 3)
 				continue;
 
-			printf("%f\n", ln);
+//			printf("%f\n", ln);
 			// Only include points inside the Ln range
 			if (ln >= start && ln <= end)
 			{
-				printf("Found\n");
+//				printf("Found\n");
 				sumX  += ln;
 				sumY  += temp;
 				sumXY += ln * temp;
@@ -407,6 +407,7 @@ void showGraphWithMarkers(uint16_t x0, uint16_t y0, uint16_t width, uint16_t hei
 
 		// Calculate thermal conductivity
 		if (buttons & (1 << 4)) { // B5
+			uint32_t startTime = HAL_GetTick();
 			HAL_Delay(debounceDelay);
 			buttons = 0;
 //			perform_slope_calculation(markers.x1, markers.x2);
@@ -438,6 +439,7 @@ void showGraphWithMarkers(uint16_t x0, uint16_t y0, uint16_t width, uint16_t hei
 			updateMetaData(filename, META_REGION_START, kbuf);
 			snprintf(kbuf, 10, "%.6f", end);
 			updateMetaData(filename, META_REGION_END, kbuf);
+			printf("Time to calculate: %lu\n", HAL_GetTick() - startTime);
 		}
 
 		// Back

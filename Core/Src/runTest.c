@@ -51,6 +51,8 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 	snprintf(tempbuf, 16, "%.3f", tempStart);
 	updateMetaData(filename, META_INITIAL_TEMP, tempbuf);
 	Displ_WString(5, 50+3*16, "FileCreated", Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+	Displ_WString(5, 50+4*16, "Filename:", Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+	Displ_WString(5 + 11*10, 50+4*16, filename, Font16, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
 
 //	heater = 2;
 
@@ -81,9 +83,9 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 	snprintf(tempbuf, 16, "Delta T:");
 	Displ_WString(10, 320-10-24*2, tempbuf, Font24, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
 	snprintf(tempbuf, 16, "Time:");
-	Displ_WString(10, 320-10-24, tempbuf, Font24, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
+	Displ_WString(10+17*3, 320-10-24, tempbuf, Font24, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
 	snprintf(tempbuf, 16, "/%d s", deltaTime);
-	Displ_WString(10 + 17*(6+5), 320-10-24, tempbuf, Font24, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+	Displ_WString(10 + 17*(9+5), 320-10-24, tempbuf, Font24, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
 
 
 	startTime = HAL_GetTick();
@@ -101,7 +103,7 @@ double runTest(int deltaTime, int deltaTemp, int heater){
 			sprintf(tempbuf, "%4.3f C  ", runDeltaTemp);
 			Displ_WString(10+17*9, 320-10-24*2, tempbuf, Font24, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
 			sprintf(tempbuf, "%4.0f", ((float)currentTime) / 1000.0);
-			Displ_WString(10+17*6, 320-10-24, tempbuf, Font24, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+			Displ_WString(10+17*9, 320-10-24, tempbuf, Font24, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
 			samplesLeft--;
 
 			if(buttons & 0x20)

@@ -89,6 +89,10 @@ void menus() {
 //                }
 
                 int t = HAL_GetTick();
+                int bottom_text = 480/2 - 11*5;
+                Displ_WString(bottom_text, 320-3*16, "Temp:", Font16, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
+                Displ_WString(bottom_text + 11, 320-2*16, "Lat:", Font16, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
+                Displ_WString(bottom_text, 320-1*16, "Long:", Font16, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
                 while(1)
                 {
                 	if(HAL_GetTick() > t + 1000)
@@ -100,34 +104,31 @@ void menus() {
 
 						if(temp < -100 || temp > 200)
 						{
-							snprintf(buf, 32, "Current Temp: %.1f", temp);
-							Displ_WString(480/2 - 11*strlen(buf)/2, 320-3*16-10, "                  ", Font16, 1, BACKGROUNDCOLOUR, BACKGROUNDCOLOUR);
-							snprintf(buf, 32, "No TLS Connected");
-							Displ_WString(480/2 - 11*strlen(buf)/2, 320-3*16-10, buf, Font16, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
+							Displ_FillArea(bottom_text + 11*6, 320-3*16, bottom_text + 11*6 + 11*6, 320-2*16, BACKGROUNDCOLOUR);
+							Displ_WString(bottom_text + 11*6, 320-3*16, "NC", Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
 						} else
 						{
-							snprintf(buf, 32, "No TLS Connected");
-							Displ_WString(480/2 - 11*strlen(buf)/2, 320-3*16-10, "                     ", Font16, 1, BACKGROUNDCOLOUR, BACKGROUNDCOLOUR);
-							snprintf(buf, 32, "Current Temp: %3.1f", temp);
-							Displ_WString(480/2 - 11*strlen(buf)/2, 320-3*16-10, buf, Font16, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
+							Displ_FillArea(bottom_text + 11*6, 320-3*16, bottom_text + 11*6 + 11*6, 320-2*16, BACKGROUNDCOLOUR);
+							snprintf(buf, 32, "%4.1f", temp);
+							Displ_WString(bottom_text + 11*6, 320-3*16, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
 						}
 
 						GPS_Process();
 						printf("Valid: %d\n", gps_data.valid);
 						if(gps_data.valid == 1)
 						{
-							snprintf(buf, 32, "GPS Connecting...");
-							Displ_WString(480/2 - 11*strlen(buf)/2, 320-2*16-10, buf, Font16, 1, BACKGROUNDCOLOUR, BACKGROUNDCOLOUR);
-							snprintf(buf, 32, "Long: %.5f", gps_data.longitude);
-							Displ_WString(480/2 - 11*strlen(buf)/2, 320-2*16-10, buf, Font16, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
-							snprintf(buf, 32, "Lat: %.5f", gps_data.latitude);
-							Displ_WString(480/2 - 11*strlen(buf)/2, 320-16-10, buf, Font16, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
+							Displ_FillArea(bottom_text + 11*6, 320-2*16, bottom_text + 11*6 + 11*10, 320, BACKGROUNDCOLOUR);
+
+							snprintf(buf, 32, "%4.5f", gps_data.latitude);
+							Displ_WString(bottom_text + 11*6, 320-2*16, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
+
+							snprintf(buf, 32, "%4.5f", gps_data.longitude);
+							Displ_WString(bottom_text + 11*6, 320-1*16, buf, Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
 						} else
 						{
-							snprintf(buf, 32, "GPS Connecting...");
-							Displ_WString(480/2 - 11*strlen(buf)/2, 320-2*16-10, buf, Font16, 1, SECONDARYTEXTCOLOUR, BACKGROUNDCOLOUR);
-							snprintf(buf, 32, "GPS Connecting...");
-							Displ_WString(480/2 - 11*strlen(buf)/2, 320-16-10, buf, Font16, 1, BACKGROUNDCOLOUR, BACKGROUNDCOLOUR);
+
+							Displ_FillArea(bottom_text + 11*6, 320-2*16, bottom_text + 11*6 + 11*10, 320, BACKGROUNDCOLOUR);
+							Displ_WString(bottom_text + 11*6, 320-2*16, "...", Font16, 1, MAINTEXTCOLOUR, BACKGROUNDCOLOUR);
 						}
 
 						t = HAL_GetTick();
